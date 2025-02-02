@@ -4,6 +4,15 @@
   "description": "kieksme website",
   "type": "module",
   "private": true,
+  "author": "NULLZUEINS Ihn. André Lademann",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nullzueins/kieksme.git",
+    "bugs": {
+      "url": "https://github.com/nullzueins/kieksme/issues"
+    }
+  },
   "engines": {
     "node": "^18.17.1 || ^20.3.0 || >= 21.0.0"
   },
