@@ -161,18 +161,15 @@ export const footerData = {
         { text: 'Status', href: '#' },
       ],
     },
-    */
     {
       title: 'Company',
-      links: [
-        { text: 'Über', href: '#' },
-        { text: 'Impressum', href: '#' },
-      ],
+      links: [{ text: 'Über', href: '#' }],
     },
+    */
   ],
   secondaryLinks: [
     { text: 'Datenschutzerklärung', href: getPermalink('/datenschutz') },
-    { text: 'Impressumg', href: getPermalink('/impressum') },
+    { text: 'Impressum', href: getPermalink('/impressum') },
   ],
   socialLinks: [
     /*
