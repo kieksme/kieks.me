@@ -1,6 +1,6 @@
 services:
-  astrowind:
+  app:
     build: .
-    container_name: astrowind
+    container_name: kieksme-app
     ports:
       - 8080:8080
