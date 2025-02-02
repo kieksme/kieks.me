@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: kieks.me
-    template: '%s — kieks.me'
+    default: kieks.me 👉
+    template: '%s 👉 kieks.me'
   description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: kieks.me
+    site_name: 👉 kieks.me
     images:
       - url: '~/assets/images/default.png'
         width: 1200
