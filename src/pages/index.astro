@@ -9,7 +9,7 @@ import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 
 const metadata = {
-  title: 'kies.me — Die besten Webseiten für dich',
+  title: 'kieks.me',
   ignoreTitleTemplate: true,
 };
 ---
@@ -23,7 +23,6 @@ const metadata = {
         variant: 'primary',
         text: 'Erstgespräch vereinbaren',
         href: '/kontakt',
-        target: '_blank',
         icon: 'tabler:calendar-event',
       },
       { text: 'Mehr erfahren', href: '#mehr' },
@@ -151,8 +150,7 @@ const metadata = {
       {
         variant: 'primary',
         text: 'Erstgespräch vereinbaren',
-        href: 'tel:+49123456789',
-        target: '_blank',
+        href: '/kontakt',
         icon: 'tabler:calendar-event',
       },
     ]}
