@@ -12,11 +12,14 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4
+      - name: Install and build
+        uses: withastro/action@v3
         with:
-          version: 9.15.4
-      - name: Use Node.js 22
+          node-version: 22 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
+          package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
+      - name: Check with node
         uses: actions/setup-node@v4
         with:
           node-version: 22

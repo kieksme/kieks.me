@@ -13,10 +13,6 @@
       "url": "https://github.com/nullzueins/kieksme/issues"
     }
   },
-  "packageManager": "pnpm@9.15.4",
-  "engines": {
-    "node": "^20.3.0 || >= 21.0.0"
-  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
