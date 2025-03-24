@@ -53,4 +53,4 @@ Allgemeine Geschäftsbedingungen (AGB) der Kieks.me GbR
 8.2 Gerichtsstand für alle Streitigkeiten aus diesem Vertrag ist, soweit gesetzlich zulässig, der Sitz der Kieks.me GbR.  
 8.3 Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.  
 
-**Stand: März 2025**
+Stand: März 2025
