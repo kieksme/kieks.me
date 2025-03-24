@@ -169,6 +169,7 @@ export const footerData = {
   ],
   secondaryLinks: [
     { text: 'Datenschutzerklärung', href: getPermalink('/datenschutz') },
+    { text: 'AGB', href: getPermalink('/agb') },
     { text: 'Impressum', href: getPermalink('/impressum') },
   ],
   socialLinks: [
