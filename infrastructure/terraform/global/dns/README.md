@@ -62,6 +62,41 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
    terraform destroy
    ```
 
+## GitHub Actions Integration
+
+Die DNS-Konfiguration wird automatisch über GitHub Actions verwaltet. Der Workflow wird ausgeführt:
+- Bei Push auf den `main` Branch
+- Bei Pull Requests auf den `main` Branch
+- Manuell über den "Run workflow" Button
+
+### Workflow-Schritte
+
+1. **Format Check**: Überprüft die Terraform-Formatierung
+2. **Initialisierung**: Initialisiert Terraform
+3. **Validierung**: Validiert die Konfiguration
+4. **Plan**: Erstellt einen Plan (nur bei PRs)
+5. **Apply**: Wendet Änderungen an (nur bei Push auf main)
+
+### GitHub Secrets
+
+Du musst folgende Secrets in deinem GitHub Repository einrichten:
+
+1. `CLOUDFLARE_API_TOKEN`: Dein Cloudflare API Token
+2. `TF_VAR_ROOT_IP`: Die IP-Adresse für den A-Record
+
+So richtest du die Secrets ein:
+1. Gehe zu deinem GitHub Repository
+2. Navigiere zu "Settings" > "Secrets and variables" > "Actions"
+3. Klicke auf "New repository secret"
+4. Füge die Secrets wie oben beschrieben hinzu
+
+### Pull Request Integration
+
+Bei Pull Requests wird automatisch:
+- Ein Terraform Plan erstellt
+- Der Plan als Kommentar im PR gepostet
+- Die Validierung der Konfiguration durchgeführt
+
 ## Verwaltete DNS-Records
 
 Die Konfiguration verwaltet folgende DNS-Records:
@@ -87,6 +122,10 @@ Die Konfiguration verwaltet folgende DNS-Records:
 2. **Fehler: Ungültiger API Token**
    - Überprüfe, ob der Token korrekt ist
    - Überprüfe, ob der Token die notwendigen Berechtigungen hat
+
+3. **GitHub Actions Fehler**
+   - Überprüfe, ob alle Secrets korrekt gesetzt sind
+   - Schaue in die GitHub Actions Logs für detaillierte Fehlermeldungen
 
 ## Support
 
