@@ -5,10 +5,12 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
 ## Voraussetzungen
 
 1. **Cloudflare Account**
+
    - Du benötigst einen Cloudflare Account mit der Domain kieks.me
    - Die Domain muss bereits in Cloudflare registriert sein
 
 2. **Cloudflare API Token**
+
    - Erstelle einen API Token in Cloudflare mit den folgenden Berechtigungen:
      - Zone:Read
      - DNS:Edit
@@ -22,6 +24,7 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
 
 1. Klone das Repository
 2. Navigiere in das Verzeichnis:
+
    ```bash
    cd infrastructure/terraform/global/dns
    ```
@@ -34,6 +37,7 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
 ## Konfiguration
 
 1. Erstelle eine `terraform.tfvars` Datei (wird nicht ins Git-Repository aufgenommen):
+
    ```hcl
    cloudflare_api_token = "your-api-token"
    root_ip             = "your-server-ip"
@@ -48,11 +52,13 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
 ## Verwendung
 
 1. Plane die Änderungen:
+
    ```bash
    terraform plan
    ```
 
 2. Wende die Änderungen an:
+
    ```bash
    terraform apply
    ```
@@ -65,6 +71,7 @@ Diese Terraform-Konfiguration verwaltet die DNS-Records für die Domain kieks.me
 ## GitHub Actions Integration
 
 Die DNS-Konfiguration wird automatisch über GitHub Actions verwaltet. Der Workflow wird ausgeführt:
+
 - Bei Push auf den `main` Branch
 - Bei Pull Requests auf den `main` Branch
 - Manuell über den "Run workflow" Button
@@ -85,6 +92,7 @@ Du musst folgende Secrets in deinem GitHub Repository einrichten:
 2. `TF_VAR_ROOT_IP`: Die IP-Adresse für den A-Record
 
 So richtest du die Secrets ein:
+
 1. Gehe zu deinem GitHub Repository
 2. Navigiere zu "Settings" > "Secrets and variables" > "Actions"
 3. Klicke auf "New repository secret"
@@ -93,6 +101,7 @@ So richtest du die Secrets ein:
 ### Pull Request Integration
 
 Bei Pull Requests wird automatisch:
+
 - Ein Terraform Plan erstellt
 - Der Plan als Kommentar im PR gepostet
 - Die Validierung der Konfiguration durchgeführt
@@ -116,10 +125,12 @@ Die Konfiguration verwaltet folgende DNS-Records:
 ## Troubleshooting
 
 1. **Fehler: Zone nicht gefunden**
+
    - Überprüfe, ob die Domain in Cloudflare registriert ist
    - Überprüfe die API Token Berechtigungen
 
 2. **Fehler: Ungültiger API Token**
+
    - Überprüfe, ob der Token korrekt ist
    - Überprüfe, ob der Token die notwendigen Berechtigungen hat
 
@@ -129,4 +140,4 @@ Die Konfiguration verwaltet folgende DNS-Records:
 
 ## Support
 
-Bei Problemen oder Fragen, erstelle bitte ein Issue im Repository. 
+Bei Problemen oder Fragen, erstelle bitte ein Issue im Repository.

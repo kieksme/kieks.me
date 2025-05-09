@@ -5,10 +5,12 @@ Diese Terraform-Konfiguration verwaltet die Netlify-Ressourcen für die Domain k
 ## Voraussetzungen
 
 1. **Netlify Account**
+
    - Du benötigst einen Netlify Account
    - Die Domain kieks.me muss in deinem Netlify Account verfügbar sein
 
 2. **Netlify API Token**
+
    - Erstelle einen API Token in Netlify:
      1. Gehe zu User Settings > Applications
      2. Klicke auf "New access token"
@@ -23,6 +25,7 @@ Diese Terraform-Konfiguration verwaltet die Netlify-Ressourcen für die Domain k
 
 1. Klone das Repository
 2. Navigiere in das Verzeichnis:
+
    ```bash
    cd infrastructure/terraform/global/netlify
    ```
@@ -35,6 +38,7 @@ Diese Terraform-Konfiguration verwaltet die Netlify-Ressourcen für die Domain k
 ## Konfiguration
 
 1. Erstelle eine `terraform.tfvars` Datei (wird nicht ins Git-Repository aufgenommen):
+
    ```hcl
    netlify_token = "your-netlify-token"
    ```
@@ -47,11 +51,13 @@ Diese Terraform-Konfiguration verwaltet die Netlify-Ressourcen für die Domain k
 ## Verwendung
 
 1. Plane die Änderungen:
+
    ```bash
    terraform plan
    ```
 
 2. Wende die Änderungen an:
+
    ```bash
    terraform apply
    ```
@@ -64,6 +70,7 @@ Diese Terraform-Konfiguration verwaltet die Netlify-Ressourcen für die Domain k
 ## GitHub Actions Integration
 
 Die Netlify-Konfiguration wird automatisch über GitHub Actions verwaltet. Der Workflow wird ausgeführt:
+
 - Bei Push auf den `main` Branch
 - Bei Pull Requests auf den `main` Branch
 - Manuell über den "Run workflow" Button
@@ -83,6 +90,7 @@ Du musst folgende Secrets in deinem GitHub Repository einrichten:
 1. `NETLIFY_TOKEN`: Dein Netlify API Token
 
 So richtest du die Secrets ein:
+
 1. Gehe zu deinem GitHub Repository
 2. Navigiere zu "Settings" > "Secrets and variables" > "Actions"
 3. Klicke auf "New repository secret"
@@ -108,10 +116,12 @@ Die Konfiguration verwaltet folgende Netlify-Ressourcen:
 ## Troubleshooting
 
 1. **Fehler: Ungültiger API Token**
+
    - Überprüfe, ob der Token korrekt ist
    - Überprüfe, ob der Token die notwendigen Berechtigungen hat
 
 2. **Fehler: Domain nicht verfügbar**
+
    - Überprüfe, ob die Domain in deinem Netlify Account verfügbar ist
    - Überprüfe die DNS-Konfiguration
 
@@ -121,4 +131,4 @@ Die Konfiguration verwaltet folgende Netlify-Ressourcen:
 
 ## Support
 
-Bei Problemen oder Fragen, erstelle bitte ein Issue im Repository. 
+Bei Problemen oder Fragen, erstelle bitte ein Issue im Repository.
