@@ -1,4 +1,5 @@
-name: Terraform Netlify Management
+name: Terraform - Netlify Management
+description: Manage the Netlify configuration for the website
 
 on:
   push:

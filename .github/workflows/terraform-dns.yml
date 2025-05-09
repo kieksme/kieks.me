@@ -1,4 +1,5 @@
-name: Terraform DNS Management
+name: Terraform - DNS Management
+description: Manage the DNS records for the website
 
 on:
   push:
