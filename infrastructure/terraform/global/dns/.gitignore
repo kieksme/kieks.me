@@ -1,0 +1,19 @@
+# Lokale Terraform-Verzeichnisse
+.terraform/
+.terraform.lock.hcl
+
+# Terraform Variablen-Dateien
+*.tfvars
+*.tfvars.json
+
+# Crash-Log-Dateien
+crash.log
+crash.*.log
+
+# Ausgabedateien
+*.tfstate
+*.tfstate.*
+
+# Sensible Daten
+*.pem
+*.key 
