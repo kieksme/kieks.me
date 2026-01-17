@@ -17,7 +17,7 @@ André Lademann, Thomas Schöne
 
 ## Kontakt
 
-E-Mail: <kontakt@kiek.me><br>
+E-Mail: <kontakt@kieks.me><br>
 Telefon: [+49 170 7353 067](tel:+491707353067)
 
 **Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:**<br>

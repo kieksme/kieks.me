@@ -12,7 +12,7 @@ Hardenbergstraße 48<br>
 Deutschland<br>
 </address>
 
-E-Mail: kontakt@kiek.me<br>
+E-Mail: kontakt@kieks.me<br>
 Telefon: [+49 170 7353 067](tel:+491707353067)
 
 ## 2. Allgemeine Hinweise
