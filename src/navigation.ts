@@ -16,7 +16,7 @@ export const headerData = {
     { text: 'CSP', href: getPermalink('/csp') },
     { text: 'Kontakt', href: getPermalink('/kontakt') },
   ],
-  actions: [{ text: 'Erstgespräch buchen', href: BOOKING_URL }],
+  actions: [{ variant: 'primary' as const, text: 'Erstgespräch buchen', href: BOOKING_URL }],
 };
 
 export const footerData = {
