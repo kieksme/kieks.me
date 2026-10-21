@@ -136,16 +136,17 @@ const faqs = [
           </Placeholder>
         </div>
 
-        <div class="relative justify-self-center lg:justify-self-end w-full max-w-sm">
-          <div class="relative mx-auto w-fit">
-            <div class="pop-starburst mx-auto" aria-hidden="true">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <PopHand size={140} class="relative z-10 -translate-x-2" />
-              </div>
+        <div class="relative justify-self-center lg:justify-self-end w-full max-w-sm" aria-hidden="true">
+          <div class="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
+            <div
+              class="absolute inset-0"
+              style="background: var(--pop-yellow); clip-path: polygon(50% 0%, 61% 18%, 80% 8%, 78% 28%, 100% 35%, 82% 48%, 95% 68%, 72% 68%, 70% 90%, 50% 78%, 30% 90%, 28% 68%, 5% 68%, 18% 48%, 0% 35%, 22% 28%, 20% 8%, 39% 18%); border: 0; outline: 3px solid var(--pop-navy); outline-offset: -3px;"
+            >
             </div>
+            <PopHand size={168} class="relative z-10" />
             <span
-              class="absolute left-1/2 z-20 -translate-x-1/2 whitespace-nowrap px-3 py-1 font-heading text-sm font-black lowercase"
-              style="bottom: 12%; background: var(--pop-fuchsia); color: #fff; border: 2.5px solid var(--pop-navy); box-shadow: 4px 4px 0 0 var(--pop-navy);"
+              class="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap px-3 py-1 font-heading text-sm font-black lowercase"
+              style="background: var(--pop-fuchsia); color: #fff; border: 2.5px solid var(--pop-navy); box-shadow: 4px 4px 0 0 var(--pop-navy);"
             >
               open source!
             </span>
