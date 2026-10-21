@@ -1,17 +1,14 @@
 {
-  "name": "@nullzueins/kieksmewww",
+  "name": "@kieksme/kieks.me",
   "version": "1.0.0",
-  "description": "kieksme website",
+  "description": "Company website of kieks.me GbR",
   "type": "module",
   "private": true,
-  "author": "NULLZUEINS Ihn. André Lademann",
+  "author": "kieks.me GbR",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nullzueins/kieksme.git",
-    "bugs": {
-      "url": "https://github.com/nullzueins/kieksme/issues"
-    }
+    "url": "git+https://github.com/kieksme/kieks.me.git"
   },
   "scripts": {
     "dev": "astro dev",
@@ -19,11 +16,11 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
+    "check": "pnpm run check:astro && pnpm run check:eslint && pnpm run check:prettier",
     "check:astro": "astro check",
     "check:eslint": "eslint .",
     "check:prettier": "prettier --check .",
-    "fix": "npm run fix:eslint && npm run fix:prettier",
+    "fix": "pnpm run fix:eslint && pnpm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w ."
   },
@@ -33,6 +30,8 @@
     "@astrolib/analytics": "^0.6.1",
     "@astrolib/seo": "1.0.0-beta.8",
     "@fontsource-variable/inter": "^5.1.1",
+    "@fontsource/hanken-grotesk": "^5.3.0",
+    "@fontsource/source-sans-3": "^5.3.1",
     "astro": "^5.2.3",
     "astro-embed": "^0.9.0",
     "astro-icon": "^1.1.5",
@@ -71,5 +70,14 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.22.0",
     "unist-util-visit": "^5.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/kieksme/kieks.me/issues"
   }
 }

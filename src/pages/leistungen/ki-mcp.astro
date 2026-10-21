@@ -1,0 +1,110 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Button from '~/components/ui/Button.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Features from '~/components/widgets/Features.astro';
+
+const metadata = {
+  title: 'KI & MCP-Integration für Unternehmen',
+  description:
+    'kieks.me verbindet KI-Assistenten über das Model Context Protocol mit Ihren Systemen: eigene MCP-Server, abgesicherter Zugriff, Agent-Skills für Ihr Team.',
+};
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="KI, die mit Ihren Systemen arbeitet, nicht an ihnen vorbei."
+    subtitle="Wir verbinden KI-Assistenten wie Claude, Cursor oder VS Code über das Model Context Protocol (MCP) mit Ihren Werkzeugen und Daten, so gezielt und nachvollziehbar wie nötig."
+    ctaText="KI-Vorhaben besprechen"
+  />
+
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Was ist MCP?</h2>
+      <p class="mt-4 text-lg text-muted leading-relaxed">
+        Das Model Context Protocol ist ein offener Standard, über den KI-Assistenten auf Werkzeuge und Daten zugreifen.
+        Statt Informationen per Copy-and-paste in einen Chat zu kopieren, ruft der Assistent definierte Funktionen auf,
+        zum Beispiel „Server-Snapshot anlegen“ oder „Statistik abrufen“. Welche Funktionen das sind, bestimmen Sie.
+      </p>
+    </div>
+  </section>
+
+  <Features
+    title="Was wir für Sie tun"
+    items={[
+      {
+        title: 'MCP-Server für Ihre Systeme',
+        description: 'Wir entwickeln MCP-Server für Ihre internen Anwendungen oder für Dienste, die Sie nutzen.',
+        icon: 'tabler:server',
+      },
+      {
+        title: 'Lokal oder als Dienst',
+        description:
+          'Lokal über stdio auf dem Rechner der Nutzer oder als Remote-Server über Streamable HTTP, abgesichert per Bearer-Token oder OAuth 2.1.',
+        icon: 'tabler:lock',
+      },
+      {
+        title: 'Agent-Skills',
+        description:
+          'Wiederverwendbare Arbeitsanweisungen für KI-Coding-Assistenten, damit Ihr Team KI einheitlich und geprüft einsetzt.',
+        icon: 'tabler:brain',
+      },
+      {
+        title: 'Einordnung und Auswahl',
+        description:
+          'Welche Abläufe sich für KI eignen und welche nicht. Welche Rechte ein Assistent braucht und welche nicht.',
+        icon: 'tabler:list-check',
+      },
+    ]}
+  />
+
+  <Steps
+    title="So arbeiten wir"
+    items={[
+      {
+        title: 'Verstehen',
+        description: 'Welche Aufgabe soll ein KI-Assistent übernehmen, mit welchen Daten?',
+        icon: 'tabler:number-1',
+      },
+      {
+        title: 'Eingrenzen',
+        description: 'Funktionen, Rechte und Grenzen festlegen. Lesen und Schreiben trennen wir bewusst.',
+        icon: 'tabler:number-2',
+      },
+      {
+        title: 'Umsetzen',
+        description: 'MCP-Server entwickeln, testen und dokumentieren.',
+        icon: 'tabler:number-3',
+      },
+      {
+        title: 'Übergeben',
+        description: 'Code, Dokumentation und auf Wunsch Skills für Ihr Team.',
+        icon: 'tabler:number-4',
+      },
+    ]}
+  />
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Nachweis statt Versprechen</h2>
+      <p class="mt-4 text-lg text-muted">
+        Unsere eigenen MCP-Server sind öffentlich auf GitHub und als npm-Pakete verfügbar. Sie können sich den Code
+        vorab ansehen.
+      </p>
+      <div class="mt-6">
+        <Button variant="primary" text="Zu unseren MCP-Servern" href="/projekte/mcp-server" />
+      </div>
+      <p class="mt-6 text-sm text-muted">
+        Hinweis: „nachvollziehbar und mit klaren Zugriffsrechten“ ist durch Token- bzw. OAuth-2.1-Absicherung in
+        kieksme/mcp-http-kit belegt. Keine weitergehende Sicherheits- oder Datenschutzzusage.
+      </p>
+    </div>
+  </section>
+
+  <SectionCTA
+    title="Haben Sie ein System, mit dem Ihre KI sprechen soll?"
+    text="Erzählen Sie uns davon. In 30 Minuten klären wir, ob und wie ein MCP-Server dafür sinnvoll ist."
+  />
+</Layout>

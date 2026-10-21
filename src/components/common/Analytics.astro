@@ -12,18 +12,16 @@ import { ANALYTICS } from 'astrowind:config';
   ) : null
 }
 
-<script src="https://swetrix.org/swetrix.js" defer></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    swetrix.init('oGhr5vx4aCwW')
-    swetrix.trackViews()
-  })
+<script is:inline src="https://swetrix.org/swetrix.js" defer></script>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof window.swetrix !== 'undefined') {
+      window.swetrix.init('oGhr5vx4aCwW');
+      window.swetrix.trackViews();
+    }
+  });
 </script>
 
 <noscript>
-  <img
-    src="https://api.swetrix.com/log/noscript?pid=oGhr5vx4aCwW"
-    alt=""
-    referrerpolicy="no-referrer-when-downgrade"
-  />
+  <img src="https://api.swetrix.com/log/noscript?pid=oGhr5vx4aCwW" alt="" referrerpolicy="no-referrer-when-downgrade" />
 </noscript>

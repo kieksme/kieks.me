@@ -35,4 +35,4 @@ Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für di
 
 Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <https://ec.europa.eu/consumers/odr>. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
 
-Stand: 02, 2025
+Stand: Februar 2025

@@ -1,0 +1,40 @@
+/* kieks.me Brand Colors — from kieksme/kieks.me.brand assets/colors/colors.css */
+
+:root {
+  /* Selection Colors */
+  --color-aqua: #00ffdc;
+  --color-navy: #1e2a45;
+  --color-fuchsia: #ff008f;
+
+  /* Aqua */
+  --color-aqua-50: #e6fffc;
+  --color-aqua-100: #b3fff5;
+  --color-aqua-500: #00ffdc;
+  --color-aqua-600: #00bfa5;
+  --color-aqua-700: #006b5f;
+
+  /* Navy */
+  --color-navy-50: #f0f2f5;
+  --color-navy-100: #e1e5eb;
+  --color-navy-300: #5a6b8c;
+  --color-navy-400: #2f4169;
+  --color-navy-500: #1e2a45;
+
+  /* Fuchsia */
+  --color-fuchsia-50: #ffe6f5;
+  --color-fuchsia-100: #ffcceb;
+  --color-fuchsia-500: #ff008f;
+  --color-fuchsia-600: #bf006b;
+  --color-fuchsia-700: #800047;
+
+  /* Text / Neutrals */
+  --color-white: #ffffff;
+  --color-gray-dark: #333333;
+  --color-gray-medium: #666666;
+  --color-gray-light: #cccccc;
+
+  /* RGB helpers */
+  --color-aqua-rgb: 0, 255, 220;
+  --color-navy-rgb: 30, 42, 69;
+  --color-fuchsia-rgb: 255, 0, 143;
+}
