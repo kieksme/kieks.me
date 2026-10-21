@@ -71,12 +71,6 @@
     "typescript-eslint": "^8.22.0",
     "unist-util-visit": "^5.0.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
-  },
   "bugs": {
     "url": "https://github.com/kieksme/kieks.me/issues"
   }
