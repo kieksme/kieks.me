@@ -50,6 +50,7 @@ export const ORGANIZATION_JSON_LD = {
   url: 'https://kieks.me',
   logo: 'https://kieks.me/favicon.svg',
   email: CONTACT_EMAIL,
+  description: 'AI Consultants aus Leipzig: Skills, MCP-Server, Agents und Agent-Hubs für Unternehmen.',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Hardenbergstraße 48',
@@ -58,4 +59,36 @@ export const ORGANIZATION_JSON_LD = {
     addressCountry: 'DE',
   },
   sameAs: [GITHUB_ORG_URL],
+  makesOffer: [
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'Agent-Hub',
+        description:
+          'Interner Agent-Hub: geprüfte Skills, MCP-Server und Agents mit Review-Gate, Versionierung und Richtlinien.',
+        url: 'https://kieks.me/agent-hub',
+        provider: {
+          '@type': 'Organization',
+          name: LEGAL_NAME,
+          url: 'https://kieks.me',
+        },
+      },
+    },
+    {
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: 'KI & MCP',
+        description:
+          'Skills, MCP-Server und Agents für KI-Assistenten, nachvollziehbar und mit klaren Zugriffsrechten.',
+        url: 'https://kieks.me/leistungen/ki-mcp',
+        provider: {
+          '@type': 'Organization',
+          name: LEGAL_NAME,
+          url: 'https://kieks.me',
+        },
+      },
+    },
+  ],
 } as const;

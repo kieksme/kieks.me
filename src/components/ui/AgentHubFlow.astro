@@ -1,0 +1,173 @@
+---
+/**
+ * Pop-Art flow diagram: Produktteams → Review → Agent-Hub → Entwicklerrechner & CI
+ * Öffentliche Marketplaces are shown as blocked.
+ */
+---
+
+<figure class="agent-hub-flow not-prose" aria-labelledby="agent-hub-flow-caption">
+  <figcaption id="agent-hub-flow-caption" class="sr-only">
+    Ablauf: Produktteams reichen ein, Review prüft, Agent-Hub stellt bereit, Entwicklerrechner und CI nutzen nur
+    Freigegebenes. Öffentliche Marketplaces sind blockiert.
+  </figcaption>
+
+  <div class="agent-hub-flow__track" role="list">
+    <div class="agent-hub-flow__node agent-hub-flow__node--aqua" role="listitem">
+      <span class="agent-hub-flow__step">01</span>
+      <span class="agent-hub-flow__label">Produktteams</span>
+      <span class="agent-hub-flow__hint">reichen ein</span>
+    </div>
+    <span class="agent-hub-flow__arrow" aria-hidden="true">→</span>
+    <div class="agent-hub-flow__node agent-hub-flow__node--fuchsia" role="listitem">
+      <span class="agent-hub-flow__step">02</span>
+      <span class="agent-hub-flow__label">Review</span>
+      <span class="agent-hub-flow__hint">prüft</span>
+    </div>
+    <span class="agent-hub-flow__arrow" aria-hidden="true">→</span>
+    <div class="agent-hub-flow__node agent-hub-flow__node--yellow" role="listitem">
+      <span class="agent-hub-flow__step">03</span>
+      <span class="agent-hub-flow__label">Agent-Hub</span>
+      <span class="agent-hub-flow__hint">versioniert &amp; pinnt</span>
+    </div>
+    <span class="agent-hub-flow__arrow" aria-hidden="true">→</span>
+    <div class="agent-hub-flow__node agent-hub-flow__node--purple" role="listitem">
+      <span class="agent-hub-flow__step">04</span>
+      <span class="agent-hub-flow__label">Entwicklerrechner &amp; CI</span>
+      <span class="agent-hub-flow__hint">nur Freigegebenes</span>
+    </div>
+  </div>
+
+  <div class="agent-hub-flow__blocked" role="note">
+    <svg class="agent-hub-flow__blocked-icon" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
+      <rect x="4" y="4" width="40" height="40" fill="#ffd60a" stroke="#1e2a45" stroke-width="3"></rect>
+      <circle cx="24" cy="24" r="12" fill="none" stroke="#e8202a" stroke-width="3.5"></circle>
+      <line x1="15" y1="33" x2="33" y2="15" stroke="#e8202a" stroke-width="3.5" stroke-linecap="square"></line>
+    </svg>
+    <div>
+      <p class="agent-hub-flow__blocked-title">öffentliche Marketplaces</p>
+      <p class="agent-hub-flow__blocked-text">blockiert — kein direkter Weg auf Entwicklerrechner oder in die CI</p>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .agent-hub-flow {
+    margin: 0;
+    padding: 1.25rem;
+    background: var(--pop-surface);
+    border: 2.5px solid var(--pop-navy);
+    box-shadow: 8px 8px 0 0 var(--pop-aqua);
+  }
+
+  .dark .agent-hub-flow {
+    border-color: var(--pop-aqua);
+    box-shadow: 8px 8px 0 0 var(--pop-fuchsia);
+  }
+
+  .agent-hub-flow__track {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem 0.35rem;
+  }
+
+  .agent-hub-flow__node {
+    flex: 1 1 9rem;
+    min-width: 8.5rem;
+    max-width: 12rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.9rem 0.85rem;
+    border: 2.5px solid var(--pop-navy);
+    color: var(--pop-navy);
+    font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  }
+
+  .agent-hub-flow__node--aqua {
+    background: var(--pop-aqua);
+    box-shadow: 5px 5px 0 0 var(--pop-navy);
+  }
+  .agent-hub-flow__node--fuchsia {
+    background: var(--pop-fuchsia);
+    color: #fff;
+    box-shadow: 5px 5px 0 0 var(--pop-navy);
+  }
+  .agent-hub-flow__node--yellow {
+    background: var(--pop-yellow);
+    box-shadow: 5px 5px 0 0 var(--pop-fuchsia);
+  }
+  .agent-hub-flow__node--purple {
+    background: var(--pop-purple);
+    color: #fff;
+    box-shadow: 5px 5px 0 0 var(--pop-navy);
+  }
+
+  .agent-hub-flow__step {
+    font-weight: 900;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    opacity: 0.85;
+  }
+
+  .agent-hub-flow__label {
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1.15;
+    text-transform: lowercase;
+  }
+
+  .agent-hub-flow__hint {
+    font-family: var(--aw-font-sans), ui-sans-serif, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .agent-hub-flow__arrow {
+    display: none;
+    align-self: center;
+    font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--pop-yellow);
+    text-shadow: 2px 2px 0 var(--pop-navy);
+  }
+
+  @media (min-width: 768px) {
+    .agent-hub-flow__arrow {
+      display: block;
+    }
+  }
+
+  .agent-hub-flow__blocked {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--pop-page-bg);
+    border: 2.5px dashed var(--pop-red);
+    box-shadow: 5px 5px 0 0 var(--pop-navy);
+  }
+
+  .agent-hub-flow__blocked-title {
+    margin: 0;
+    font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: lowercase;
+    color: var(--pop-text-primary);
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+    text-decoration-color: var(--pop-red);
+  }
+
+  .agent-hub-flow__blocked-text {
+    margin: 0.2rem 0 0;
+    font-size: 0.875rem;
+    color: var(--pop-text-secondary);
+  }
+</style>

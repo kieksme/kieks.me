@@ -1,0 +1,282 @@
+---
+/**
+ * Agent-Hub service page
+ *
+ * TODO ⟦PLATZHALTER: Buchungslink⟧ — CTAs use BOOKING_URL (/kontakt until set in site.ts)
+ * TODO ⟦BESTÄTIGEN⟧ Zahlenbeleg „341 von 2.857 Skills auf ClawHub, Koi Security“ nennen oder allgemein lassen?
+ * TODO ⟦BESTÄTIGEN⟧ Paket/Workshop-Format und Preisrahmen?
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import AgentHubFlow from '~/components/ui/AgentHubFlow.astro';
+import { BOOKING_URL } from '~/config/site';
+
+const metadata = {
+  title: 'Agent-Hub für Unternehmen – Skills, MCP-Server und Agents sicher verteilen',
+  description:
+    'kieks.me baut Ihren internen Agent-Hub: geprüfte Skills, MCP-Server und Agents an einem Ort, mit Review-Gate, Versionierung und Richtlinien für Claude Code, Codex & Co.',
+};
+
+const offers = [
+  {
+    title: 'Hub-Design',
+    description:
+      'Struktur, Repository, Versionierung und Verteilweg passend zu Ihren Werkzeugen, etwa Claude Code, Codex oder Google Cloud Agent Registry.',
+    accent: 'aqua',
+  },
+  {
+    title: 'Review-Prozess',
+    description: 'Prüfkriterien, Rollen und ein Service-Level, damit das Review kein Flaschenhals wird.',
+    accent: 'fuchsia',
+  },
+  {
+    title: 'Richtlinien und Durchsetzung',
+    description:
+      'Allowlists für Marketplaces und MCP-Server, Managed Settings und Verteilung über Ihre bestehenden Werkzeuge.',
+    accent: 'aqua',
+  },
+  {
+    title: 'Skills, MCP-Server und Agents entwickeln',
+    description: 'Wir bauen die Komponenten, die Ihre Teams wirklich brauchen, und bringen sie geprüft in den Hub.',
+    accent: 'fuchsia',
+  },
+  {
+    title: 'Identitäten und Secrets',
+    description: 'Sichere Anbindung von MCP-Servern an Ihre Systeme und Zugangsdaten.',
+    accent: 'aqua',
+  },
+  {
+    title: 'Betrieb und Monitoring',
+    description: 'Nachvollziehen, was wo installiert ist, mit Audit-Trail und Begleitung im laufenden Betrieb.',
+    accent: 'fuchsia',
+  },
+];
+
+const benefits = [
+  'Eine Stelle, an der ein fehlerhafter Skill einmal repariert wird – für alle.',
+  'Ein Audit-Trail und eine klare Antwort auf die Frage „Was ist wo installiert?“.',
+  'Weniger Doppelarbeit zwischen Teams.',
+  'Eine Grundlage, um KI-Werkzeuge sicher im ganzen Unternehmen auszurollen.',
+];
+
+const steps = [
+  {
+    num: '01',
+    title: 'Bestandsaufnahme',
+    description: 'Welche Skills, MCP-Server und Agents nutzen Ihre Teams heute, und woher kommen sie?',
+    tone: 'aqua',
+  },
+  {
+    num: '02',
+    title: 'Konzept',
+    description: 'Hub-Struktur, Review-Gate und Richtlinien für Ihre Umgebung.',
+    tone: 'fuchsia',
+  },
+  {
+    num: '03',
+    title: 'Aufbau',
+    description: 'Wir richten den Hub ein und überführen die ersten Komponenten.',
+    tone: 'yellow',
+  },
+  {
+    num: '04',
+    title: 'Begleitung',
+    description: 'Wir unterstützen beim Betrieb und entwickeln neue Komponenten mit Ihnen.',
+    tone: 'purple',
+  },
+];
+
+const flowSteps = [
+  {
+    title: 'Beitragen',
+    description: 'Ihre Teams reichen Skills, MCP-Server und Agents per Pull Request ein.',
+  },
+  {
+    title: 'Prüfen',
+    description:
+      'Ein Review klärt, was eine Komponente anweist, was sie ausführt und womit sie sich verbindet – für MCP-Server und Agents genauso streng wie für Skills.',
+  },
+  {
+    title: 'Freigeben',
+    description: 'Geprüfte Komponenten werden versioniert und gepinnt im internen Marketplace bereitgestellt.',
+  },
+  {
+    title: 'Durchsetzen',
+    description:
+      'Richtlinien legen fest, dass auf Entwicklerrechnern und in der CI nur Freigegebenes landet. Öffentliche Marketplaces bleiben außen vor.',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden not-prose md:-mt-[76px]" style="background: var(--pop-hero-bg);">
+    <div class="absolute inset-0 pop-halftone" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20">
+      <span class="pop-badge">Agent-Hub</span>
+      <h1
+        class="pop-display pop-display--offset text-4xl sm:text-5xl md:text-[3.25rem] mt-5 max-w-4xl"
+        style="color: var(--pop-hero-heading);"
+      >
+        Ein Ort für alle Skills, MCP-Server und Agents Ihres Unternehmens
+      </h1>
+      <p class="mt-6 text-lg md:text-xl max-w-3xl" style="color: var(--pop-hero-text);">
+        Irgendwo in Ihrem Unternehmen gibt es denselben Skill fünfmal: kopiert, leicht verändert, aus dem Internet
+        ergänzt. Niemand hat etwas falsch gemacht, es fehlte nur ein Ort, an dem ein Skill leben, besser werden und
+        Vertrauen aufbauen kann. Diesen Ort bauen wir mit Ihnen auf.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 items-start">
+        <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
+        <Button variant="primary" text="Erstgespräch vereinbaren" href={BOOKING_URL} icon="tabler:calendar-event" />
+        <Button
+          variant="secondary"
+          text="Zum Fachartikel →"
+          href="https://blog.andrelademann.de/de/posts/warum-unternehmen-einen-agent-hub-brauchen/"
+          target="_blank"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--fuchsia">Das Problem</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">Mehr als ein Skill-Repository</h2>
+      <p class="mt-4 text-lg leading-relaxed" style="color: var(--pop-text-secondary);">
+        Skills, MCP-Server und Agents haben sehr unterschiedliche Risikoprofile. Ein Skill ist überwiegend Markdown mit
+        gelegentlichem Skript. Ein MCP-Server ist laufende Software mit Netzwerkzugriff und Zugangsdaten. Ein Agent
+        bündelt Anweisungen, Werkzeuge und Berechtigungen. Ein Ordner namens „skills“ wird dem nicht gerecht – ein
+        Agent-Hub schon.
+      </p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--aqua">Ablauf</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">Ein Hub, ein Review-Gate</h2>
+
+      <ol class="mt-8 grid sm:grid-cols-2 gap-4 list-none p-0 m-0">
+        {
+          flowSteps.map((s, i) => (
+            <li
+              class="p-5"
+              style="background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-aqua);"
+            >
+              <p class="font-heading font-black text-2xl" style="color: var(--pop-fuchsia);">
+                {String(i + 1).padStart(2, '0')}
+              </p>
+              <h3 class="font-heading font-extrabold text-lg lowercase mt-1" style="color: var(--pop-text-primary);">
+                {s.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
+                {s.description}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="mt-10">
+        <AgentHubFlow />
+      </div>
+    </div>
+  </section>
+
+  <!-- Why it matters -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-navy);">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge">Sicherheit</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">Das Internet ist keine Paketquelle</h2>
+      <p class="mt-4 text-lg leading-relaxed text-white/90">
+        Ein Skill ist Software: Er kann einen Agenten anweisen, Befehle auszuführen, und eigene Skripte mitbringen. Jede
+        ungeprüfte Installation ist ungeprüfte Codeausführung. Sicherheitsforscher haben Anfang 2026 in einem
+        öffentlichen Skill-Marketplace hunderte bösartige Skills gefunden. Scanner helfen, ersetzen aber kein Review.
+        Für Unternehmen mit hohen Sicherheitsanforderungen, etwa im KRITIS-Umfeld, ist ein kontrollierter Hub deshalb
+        Pflicht.
+      </p>
+      <!-- TODO ⟦BESTÄTIGEN⟧: Zahlenbeleg „341 von 2.857 Skills auf ClawHub, Koi Security“ aus dem Artikel nennen oder bewusst allgemein lassen? Wenn genannt, mit Quellenlink. -->
+    </div>
+  </section>
+
+  <!-- Offers -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--fuchsia">Leistungen</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was wir für Sie tun</h2>
+      <div class="mt-8 grid sm:grid-cols-2 gap-5">
+        {
+          offers.map((o) => (
+            <article
+              class="p-6"
+              style={`background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); border-left: 6px solid var(--pop-${o.accent}); box-shadow: 6px 6px 0 0 var(--pop-${o.accent});`}
+            >
+              <h3 class="font-heading font-extrabold text-lg lowercase" style="color: var(--pop-text-primary);">
+                {o.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
+                {o.description}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--aqua">Ihr Nutzen</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was Sie davon haben</h2>
+      <ul class="mt-8 space-y-4 list-none p-0 m-0">
+        {
+          benefits.map((b) => (
+            <li class="flex gap-3 items-start">
+              <span class="pop-faq-mark pop-faq-mark--aqua mt-1.5" aria-hidden="true" />
+              <span class="text-lg" style="color: var(--pop-text-primary);">
+                {b}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge">Vorgehen</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">So starten wir</h2>
+      <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {
+          steps.map((s) => (
+            <article class:list={['pop-service-card', `pop-service-card--${s.tone}`]}>
+              <div class="pop-service-card__head">
+                <span class="pop-service-card__num">{s.num}</span>
+              </div>
+              <div class="pop-service-card__body">
+                <h3 class="pop-service-card__title">{s.title}</h3>
+                <p class="text-sm" style="color: var(--pop-text-secondary);">
+                  {s.description}
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <!-- TODO ⟦BESTÄTIGEN⟧: Paket/Workshop-Format und Preisrahmen? -->
+    </div>
+  </section>
+
+  <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
+  <SectionCTA
+    title="Wie heißt diese Schicht bei Ihnen?"
+    text="Skill-Repository, Agent-Hub, Registry oder noch gar nichts? Lassen Sie uns darüber sprechen, wie Ihr Unternehmen Skills, MCP-Server und Agents sicher und gemeinsam nutzt."
+    ctaText="Erstgespräch vereinbaren"
+  />
+</Layout>

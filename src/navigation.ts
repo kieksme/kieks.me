@@ -6,6 +6,7 @@ export const headerData = {
     {
       text: 'Leistungen',
       links: [
+        { text: 'Agent-Hub', href: getPermalink('/agent-hub') },
         { text: 'KI & MCP', href: getPermalink('/leistungen/ki-mcp') },
         { text: 'Cloud & DevOps', href: getPermalink('/leistungen/cloud-devops') },
         { text: 'Web- & Softwareentwicklung', href: getPermalink('/leistungen/entwicklung') },
@@ -24,6 +25,7 @@ export const footerData = {
     {
       title: 'Leistungen',
       links: [
+        { text: 'Agent-Hub', href: getPermalink('/agent-hub') },
         { text: 'KI & MCP', href: getPermalink('/leistungen/ki-mcp') },
         { text: 'Cloud & DevOps', href: getPermalink('/leistungen/cloud-devops') },
         { text: 'Web- & Softwareentwicklung', href: getPermalink('/leistungen/entwicklung') },
