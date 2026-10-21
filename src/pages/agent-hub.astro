@@ -3,8 +3,7 @@
  * Agent-Hub service page
  *
  * TODO ⟦PLATZHALTER: Buchungslink⟧ — CTAs use BOOKING_URL (/kontakt until set in site.ts)
- * TODO ⟦BESTÄTIGEN⟧ Zahlenbeleg „341 von 2.857 Skills auf ClawHub, Koi Security“ nennen oder allgemein lassen?
- * TODO ⟦BESTÄTIGEN⟧ Paket/Workshop-Format und Preisrahmen?
+ * TODO ⟦PLATZHALTER: Preisrahmen Agent-Hub, Angabe folgt von André⟧ — visible block shows „Preisrahmen folgt“ until set
  */
 import Layout from '~/layouts/PageLayout.astro';
 import Button from '~/components/ui/Button.astro';
@@ -193,12 +192,20 @@ const flowSteps = [
       <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">Das Internet ist keine Paketquelle</h2>
       <p class="mt-4 text-lg leading-relaxed text-white/90">
         Ein Skill ist Software: Er kann einen Agenten anweisen, Befehle auszuführen, und eigene Skripte mitbringen. Jede
-        ungeprüfte Installation ist ungeprüfte Codeausführung. Sicherheitsforscher haben Anfang 2026 in einem
-        öffentlichen Skill-Marketplace hunderte bösartige Skills gefunden. Scanner helfen, ersetzen aber kein Review.
-        Für Unternehmen mit hohen Sicherheitsanforderungen, etwa im KRITIS-Umfeld, ist ein kontrollierter Hub deshalb
-        Pflicht.
+        ungeprüfte Installation ist ungeprüfte Codeausführung. Koi Security hat Anfang 2026 alle 2.857 Skills im
+        öffentlichen Marketplace ClawHub geprüft und 341 bösartige gefunden (
+        <a
+          href="https://labs.cloudsecurityalliance.org/research/csa-research-note-openclaw-clawhub-supply-chain-risk-2026070/"
+          class="font-bold underline underline-offset-4 hover:text-aqua"
+          style="color: var(--pop-aqua);"
+          target="_blank"
+          rel="noopener"
+        >
+          Quelle: Cloud Security Alliance
+        </a>
+        ). Scanner helfen, ersetzen aber kein Review. Für Unternehmen mit hohen Sicherheitsanforderungen, etwa im KRITIS-Umfeld,
+        ist ein kontrollierter Hub deshalb Pflicht.
       </p>
-      <!-- TODO ⟦BESTÄTIGEN⟧: Zahlenbeleg „341 von 2.857 Skills auf ClawHub, Koi Security“ aus dem Artikel nennen oder bewusst allgemein lassen? Wenn genannt, mit Quellenlink. -->
     </div>
   </section>
 
@@ -269,7 +276,19 @@ const flowSteps = [
           ))
         }
       </div>
-      <!-- TODO ⟦BESTÄTIGEN⟧: Paket/Workshop-Format und Preisrahmen? -->
+
+      {/* TODO ⟦PLATZHALTER: Preisrahmen Agent-Hub, Angabe folgt von André⟧ */}
+      <aside
+        class="mt-10 max-w-xl p-6"
+        style="background: var(--pop-yellow); border: 2.5px solid var(--pop-navy); box-shadow: 8px 8px 0 0 var(--pop-fuchsia); color: var(--pop-navy);"
+        aria-label="Preisrahmen"
+      >
+        <p class="font-heading font-extrabold lowercase text-sm tracking-wide">Preisrahmen</p>
+        <p class="font-heading font-black lowercase text-2xl md:text-3xl mt-2 leading-tight">Preisrahmen folgt</p>
+        <p class="mt-2 text-sm font-semibold opacity-80">
+          Konkreter Betrag folgt. Im Erstgespräch klären wir Umfang und Angebot.
+        </p>
+      </aside>
     </div>
   </section>
 
