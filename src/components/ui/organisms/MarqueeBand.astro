@@ -1,0 +1,36 @@
+---
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+
+export interface Props {
+  sticker?: string;
+  text?: string;
+  class?: string;
+}
+
+const {
+  sticker = 'unsere haltung',
+  text = 'einfach statt kompliziert  ·  bewährt statt modisch  ·  offen statt abhängig',
+  class: className = '',
+} = Astro.props;
+---
+
+<section
+  class:list={['pop-marquee-band overflow-hidden', className]}
+  style="background: var(--band-bg); color: var(--band-text);"
+>
+  <div class="mx-auto max-w-[1440px] px-5 md:px-20 pt-[26px] pb-[30px] flex items-center gap-6">
+    <Sticker color="fuchsia" shadow="aqua" rotate={4} size="lg" class="shrink-0 z-10 relative">
+      {sticker}
+    </Sticker>
+    <div class="overflow-hidden flex-1 min-w-0">
+      <div class="motion-safe:pop-marquee flex whitespace-nowrap w-max">
+        <p class="font-heading font-black text-[clamp(1.25rem,2.5vw,2rem)] leading-none pr-16">
+          {text}&nbsp;&nbsp;{text}
+        </p>
+        <p class="font-heading font-black text-[clamp(1.25rem,2.5vw,2rem)] leading-none pr-16" aria-hidden="true">
+          {text}&nbsp;&nbsp;{text}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

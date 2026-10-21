@@ -1,0 +1,19 @@
+---
+export interface Props {
+  size?: 'l' | 'm';
+  tone?: 'primary' | 'secondary' | 'onColor';
+  class?: string;
+}
+
+const { size = 'l', tone = 'secondary', class: className = '' } = Astro.props;
+const sizes = { l: 'text-[22px] leading-8', m: 'text-lg leading-7' };
+const tones = {
+  primary: 'var(--text-primary)',
+  secondary: 'var(--text-secondary)',
+  onColor: 'inherit',
+};
+---
+
+<p class:list={['font-sans font-normal', sizes[size], className]} style={`color: ${tones[tone]};`}>
+  <slot />
+</p>

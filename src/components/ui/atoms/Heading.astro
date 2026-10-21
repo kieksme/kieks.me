@@ -1,0 +1,57 @@
+---
+/** Pop Heading with hard text-shadow — SPEC §1.2 */
+export interface Props {
+  level?: 1 | 2 | 3;
+  size?: 'xl' | 'l' | 'cta' | 'cta-ki' | 's';
+  color?: string;
+  shadowColor?: string;
+  shadowSize?: string;
+  class?: string;
+  as?: string;
+}
+
+const {
+  level = 2,
+  size = 'l',
+  color = 'var(--text-primary)',
+  shadowColor = 'var(--pop-fuchsia)',
+  shadowSize,
+  class: className = '',
+  as,
+} = Astro.props;
+
+const tagName = as ?? `h${level}`;
+const sizes: Record<string, string> = {
+  xl: 'text-[clamp(2.75rem,6vw,6rem)] leading-[0.96] tracking-[-0.02em]',
+  l: 'text-[clamp(2.25rem,4.5vw,4rem)] leading-none tracking-[-0.02em]',
+  cta: 'text-[clamp(2.75rem,6vw,5.5rem)] leading-[1.15]',
+  'cta-ki': 'text-[clamp(2.25rem,4.5vw,4.25rem)] leading-[1.06]',
+  s: 'text-2xl leading-[1.25]',
+};
+const defaultShadow = shadowSize ?? (size === 'xl' ? '6px 6px 0' : size.startsWith('cta') ? '7px 7px 0' : '4px 4px 0');
+---
+
+{
+  tagName === 'h1' ? (
+    <h1
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h1>
+  ) : tagName === 'h3' ? (
+    <h3
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h3>
+  ) : (
+    <h2
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h2>
+  )
+}

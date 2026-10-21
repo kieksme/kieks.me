@@ -1,5 +1,6 @@
-dist
-node_modules
-.github
 .changeset
+dist
+figma/
+.github
+node_modules
 .obsidian

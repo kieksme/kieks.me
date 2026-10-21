@@ -1,96 +1,97 @@
-/* kieks.me Pop-Art tokens — from Figma collections
- * „kieks.me Pop / Light“ (node 652:2) and „kieks.me Pop / Dark“ (node 661:68)
- */
+/* kieks.me Pop tokens — from figma/spec/tokens.json + SPEC.md §1 */
 
 :root {
-  /* Brand primaries (shared) */
-  --color-aqua: #00ffdc;
-  --color-navy: #1e2a45;
-  --color-fuchsia: #ff008f;
-  --pop-aqua: #00ffdc;
   --pop-navy: #1e2a45;
+  --pop-aqua: #00ffdc;
   --pop-fuchsia: #ff008f;
   --pop-yellow: #ffd60a;
   --pop-purple: #9747ff;
   --pop-purple-deep: #7b2ff7;
   --pop-red: #e8202a;
   --pop-white: #ffffff;
-  --pop-ink: #1e2a45;
 
-  /* Aqua scale */
+  --ink: #1e2a45;
+  --surface: #ffffff;
+  --page-bg: #f4f5f9;
+  --text-primary: #1e2a45;
+  --text-secondary: #4a5370;
+  --text-link: #c8006f;
+  --hero-bg: #00ffdc;
+  --hero-heading: #1e2a45;
+  --hero-text: #1e2a45;
+  --hero-dots: #1e2a45;
+  --band-bg: #1e2a45;
+  --band-text: #00ffdc;
+  --note-bg: #fff3b0;
+  --note-text: #5c4a00;
+  --footer-bg: #1e2a45;
+  --footer-text: #f0f2f9;
+
+  /* aliases used by existing pop styles */
+  --pop-page-bg: var(--page-bg);
+  --pop-surface: var(--surface);
+  --pop-hero-bg: var(--hero-bg);
+  --pop-hero-heading: var(--hero-heading);
+  --pop-hero-text: var(--hero-text);
+  --pop-hero-dots: var(--hero-dots);
+  --pop-band-bg: var(--band-bg);
+  --pop-band-text: var(--band-text);
+  --pop-text-primary: var(--text-primary);
+  --pop-text-secondary: var(--text-secondary);
+  --pop-text-link: var(--text-link);
+  --pop-note-bg: var(--note-bg);
+  --pop-note-text: var(--note-text);
+  --pop-footer-bg: var(--footer-bg);
+  --pop-footer-text: var(--footer-text);
+  --pop-ink: var(--ink);
+  --pop-border: var(--ink);
+  --pop-card-bg: var(--surface);
+  --pop-card-text: var(--text-primary);
+  --pop-offset: 0.5rem;
+  --pop-border-width: 3px;
+
+  --color-aqua: #00ffdc;
+  --color-navy: #1e2a45;
+  --color-fuchsia: #ff008f;
   --color-aqua-50: #e6fffc;
   --color-aqua-100: #b3fff5;
   --color-aqua-500: #00ffdc;
   --color-aqua-600: #00bfa5;
   --color-aqua-700: #006b5f;
-
-  /* Navy scale */
   --color-navy-50: #f0f2f5;
   --color-navy-100: #e1e5eb;
   --color-navy-300: #5a6b8c;
   --color-navy-400: #2f4169;
   --color-navy-500: #1e2a45;
-
-  /* Fuchsia scale */
   --color-fuchsia-50: #ffe6f5;
   --color-fuchsia-100: #ffcceb;
   --color-fuchsia-500: #ff008f;
   --color-fuchsia-600: #bf006b;
   --color-fuchsia-700: #800047;
-
-  /* Neutrals */
   --color-white: #ffffff;
   --color-gray-dark: #333333;
   --color-gray-medium: #666666;
   --color-gray-light: #cccccc;
-
-  /* RGB helpers */
   --color-aqua-rgb: 0, 255, 220;
   --color-navy-rgb: 30, 42, 69;
   --color-fuchsia-rgb: 255, 0, 143;
-
-  /* Semantic — Light (Figma Pop / Light) */
-  --pop-page-bg: #f4f5f9;
-  --pop-surface: #ffffff;
-  --pop-hero-bg: #00ffdc;
-  --pop-hero-heading: #1e2a45;
-  --pop-hero-text: #1e2a45;
-  --pop-hero-dots: #1e2a45;
-  --pop-band-bg: #1e2a45;
-  --pop-band-text: #00ffdc;
-  --pop-text-primary: #1e2a45;
-  --pop-text-secondary: #4a5370;
-  --pop-text-link: #c8006f;
-  --pop-note-bg: #fff3b0;
-  --pop-note-text: #5c4a00;
-  --pop-footer-bg: #1e2a45;
-  --pop-footer-text: #f0f2f9;
-  --pop-border: #1e2a45;
-  --pop-card-bg: #ffffff;
-  --pop-card-text: #1e2a45;
-  --pop-offset: 0.5rem;
-  --pop-border-width: 2.5px;
 }
 
 .dark {
-  /* Semantic — Dark (Figma Pop / Dark) */
-  --pop-ink: #07090d;
-  --pop-page-bg: #12151c;
-  --pop-surface: #23262e;
-  --pop-hero-bg: #1e2a45;
-  --pop-hero-heading: #00ffdc;
-  --pop-hero-text: #f0f2f9;
-  --pop-hero-dots: #00ffdc;
-  --pop-band-bg: #00ffdc;
-  --pop-band-text: #1e2a45;
-  --pop-text-primary: #f0f2f9;
-  --pop-text-secondary: #b9bfcf;
-  --pop-text-link: #ff4fb0;
-  --pop-note-bg: #3a3420;
-  --pop-note-text: #ffe27a;
-  --pop-footer-bg: #07090d;
-  --pop-footer-text: #f0f2f9;
-  --pop-border: #f0f2f9;
-  --pop-card-bg: #23262e;
-  --pop-card-text: #f0f2f9;
+  --ink: #07090d;
+  --surface: #23262e;
+  --page-bg: #12151c;
+  --text-primary: #f0f2f9;
+  --text-secondary: #b9bfcf;
+  --text-link: #ff4fb0;
+  --hero-bg: #1e2a45;
+  --hero-heading: #00ffdc;
+  --hero-text: #f0f2f9;
+  --hero-dots: #00ffdc;
+  --band-bg: #00ffdc;
+  --band-text: #1e2a45;
+  --note-bg: #3a3420;
+  --note-text: #ffe27a;
+  --footer-bg: #07090d;
+  --footer-text: #f0f2f9;
 }

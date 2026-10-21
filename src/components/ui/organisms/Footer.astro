@@ -1,0 +1,66 @@
+---
+import Logo from '~/components/ui/atoms/Logo.astro';
+import { getHomePermalink } from '~/utils/permalinks';
+
+interface Link {
+  text?: string;
+  href?: string;
+  ariaLabel?: string;
+}
+
+interface Links {
+  title?: string;
+  links: Array<Link>;
+}
+
+export interface Props {
+  links: Array<Links>;
+  secondaryLinks: Array<Link>;
+  socialLinks?: Array<Link>;
+  footNote?: string;
+}
+
+const { links = [], secondaryLinks = [], footNote = '' } = Astro.props;
+---
+
+<footer class="not-prose" style="background: var(--footer-bg); color: var(--footer-text);">
+  <div class="mx-auto max-w-[1440px] px-5 md:px-20 pt-[72px] pb-10 flex flex-col gap-12">
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-12 lg:col-span-4">
+        <a href={getHomePermalink()} aria-label="kieks.me">
+          <Logo variant="dark" />
+        </a>
+        <p class="mt-4 text-[17px] opacity-90">kieks.me GbR · Leipzig</p>
+      </div>
+      {
+        links.map(({ title, links: cols }) => (
+          <div class="col-span-6 md:col-span-3 lg:col-span-2">
+            <p class="font-heading font-black text-xl lowercase mb-3" style="color: var(--pop-aqua);">
+              {title}
+            </p>
+            <ul class="space-y-3 text-[17px]">
+              {cols.map(({ text, href, ariaLabel }) => (
+                <li>
+                  <a href={href} aria-label={ariaLabel} class="hover:underline" style="color: var(--footer-text);">
+                    <Fragment set:html={text} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <div style="border-top: 3px solid var(--pop-fuchsia);"></div>
+    <div class="flex flex-col md:flex-row md:justify-between gap-3 text-base">
+      <span set:html={footNote} />
+      <div class="flex flex-wrap gap-x-3 gap-y-1 font-semibold">
+        {
+          secondaryLinks.map(({ text, href }) => (
+            <a href={href} class="hover:underline" style="color: var(--footer-text);" set:html={text} />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>

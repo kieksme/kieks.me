@@ -1,14 +1,24 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import Button from '~/components/ui/Button.astro';
-import Placeholder from '~/components/common/Placeholder.astro';
-import SectionCTA from '~/components/widgets/SectionCTA.astro';
-import KantenDivider from '~/components/ui/KantenDivider.astro';
-import EdgeAvatar from '~/components/ui/EdgeAvatar.astro';
-import PopHand from '~/components/ui/PopHand.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import Note from '~/components/ui/atoms/Note.astro';
+import ServiceCard from '~/components/ui/molecules/ServiceCard.astro';
+import RepoRow from '~/components/ui/molecules/RepoRow.astro';
+import FaqItem from '~/components/ui/molecules/FaqItem.astro';
+import AvatarCard from '~/components/ui/molecules/AvatarCard.astro';
+import MarqueeBand from '~/components/ui/organisms/MarqueeBand.astro';
+import HeroArtFinger from '~/components/ui/organisms/HeroArtFinger.astro';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
 import avatarAndre from '~/assets/brand/avatars/kieksme-avatar-alademann.png';
 import avatarThomas from '~/assets/brand/avatars/kieksme-avatar-tschoene.png';
+import cspBurst from '~/assets/pop/654-1669_csp-art__imgBurst.svg?url';
 
 const metadata = {
   title: 'kieks.me – AI Consultants für Skills, MCP und Agent-Hubs | Leipzig',
@@ -25,7 +35,9 @@ const services = [
       'Ein zentraler, geprüfter Ort für alle Skills, MCP-Server und Agents in Ihrem Unternehmen. Mit Review-Prozess, Versionierung und klaren Regeln, was auf Entwicklerrechner gelangt.',
     href: '/agent-hub',
     linkText: 'Mehr zum Agent-Hub',
-    tone: 'aqua',
+    headColor: 'aqua' as const,
+    shadow: 'ink' as const,
+    numShadow: 'fuchsia' as const,
   },
   {
     num: '02',
@@ -34,7 +46,9 @@ const services = [
       'Skills, MCP-Server und Agents: Wir binden KI-Assistenten an Ihre Systeme und Daten an, nachvollziehbar und mit klaren Zugriffsrechten.',
     href: '/leistungen/ki-mcp',
     linkText: 'Mehr zu KI & MCP',
-    tone: 'fuchsia',
+    headColor: 'fuchsia' as const,
+    shadow: 'ink' as const,
+    numShadow: 'aqua' as const,
   },
   {
     num: '03',
@@ -42,7 +56,10 @@ const services = [
     description: 'Infrastruktur als Code, automatisierte Builds und Deployments, verlässlicher Betrieb.',
     href: '/leistungen/cloud-devops',
     linkText: 'Mehr zu Cloud & DevOps',
-    tone: 'purple',
+    headColor: 'purple' as const,
+    shadow: 'ink' as const,
+    numShadow: 'fuchsia' as const,
+    numColor: '#fff',
   },
   {
     num: '04',
@@ -50,7 +67,9 @@ const services = [
     description: 'Websites, Webanwendungen und Schnittstellen, neu entwickelt oder gezielt weiterentwickelt.',
     href: '/leistungen/entwicklung',
     linkText: 'Mehr zur Entwicklung',
-    tone: 'yellow',
+    headColor: 'yellow' as const,
+    shadow: 'fuchsia' as const,
+    numShadow: 'fuchsia' as const,
   },
   {
     num: '05',
@@ -58,201 +77,258 @@ const services = [
     description: 'Gemeinsam klären, was sich lohnt, bevor die erste Zeile Code entsteht.',
     href: '/leistungen/beratung',
     linkText: 'Mehr zu Beratung',
-    tone: 'aqua',
+    headColor: 'aqua' as const,
+    shadow: 'ink' as const,
+    numShadow: 'fuchsia' as const,
   },
-] as const;
+];
 
 const projects = [
-  { name: 'mcp-server – contabo', href: 'https://github.com/kieksme', tone: 'aqua' },
-  { name: 'mcp-server – swetrix', href: 'https://github.com/kieksme', tone: 'fuchsia' },
-  { name: 'mcp-server – listmonk', href: 'https://github.com/kieksme', tone: 'yellow' },
-  { name: 'mcp-server – balena', href: 'https://github.com/kieksme', tone: 'purple' },
-] as const;
+  { name: 'mcp-server · contabo', href: 'https://github.com/kieksme', color: 'aqua' as const },
+  { name: 'mcp-server · swetrix', href: 'https://github.com/kieksme', color: 'fuchsia' as const },
+  { name: 'mcp-server · listmonk', href: 'https://github.com/kieksme', color: 'yellow' as const },
+  { name: 'mcp-server · balena', href: 'https://github.com/kieksme', color: 'purple' as const },
+];
 
-const faqs = [
+const faqsLeft = [
   {
     title: 'Warum kieks.me und nicht eine andere Agentur?',
-    description:
-      'Bei uns arbeiten Sie direkt mit den Gesellschaftern, ohne Zwischenstationen. Offenheit, Ehrlichkeit und Transparenz sind für uns keine Schlagworte: Wir sagen Ihnen auch, wenn sich etwas nicht lohnt. Und Sie erhalten am Ende Code und Dokumentation, mit denen Ihr Team oder ein anderer Dienstleister weiterarbeiten kann.',
-    mark: 'yellow',
+    body: 'Bei uns arbeiten Sie direkt mit den Gesellschaftern, ohne Zwischenstationen. Offenheit, Ehrlichkeit und Transparenz sind für uns keine Schlagworte: Wir sagen Ihnen auch, wenn sich etwas nicht lohnt. Und Sie erhalten am Ende Code und Dokumentation, mit denen Ihr Team oder ein anderer Dienstleister weiterarbeiten kann.',
+    color: 'aqua' as const,
   },
   {
     title: 'Für welche Unternehmen arbeiten Sie?',
-    description:
-      'Vor allem für mittelständische Unternehmen und IT-Dienstleister, die ihre Software, ihre Systemlandschaft oder ihren Support pragmatisch verbessern möchten. ⟦BESTÄTIGEN: Zielgruppe⟧',
-    mark: 'aqua',
+    body: 'Vor allem für mittelständische Unternehmen und IT-Dienstleister, die ihre Software, ihre Systemlandschaft oder ihren Support pragmatisch verbessern möchten. ⟦BESTÄTIGEN: Zielgruppe⟧',
+    color: 'fuchsia' as const,
   },
   {
     title: 'Was brauchen Sie von uns für den Start?',
-    description:
-      'Ein Ziel, eine Ansprechperson und Zugang zu den Informationen, um die es geht: Systeme, Abläufe, Zielgruppe. Den Rest klären wir im Erstgespräch.',
-    mark: 'fuchsia',
+    body: 'Ein Ziel, eine Ansprechperson und Zugang zu den Informationen, um die es geht: Systeme, Abläufe, Zielgruppe. Den Rest klären wir im Erstgespräch.',
+    color: 'yellow' as const,
   },
   {
     title: 'Wie lange dauert ein Projekt?',
-    description:
-      'Das hängt vom Umfang ab. Eine Website setzen wir in der Regel in 4 bis 8 Wochen um ⟦BESTÄTIGEN: bisherige Angabe⟧. Für größere Vorhaben nennen wir Ihnen nach dem Erstgespräch einen realistischen Zeitrahmen.',
-    mark: 'yellow',
+    body: 'Das hängt vom Umfang ab. Eine Website setzen wir in der Regel in 4 bis 8 Wochen um ⟦BESTÄTIGEN: bisherige Angabe⟧. Für größere Vorhaben nennen wir Ihnen nach dem Erstgespräch einen realistischen Zeitrahmen.',
+    color: 'purple' as const,
   },
+];
+
+const faqsRight = [
   {
     title: 'Was kostet das?',
-    description:
-      'Auch das hängt vom Umfang ab. Sie erhalten ein schriftliches Angebot, bevor Kosten entstehen. Eine Website kostet in der Regel zwischen 1.000 und 10.000 Euro ⟦BESTÄTIGEN: bisherige Angabe, noch aktuell?⟧. Alle Preise verstehen sich netto zuzüglich der gesetzlichen Umsatzsteuer.',
-    mark: 'aqua',
+    body: 'Auch das hängt vom Umfang ab. Sie erhalten ein schriftliches Angebot, bevor Kosten entstehen. Eine Website kostet in der Regel zwischen 1.000 und 10.000 Euro ⟦BESTÄTIGEN: bisherige Angabe, noch aktuell?⟧. Alle Preise verstehen sich netto zuzüglich der gesetzlichen Umsatzsteuer.',
+    color: 'aqua' as const,
   },
   {
     title: 'Wer pflegt die Lösung danach?',
-    description:
-      'Ganz wie Sie möchten. Sie können selbst weitermachen, wir schulen Ihr Team dafür. Oder wir übernehmen die Pflege im Rahmen eines Wartungsvertrags ⟦BESTÄTIGEN: Wartungsangebot existiert⟧.',
-    mark: 'fuchsia',
+    body: 'Ganz wie Sie möchten. Sie können selbst weitermachen, wir schulen Ihr Team dafür. Oder wir übernehmen die Pflege im Rahmen eines Wartungsvertrags ⟦BESTÄTIGEN: Wartungsangebot existiert⟧.',
+    color: 'fuchsia' as const,
   },
   {
     title: 'Was passiert, wenn Sie nicht zufrieden sind?',
-    description:
-      'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab. ⟦BESTÄTIGEN: Einschränkung gegenüber unbegrenztem Nachbesserungsversprechen⟧',
-    mark: 'yellow',
+    body: 'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab. ⟦BESTÄTIGEN: Einschränkung gegenüber unbegrenztem Nachbesserungsversprechen⟧',
+    color: 'yellow' as const,
   },
 ];
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero — Pop-Art aqua (light) / navy (dark) -->
-  <section class="relative overflow-hidden not-prose md:-mt-[76px]" style="background: var(--pop-hero-bg);">
-    <div class="absolute inset-0 pop-halftone" aria-hidden="true"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20">
-      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
-        <div class="max-w-3xl">
-          <span class="pop-badge motion-safe:animate-fade-in">kieks.me GbR · Leipzig</span>
-          <h1
-            class="pop-display pop-display--offset text-4xl sm:text-5xl md:text-6xl mt-6 motion-safe:animate-slide-up"
-            style="color: var(--pop-hero-heading);"
+  <!-- 3.2 Hero -->
+  <section class="relative overflow-hidden not-prose" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={620}
+      height={560}
+      pitch={20}
+      origin="top-right"
+      d0={14.78}
+      k={0.018}
+      color="var(--hero-dots)"
+      opacity={0.22}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
+      <div class="grid lg:grid-cols-[760fr_520fr] gap-10 items-start">
+        <div class="flex flex-col gap-7 max-w-[760px]">
+          <Sticker color="yellow" shadow="fuchsia" rotate={3}>kieks.me GbR · Leipzig</Sticker>
+          <Heading
+            level={1}
+            size="xl"
+            color="var(--hero-heading)"
+            shadowColor="var(--pop-fuchsia)"
+            shadowSize="6px 6px 0"
           >
-            Ihre Software. Ihr Code. Unsere Erfahrung.
-          </h1>
-          <p
-            class="mt-6 text-lg md:text-xl max-w-[40rem] motion-safe:animate-fade"
-            style="color: var(--pop-hero-text);"
-          >
+            ihre software.<br />ihr code.<br />unsere erfahrung.
+          </Heading>
+          <Lead size="l" tone="onColor" class="!text-[color:var(--hero-text)]">
             Wir sind AI Consultants aus Leipzig. Wir entwickeln Skills, MCP-Server und Agents für Ihr Unternehmen und
             bauen den Agent-Hub, über den Ihre Teams sie sicher nutzen.
-          </p>
-          <div class="mt-8 flex flex-col sm:flex-row gap-4 motion-safe:animate-fade">
-            <Button variant="primary" text="Erstgespräch buchen" href={BOOKING_URL} icon="tabler:calendar-event" />
-            <Button variant="secondary" text="Leistungen ansehen" href="#leistungen" />
+          </Lead>
+          <div class="flex flex-col sm:flex-row gap-5">
+            <Button variant="primary" shadow="fuchsia" href={BOOKING_URL} text="Erstgespräch buchen" />
+            <Button variant="secondary" shadow="aqua" href="#leistungen" text="Leistungen ansehen" />
           </div>
-          <Placeholder label="⟦BESTÄTIGEN⟧" class="mt-8 max-w-xl">
+          <Note label="⟦BESTÄTIGEN⟧" class="max-w-[520px]">
             Claim „Ihre Software. Ihr Code. Unsere Erfahrung.“ als Unternehmens-Claim freigeben (D2).
-          </Placeholder>
+          </Note>
         </div>
-
-        <div class="relative justify-self-center lg:justify-self-end w-full max-w-sm" aria-hidden="true">
-          <div class="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
-            <div
-              class="absolute inset-0"
-              style="background: var(--pop-yellow); clip-path: polygon(50% 0%, 61% 18%, 80% 8%, 78% 28%, 100% 35%, 82% 48%, 95% 68%, 72% 68%, 70% 90%, 50% 78%, 30% 90%, 28% 68%, 5% 68%, 18% 48%, 0% 35%, 22% 28%, 20% 8%, 39% 18%); border: 0; outline: 3px solid var(--pop-navy); outline-offset: -3px;"
-            >
-            </div>
-            <PopHand size={168} class="relative z-10" />
-            <span
-              class="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap px-3 py-1 font-heading text-sm font-black lowercase"
-              style="background: var(--pop-fuchsia); color: #fff; border: 2.5px solid var(--pop-navy); box-shadow: 4px 4px 0 0 var(--pop-navy);"
-            >
-              open source!
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Haltung band -->
-    <div class="relative" style="background: var(--pop-band-bg); color: var(--pop-band-text);">
-      <KantenDivider from="navy" class="dark:hidden relative -mt-px" />
-      <div class="hidden dark:block">
-        <KantenDivider from="aqua" class="relative -mt-px" />
-      </div>
-      <div class="max-w-6xl px-4 py-5 mx-auto text-center sm:px-6">
-        <p class="font-heading font-extrabold text-base md:text-lg lowercase tracking-tight">
-          <span class="pop-badge pop-badge--fuchsia mr-2 align-middle">unsere Haltung</span>
-          einfach statt kompliziert · bewährt statt modisch · offen statt abhängig.
-        </p>
+        <HeroArtFinger class="lg:mt-10" />
       </div>
     </div>
   </section>
 
-  <!-- Leistungen -->
-  <section id="leistungen" class="not-prose py-14 md:py-20" style="background: var(--pop-page-bg);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--aqua">Leistungen</span>
-      <h2 class="pop-display text-3xl md:text-5xl mt-4">Was wir für Sie tun</h2>
-      <p class="mt-4 text-lg max-w-3xl" style="color: var(--pop-text-secondary);">
+  <ZigzagDivider top="var(--hero-bg)" bottom="var(--band-bg)" />
+  <MarqueeBand />
+  <ZigzagDivider top="var(--band-bg)" bottom="var(--page-bg)" />
+
+  <!-- 3.5 Leistungen -->
+  <section id="leistungen" class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Leistungen</Sticker>
+      <Heading level={2} size="l" class="mt-6">was wir für sie tun</Heading>
+      <Lead class="mt-6 max-w-[760px]">
         Fünf Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht.
-      </p>
-
-      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {
-          services.map((s) => (
-            <article class:list={['pop-service-card', `pop-service-card--${s.tone}`]}>
-              <div class="pop-service-card__head">
-                <span class="pop-service-card__num">{s.num}</span>
-              </div>
-              <div class="pop-service-card__body">
-                <h3 class="pop-service-card__title">{s.title}</h3>
-                <p class="text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
-                  {s.description}
-                </p>
-                <a class="pop-service-card__link" href={s.href}>
-                  {s.linkText} →
-                </a>
-              </div>
-            </article>
-          ))
-        }
+      </Lead>
+      <div class="mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-7">
+        {services.map((s) => <ServiceCard {...s} />)}
       </div>
-
-      <Placeholder label="⟦ENTSCHEIDUNG D6⟧" class="mt-8 max-w-2xl">
+      <Note label="⟦ENTSCHEIDUNG D6⟧" class="mt-6 max-w-[640px]">
         Social Media und SEO waren bisher eigene Leistungen. Hier bewusst nicht als Kachel. Weglassen oder als Teil von
         „Web- & Softwareentwicklung“ nennen?
-      </Placeholder>
+      </Note>
     </div>
   </section>
 
-  <!-- Open Source -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="grid lg:grid-cols-2 gap-10 items-start">
-        <div>
-          <span class="pop-badge">nur echtes Zeug</span>
-          <h2 class="pop-display text-3xl md:text-4xl mt-4" style="color: var(--pop-purple);">
-            Open Source, öffentlich nachprüfbar
-          </h2>
-          <p class="mt-4 text-lg" style="color: var(--pop-text-secondary);">
-            Wir veröffentlichen eigene MCP-Server, zum Beispiel für Contabo, Swetrix, Listmonk und Balena, sowie
-            Agent-Skills und Werkzeuge auf GitHub. So sehen Sie vor dem ersten Gespräch, wie wir arbeiten.
-          </p>
-          <div class="mt-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <Button variant="primary" text="Unsere MCP-Server ansehen" href="/projekte/mcp-server" />
-            <a
-              href={GITHUB_ORG_URL}
-              class="font-heading font-bold underline-offset-4 hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Alle Projekte auf GitHub →
-            </a>
-          </div>
+  <!-- 3.6 Open Source -->
+  <section
+    class="not-prose py-16 md:py-24"
+    style="background: var(--surface); border-top: 4px solid var(--ink); border-bottom: 4px solid var(--ink);"
+  >
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="flex flex-col gap-6">
+        <Sticker color="yellow" shadow="aqua" rotate={-2}>Aus unserer Werkstatt</Sticker>
+        <Heading level={2} size="l">open source, öffentlich nachprüfbar</Heading>
+        <Lead>
+          Wir veröffentlichen eigene MCP-Server, zum Beispiel für Contabo, Swetrix, Listmonk und Balena, sowie
+          Agent-Skills und Werkzeuge auf GitHub. So sehen Sie vor dem ersten Gespräch, wie wir arbeiten.
+        </Lead>
+        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+          <Button variant="aqua" shadow="fuchsia" href="/projekte/mcp-server" text="Unsere MCP-Server ansehen" />
+          <TextLink href={GITHUB_ORG_URL} target="_blank">Alle Projekte auf GitHub</TextLink>
         </div>
-        <div class="flex flex-col gap-3">
+      </div>
+      <div class="flex flex-col gap-[18px]">
+        {projects.map((p) => <RepoRow {...p} />)}
+      </div>
+    </div>
+  </section>
+
+  <ZigzagDivider top="var(--surface)" bottom="var(--pop-purple-deep)" />
+
+  <!-- 3.7 CSP -->
+  <section class="relative overflow-hidden not-prose py-16 md:py-24" style="background: var(--pop-purple-deep);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={700}
+      height={560}
+      pitch={22}
+      origin="top-right"
+      d0={15.8}
+      k={0.0178}
+      color="#ff008f"
+      opacity={0.55}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
+      <div class="flex flex-col gap-6 max-w-[720px]">
+        <Sticker color="aqua" shadow="fuchsia" rotate={3}>Unser Produkt</Sticker>
+        <Heading level={2} size="l" color="#fff" shadowColor="var(--pop-navy)">
+          csp: ein eigenes<br />serviceportal für<br />it-dienstleister
+        </Heading>
+        <Lead tone="onColor" class="!text-white">
+          Das Customer Service Portal bündelt Status, Bereitschaft, Ansprechpartner und Supportwissen vor Ihrem
+          vorhandenen Ticketsystem. Open Source unter MIT, mit direktem Weg zum Menschen.
+        </Lead>
+        <Button variant="primary" href="/csp" text="CSP kennenlernen" />
+        <Note label="⟦PLATZHALTER / D4⟧" class="max-w-xl">
+          Ziel-URL: kieks.me/csp oder csp.kieks.me — siehe Entscheidung D4.
+        </Note>
+      </div>
+      <div class="relative justify-self-center w-full max-w-[400px]">
+        <img
+          src={cspBurst}
+          alt=""
+          class="motion-safe:pop-spin-slow w-full h-auto"
+          width="400"
+          height="400"
+          decoding="async"
+        />
+        <div
+          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-heading font-black lowercase leading-none"
+          style="transform: translate(-50%, -50%) rotate(6deg); color: var(--pop-navy);"
+        >
+          <p class="text-[clamp(1.75rem,4vw,2.75rem)]">open source</p>
+          <p class="text-[clamp(1.25rem,3vw,1.875rem)] mt-1">MIT-Lizenz</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ZigzagDivider top="var(--pop-purple-deep)" bottom="var(--page-bg)" />
+
+  <!-- 3.8 Team -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-[1fr_auto] gap-12 items-center">
+      <div class="flex flex-col gap-6 max-w-md">
+        <Sticker color="fuchsia" shadow="aqua" rotate={3}>Team</Sticker>
+        <Heading level={2} size="l">wer<br />dahintersteht</Heading>
+        <Lead>
+          kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
+          Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
+        </Lead>
+        <Note label="⟦PLATZHALTER D10⟧">
+          Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
+        </Note>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-10">
+        <AvatarCard
+          name="André Lademann"
+          label="andré"
+          image={avatarAndre}
+          imageAlt="André Lademann, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+        />
+        <AvatarCard
+          name="Thomas Schöne"
+          label="thomas"
+          image={avatarThomas}
+          imageAlt="Thomas Schöne, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3.9 FAQ -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--surface); border-top: 4px solid var(--ink);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>FAQ</Sticker>
+      <Heading level={2} size="l">häufige fragen</Heading>
+      <Lead>Kurz und ehrlich beantwortet.</Lead>
+      <div class="grid md:grid-cols-2 gap-x-16">
+        <div>
           {
-            projects.map((p) => (
-              <a
-                class:list={['pop-project-row', `pop-project-row--${p.tone}`]}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{p.name}</span>
-                <span class="text-sm font-bold opacity-70">GitHub</span>
-              </a>
+            faqsLeft.map((f) => (
+              <FaqItem title={f.title} color={f.color}>
+                {f.body}
+              </FaqItem>
+            ))
+          }
+        </div>
+        <div>
+          {
+            faqsRight.map((f) => (
+              <FaqItem title={f.title} color={f.color}>
+                {f.body}
+              </FaqItem>
             ))
           }
         </div>
@@ -260,106 +336,10 @@ const faqs = [
     </div>
   </section>
 
-  <!-- CSP -->
-  <section
-    class="not-prose relative overflow-hidden pop-zigzag-both py-16 md:py-20"
-    style="background: var(--pop-purple);"
-  >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative">
-      <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
-        <div>
-          <span class="pop-badge pop-badge--aqua">unser Produkt</span>
-          <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">
-            CSP: ein eigenes Serviceportal für IT-Dienstleister
-          </h2>
-          <p class="mt-4 text-lg text-white/90 max-w-2xl">
-            Das Customer Service Portal bündelt Status, Bereitschaft, Ansprechpartner und Supportwissen vor Ihrem
-            vorhandenen Ticketsystem. Open Source unter MIT, mit direktem Weg zum Menschen.
-          </p>
-          <div class="mt-6">
-            <Button variant="primary" text="CSP kennenlernen" href="/csp" />
-          </div>
-          <Placeholder label="⟦PLATZHALTER / D4⟧" class="mt-6 max-w-2xl">
-            Ziel-URL: kieks.me/csp oder csp.kieks.me — siehe Entscheidung D4.
-          </Placeholder>
-        </div>
-        <div class="justify-self-center">
-          <div class="pop-starburst pop-starburst--lime">
-            <span class="pop-starburst__label">open source<br />MIT-Lizenz</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />
 
-  <!-- Team -->
-  <section class="not-prose py-14 md:py-20" style="background: var(--pop-page-bg);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--fuchsia">Team</span>
-      <h2 class="pop-display text-3xl md:text-5xl mt-4">Wer dahintersteht</h2>
-      <p class="mt-4 text-lg max-w-3xl" style="color: var(--pop-text-secondary);">
-        kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
-        Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
-      </p>
-      <div class="mt-10 flex flex-col sm:flex-row gap-10 sm:gap-16 items-start">
-        <EdgeAvatar
-          name="André Lademann"
-          label="andré"
-          image={avatarAndre}
-          imageAlt="André Lademann, Gesellschafter der kieks.me GbR"
-          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
-        />
-        <EdgeAvatar
-          name="Thomas Schöne"
-          label="thomas"
-          image={avatarThomas}
-          imageAlt="Thomas Schöne, Gesellschafter der kieks.me GbR"
-          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
-          variant="fuchsia"
-        />
-      </div>
-      <Placeholder label="⟦PLATZHALTER D10⟧" class="mt-8 max-w-2xl">
-        Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden. Fotos aus
-        kieks.me.brand/source/avatars/ (kieksme-avatar-alademann.png, kieksme-avatar-tschoene.png).
-      </Placeholder>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge">FAQ</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Häufige Fragen</h2>
-      <p class="mt-3 text-lg" style="color: var(--pop-text-secondary);">Kurz und ehrlich beantwortet.</p>
-
-      <div class="mt-10 grid md:grid-cols-2 gap-x-10 gap-y-8">
-        {
-          faqs.map((f) => (
-            <article class="flex gap-3" style="border-bottom: 1px solid rgb(30 42 69 / 15%); padding-bottom: 1.25rem;">
-              <span
-                class:list={[
-                  'pop-faq-mark',
-                  f.mark === 'aqua' && 'pop-faq-mark--aqua',
-                  f.mark === 'fuchsia' && 'pop-faq-mark--fuchsia',
-                ]}
-              />
-              <div>
-                <h3 class="font-heading font-extrabold text-lg leading-snug" style="color: var(--pop-text-primary);">
-                  {f.title}
-                </h3>
-                <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
-                  {f.description}
-                </p>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <SectionCTA
-    title="Lernen wir uns kennen"
+  <CtaSection
+    title="lernen wir uns kennen"
     text="Qualität, Tempo und Verlässlichkeit sind wichtig. Am wichtigsten ist aber, dass wir uns gegenseitig respektieren und vertrauen können. Finden wir in 30 Minuten heraus, ob wir zusammenpassen."
     showEmailLink={true}
   />

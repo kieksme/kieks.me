@@ -1,0 +1,42 @@
+---
+import logoLight from '~/assets/pop/652-3_navigation__imgLogoKieksMeRed.svg?url';
+import logoDark from '~/assets/pop/655-1052_footer__imgLogoKieksMeRedDark.svg?url';
+
+export interface Props {
+  variant?: 'auto' | 'light' | 'dark';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { variant = 'auto', size = 'md', class: className = '' } = Astro.props;
+const dims = size === 'sm' ? { w: 174, h: 34, cls: 'h-[34px] w-auto' } : { w: 225, h: 44, cls: 'h-11 w-auto' };
+---
+
+<span class:list={['inline-flex items-center', className]}>
+  {
+    variant === 'dark' ? (
+      <img src={logoDark} alt="kieks.me" width={dims.w} height={dims.h} class={dims.cls} decoding="async" />
+    ) : variant === 'light' ? (
+      <img src={logoLight} alt="kieks.me" width={dims.w} height={dims.h} class={dims.cls} decoding="async" />
+    ) : (
+      <>
+        <img
+          src={logoLight}
+          alt="kieks.me"
+          width={dims.w}
+          height={dims.h}
+          class={`${dims.cls} dark:hidden`}
+          decoding="async"
+        />
+        <img
+          src={logoDark}
+          alt="kieks.me"
+          width={dims.w}
+          height={dims.h}
+          class={`${dims.cls} hidden dark:inline`}
+          decoding="async"
+        />
+      </>
+    )
+  }
+</span>

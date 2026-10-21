@@ -1,0 +1,86 @@
+---
+/**
+ * Pop Button — SPEC §1.3 / §8
+ * variant: primary (yellow) | secondary (surface) | aqua
+ * shadow: fuchsia | aqua
+ */
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'aqua';
+  shadow?: 'fuchsia' | 'aqua';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  text?: string;
+  icon?: string;
+  type?: 'button' | 'submit' | 'reset';
+  target?: string;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  shadow = variant === 'secondary' ? 'aqua' : 'fuchsia',
+  size = 'md',
+  href,
+  text = await Astro.slots.render('default'),
+  icon = '',
+  type,
+  target,
+  class: className = '',
+} = Astro.props;
+
+const shadowColor = shadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
+const sizes = {
+  sm: 'text-base px-[26px] py-[15px]',
+  md: 'text-lg px-[26px] py-[15px]',
+  lg: 'text-xl px-[26px] py-[15px]',
+};
+const variants = {
+  primary: 'bg-[var(--pop-yellow)] text-[var(--pop-navy)]',
+  secondary: 'bg-[var(--surface)] text-[var(--text-primary)]',
+  aqua: 'bg-[var(--pop-aqua)] text-[var(--pop-navy)]',
+};
+const cls = [
+  'pop-btn inline-flex items-center justify-center font-heading font-extrabold leading-none border-[3px] border-[var(--ink)] cursor-pointer transition-[transform,box-shadow] duration-150',
+  sizes[size],
+  variants[variant],
+  className,
+].join(' ');
+---
+
+{
+  type === 'button' || type === 'submit' || type === 'reset' || !href ? (
+    <button type={type ?? 'button'} class={cls} style={`box-shadow: 6px 6px 0 0 ${shadowColor};`}>
+      {text ? <Fragment set:html={text} /> : <slot />}
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-0.5 inline-block" />}
+    </button>
+  ) : (
+    <a
+      href={href}
+      class={cls}
+      style={`box-shadow: 6px 6px 0 0 ${shadowColor};`}
+      {...(target ? { target, rel: 'noopener noreferrer' } : {})}
+    >
+      {text ? <Fragment set:html={text} /> : <slot />}
+      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-0.5 inline-block" />}
+    </a>
+  )
+}
+
+<style>
+  .pop-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 0 var(--pop-shadow, var(--pop-fuchsia)) !important;
+  }
+  .pop-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0 0 var(--pop-shadow, var(--pop-fuchsia)) !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-btn:hover,
+    .pop-btn:active {
+      transform: none;
+    }
+  }
+</style>

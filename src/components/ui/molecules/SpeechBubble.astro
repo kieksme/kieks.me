@@ -1,0 +1,14 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['pop-speech bg-[var(--surface)] border-4 border-[var(--ink)] px-9 py-7', className]}
+  style="box-shadow: 10px 10px 0 0 var(--pop-aqua);"
+>
+  <slot />
+</div>

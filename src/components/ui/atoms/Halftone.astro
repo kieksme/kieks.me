@@ -1,0 +1,51 @@
+---
+/**
+ * Generated SVG halftone with distance-based circle diameter — SPEC §5.1
+ */
+export interface Props {
+  width?: number;
+  height?: number;
+  pitch?: number;
+  origin?: 'top-right' | 'top' | 'left';
+  d0?: number;
+  k?: number;
+  color?: string;
+  opacity?: number;
+  class?: string;
+}
+
+const {
+  width = 620,
+  height = 560,
+  pitch = 20,
+  origin = 'top-right',
+  d0 = 14.78,
+  k = 0.018,
+  color = 'var(--hero-dots)',
+  opacity = 0.22,
+  class: className = '',
+} = Astro.props;
+
+const circles: { cx: number; cy: number; r: number }[] = [];
+const ox = origin === 'top-right' ? width : origin === 'left' ? 0 : width / 2;
+const oy = origin === 'left' ? height / 2 : 0;
+
+for (let y = pitch / 2; y < height; y += pitch) {
+  for (let x = pitch / 2; x < width; x += pitch) {
+    const dist = Math.hypot(x - ox, y - oy);
+    const d = Math.max(1.2, d0 - k * dist);
+    circles.push({ cx: Math.round(x * 10) / 10, cy: Math.round(y * 10) / 10, r: Math.round((d / 2) * 100) / 100 });
+  }
+}
+---
+
+<svg
+  class:list={['pop-halftone-svg pointer-events-none absolute max-w-none', className]}
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  aria-hidden="true"
+  style={`opacity: ${opacity}; color: ${color};`}
+>
+  {circles.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r} fill="currentColor" />)}
+</svg>

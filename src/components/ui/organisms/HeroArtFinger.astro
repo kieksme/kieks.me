@@ -1,0 +1,53 @@
+---
+import heroArt from '~/assets/pop/652-907_hero-art__imgHeroArt.svg?url';
+import burstDark from '~/assets/pop/661-962_hero-art-dark__imgBurstGelb.svg?url';
+import fingerDark from '~/assets/pop/661-962_hero-art-dark__imgFingerMultiStacked.svg?url';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+
+export interface Props {
+  class?: string;
+  showOpenSource?: boolean;
+}
+
+const { class: className = '', showOpenSource = true } = Astro.props;
+---
+
+<div class:list={['relative w-full max-w-[520px] aspect-square mx-auto', className]}>
+  <!-- Light: combined SVG -->
+  <img
+    src={heroArt}
+    alt=""
+    class="dark:hidden w-full h-full object-contain"
+    width="520"
+    height="520"
+    decoding="async"
+  />
+  <!-- Dark: separate burst + finger for animation -->
+  <div class="hidden dark:block absolute inset-0">
+    <img
+      src={burstDark}
+      alt=""
+      class="motion-safe:pop-spin-slow absolute inset-[5%] w-[90%] h-[90%] object-contain"
+      width="500"
+      height="500"
+      decoding="async"
+    />
+    <img
+      src={fingerDark}
+      alt=""
+      class="motion-safe:pop-tap absolute left-[8%] top-[28%] w-[78%] h-auto"
+      width="400"
+      height="277"
+      decoding="async"
+    />
+  </div>
+  {
+    showOpenSource && (
+      <div class="absolute top-[5%] right-[8%] z-10 motion-safe:pop-wobble" style="--pop-rotate: -8deg;">
+        <Sticker color="fuchsia" shadow="aqua" rotate={-8} size="md">
+          open source!
+        </Sticker>
+      </div>
+    )
+  }
+</div>

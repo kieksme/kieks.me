@@ -1,0 +1,53 @@
+---
+import Marker from '~/components/ui/atoms/Marker.astro';
+
+export interface Props {
+  name: string;
+  href: string;
+  color: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  meta?: string;
+  class?: string;
+}
+
+const { name, href, color, meta = 'GitHub · npm', class: className = '' } = Astro.props;
+const shadows = {
+  aqua: 'var(--pop-aqua)',
+  fuchsia: 'var(--pop-fuchsia)',
+  yellow: 'var(--pop-yellow)',
+  purple: 'var(--pop-purple)',
+};
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    'pop-repo-row flex items-center justify-between gap-4 px-5 py-4 bg-[var(--surface)] border-[3px] border-[var(--ink)] no-underline',
+    className,
+  ]}
+  style={`box-shadow: 6px 6px 0 0 ${shadows[color]}; color: var(--text-primary);`}
+>
+  <span class="flex items-center gap-3.5 min-w-0">
+    <Marker variant="blob" color={color} class="pop-repo-blob" />
+    <span class="font-heading font-black text-xl md:text-2xl lowercase truncate">{name}</span>
+  </span>
+  <span class="font-sans font-semibold text-base shrink-0" style="color: var(--text-secondary);">{meta}</span>
+</a>
+
+<style>
+  .pop-repo-row {
+    transition: transform 0.2s ease;
+  }
+  .pop-repo-row:hover {
+    transform: translate(4px, 0);
+  }
+  .pop-repo-row:hover :global(.pop-repo-blob) {
+    transform: rotate(0deg) !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-repo-row:hover {
+      transform: none;
+    }
+  }
+</style>

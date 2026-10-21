@@ -1,0 +1,93 @@
+---
+import cardHalftone from '~/assets/pop/653-21_service-card__imgGroup.svg?url';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
+
+export interface Props {
+  num: string;
+  title: string;
+  description: string;
+  href: string;
+  linkText: string;
+  headColor: 'aqua' | 'fuchsia' | 'purple' | 'yellow';
+  shadow?: 'ink' | 'fuchsia';
+  numShadow?: 'fuchsia' | 'aqua';
+  numColor?: string;
+  class?: string;
+}
+
+const {
+  num,
+  title,
+  description,
+  href,
+  linkText,
+  headColor,
+  shadow = 'ink',
+  numShadow = 'fuchsia',
+  numColor,
+  class: className = '',
+} = Astro.props;
+
+const heads = {
+  aqua: 'var(--pop-aqua)',
+  fuchsia: 'var(--pop-fuchsia)',
+  purple: 'var(--pop-purple)',
+  yellow: 'var(--pop-yellow)',
+};
+const shadowColor = shadow === 'fuchsia' ? 'var(--pop-fuchsia)' : 'var(--ink)';
+const nShadow = numShadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
+const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)');
+---
+
+<article
+  class:list={['pop-service-card flex flex-col bg-[var(--surface)] border-[3px] border-[var(--ink)]', className]}
+  style={`box-shadow: 8px 8px 0 0 ${shadowColor};`}
+>
+  <div
+    class="relative h-[132px] overflow-hidden border-b-[3px] border-[var(--ink)] pl-6 pt-[18px] max-md:h-auto max-md:w-[84px] max-md:shrink-0 max-md:border-b-0 max-md:border-r-[3px] max-md:pl-3 max-md:pt-4 max-md:pb-4"
+    style={`background: ${heads[headColor]};`}
+  >
+    <div
+      class="absolute left-[120px] top-0 h-[132px] w-[300px] opacity-25 pointer-events-none max-md:hidden"
+      aria-hidden="true"
+    >
+      <img src={cardHalftone} alt="" class="w-full h-full object-cover" width="300" height="132" />
+    </div>
+    <span
+      class="relative font-heading font-black text-[80px] leading-none max-md:text-[44px]"
+      style={`color: ${nColor}; text-shadow: 4px 4px 0 ${nShadow};`}
+    >
+      {num}
+    </span>
+  </div>
+  <div class="flex flex-col gap-3 px-6 pt-[22px] pb-[26px] flex-1 max-md:p-4">
+    <h3 class="font-heading font-extrabold text-2xl leading-[30px]" style="color: var(--text-primary);">{title}</h3>
+    <p class="text-lg leading-7" style="color: var(--text-secondary);">{description}</p>
+    <TextLink href={href}>{linkText}</TextLink>
+  </div>
+</article>
+
+<style>
+  .pop-service-card {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  @media (min-width: 768px) {
+    .pop-service-card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 12px 12px 0 0 var(--ink);
+    }
+  }
+  @media (max-width: 767px) {
+    .pop-service-card {
+      flex-direction: row;
+      align-items: stretch;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-service-card:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Burst gelb" filter="url(#filter0_d_0_12)">
+<use xlink:href="#stroke0_0_12" fill="#FFD60A"/>
+<mask id="stroke1_0_12" fill="white">
+<use xlink:href="#stroke0_0_12"/>
+</mask>
+<path d="M250 0L288.043 58.7469L345.671 19.0301L358.336 87.8634L426.777 73.2233L412.137 141.664L480.97 154.329L441.253 211.957L500 250L441.253 288.043L480.97 345.671L412.137 358.336L426.777 426.777L358.336 412.137L345.671 480.97L288.043 441.253L250 500L211.957 441.253L154.329 480.97L141.664 412.137L73.2233 426.777L87.8634 358.336L19.0301 345.671L58.7469 288.043L0 250L58.7469 211.957L19.0301 154.329L87.8634 141.664L73.2233 73.2233L141.664 87.8634L154.329 19.0301L211.957 58.7469L250 0Z" stroke-width="10" stroke="#07090D" mask="url(#stroke1_0_12)"/>
+</g>
+<defs>
+<filter id="filter0_d_0_12" x="0" y="0" width="512" height="512" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="12" dy="12"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0 0 0 0 0 0.560784 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_12"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_12" result="shape"/>
+</filter>
+<path id="stroke0_0_12" d="M250 0L288.043 58.7469L345.671 19.0301L358.336 87.8634L426.777 73.2233L412.137 141.664L480.97 154.329L441.253 211.957L500 250L441.253 288.043L480.97 345.671L412.137 358.336L426.777 426.777L358.336 412.137L345.671 480.97L288.043 441.253L250 500L211.957 441.253L154.329 480.97L141.664 412.137L73.2233 426.777L87.8634 358.336L19.0301 345.671L58.7469 288.043L0 250L58.7469 211.957L19.0301 154.329L87.8634 141.664L73.2233 73.2233L141.664 87.8634L154.329 19.0301L211.957 58.7469L250 0Z"/>
+</defs>
+</svg>

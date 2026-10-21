@@ -1,0 +1,26 @@
+---
+/** Preview-only placeholder note — SPEC §5.4 */
+export interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = 'Offener Punkt', class: className = '' } = Astro.props;
+const show = import.meta.env.DEV || import.meta.env.PUBLIC_SHOW_NOTES === 'true' || true;
+---
+
+{
+  show && (
+    <aside
+      class:list={['my-4 px-3.5 py-2.5 text-sm border-2 border-dashed', className]}
+      style="background: var(--note-bg); color: var(--note-text); border-color: var(--note-text);"
+      data-placeholder="true"
+      role="note"
+    >
+      <p class="font-heading font-extrabold text-sm">{label}</p>
+      <div class="mt-1 font-sans text-[15px] leading-relaxed">
+        <slot />
+      </div>
+    </aside>
+  )
+}

@@ -6,7 +6,7 @@ import '@fontsource/hanken-grotesk/900.css';
 import '@fontsource/source-sans-3/400.css';
 import '@fontsource/source-sans-3/600.css';
 import '~/assets/styles/brand-colors.css';
-import '~/assets/styles/kanten.css';
+import '~/assets/styles/pop-motion.css';
 ---
 
 <style is:inline>
@@ -18,14 +18,12 @@ import '~/assets/styles/kanten.css';
     --aw-color-primary: #1e2a45;
     --aw-color-secondary: #2f4169;
     --aw-color-accent: #ff008f;
-
-    --aw-color-text-heading: #1e2a45;
-    --aw-color-text-default: #1e2a45;
-    --aw-color-text-muted: #4a5370;
-    --aw-color-bg-page: #f4f5f9;
+    --aw-color-text-heading: var(--text-primary);
+    --aw-color-text-default: var(--text-primary);
+    --aw-color-text-muted: var(--text-secondary);
+    --aw-color-bg-page: var(--page-bg);
     --aw-color-bg-page-dark: #12151c;
-
-    --aw-color-link: #c8006f;
+    --aw-color-link: var(--text-link);
     --aw-color-link-hover: #ff008f;
 
     ::selection {
@@ -37,13 +35,11 @@ import '~/assets/styles/kanten.css';
     --aw-color-primary: #00bfa5;
     --aw-color-secondary: #00ffdc;
     --aw-color-accent: #ff008f;
-
-    --aw-color-text-heading: #f0f2f9;
-    --aw-color-text-default: #f0f2f9;
-    --aw-color-text-muted: #b9bfcf;
-    --aw-color-bg-page: #12151c;
-
-    --aw-color-link: #ff4fb0;
+    --aw-color-text-heading: var(--text-primary);
+    --aw-color-text-default: var(--text-primary);
+    --aw-color-text-muted: var(--text-secondary);
+    --aw-color-bg-page: var(--page-bg);
+    --aw-color-link: var(--text-link);
     --aw-color-link-hover: #00ffdc;
 
     ::selection {
@@ -52,23 +48,25 @@ import '~/assets/styles/kanten.css';
     }
   }
 
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+  }
+
   html {
-    background-color: var(--aw-color-bg-page);
+    background-color: var(--page-bg);
   }
 
   body {
-    background-color: var(--aw-color-bg-page);
-    color: var(--aw-color-text-default);
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    font-family: var(--aw-font-sans);
   }
 
-  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary):not(.pop-project-row):not(
-      .pop-service-card__link
-    ) {
-    color: var(--aw-color-link);
-  }
-  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary):not(.pop-project-row):not(
-      .pop-service-card__link
-    ):hover {
-    color: var(--aw-color-link-hover);
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--pop-fuchsia);
+    outline-offset: 3px;
   }
 </style>

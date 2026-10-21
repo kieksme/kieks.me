@@ -1,0 +1,36 @@
+---
+import flamesRot from '~/assets/pop/655-1038_flammen-rot__imgFlammenRot.svg?url';
+import flamesGelb from '~/assets/pop/655-1038_flammen-gelb__imgFlammenGelb.svg?url';
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['pop-flames relative w-full pointer-events-none', className]} aria-hidden="true">
+  <img
+    src={flamesRot}
+    alt=""
+    class="motion-safe:pop-flame absolute bottom-0 left-0 w-full h-auto origin-bottom"
+    width="1440"
+    height="220"
+    decoding="async"
+  />
+  <img
+    src={flamesGelb}
+    alt=""
+    class="motion-safe:pop-flame-delayed absolute bottom-0 left-0 w-full h-auto origin-bottom"
+    style="transform: scaleY(0.68); transform-origin: bottom;"
+    width="1440"
+    height="150"
+    decoding="async"
+  />
+</div>
+
+<style>
+  .pop-flames {
+    height: clamp(5rem, 14vw, 8.5rem);
+  }
+</style>

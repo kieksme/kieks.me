@@ -1,7 +1,5 @@
 ---
-import Button from '~/components/ui/Button.astro';
-import KantenDivider from '~/components/ui/KantenDivider.astro';
-import { BOOKING_URL, CONTACT_EMAIL } from '~/config/site';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 
 export interface Props {
   title: string;
@@ -11,40 +9,7 @@ export interface Props {
   showEmailLink?: boolean;
 }
 
-const { title, text, ctaText = 'Erstgespräch buchen', ctaHref = BOOKING_URL, showEmailLink = false } = Astro.props;
+const props = Astro.props;
 ---
 
-<section class="relative not-prose overflow-hidden" style="background: var(--pop-fuchsia);">
-  <KantenDivider from="fuchsia" class="relative -mt-1" />
-  <div class="absolute inset-0 pop-halftone opacity-30" style="--pop-hero-dots: #ffffff;" aria-hidden="true"></div>
-  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-    <div
-      class="pop-card mx-auto max-w-2xl p-8 md:p-10 text-center"
-      style="box-shadow: 8px 8px 0 0 var(--pop-aqua); border-color: var(--pop-navy);"
-    >
-      <h2 class="pop-display text-3xl md:text-4xl" style="color: var(--pop-text-primary);">{title}</h2>
-      {
-        text && (
-          <p class="mt-4 text-lg" style="color: var(--pop-text-secondary);">
-            {text}
-          </p>
-        )
-      }
-      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <Button variant="primary" text={ctaText} href={ctaHref} icon="tabler:calendar-event" />
-        {
-          showEmailLink && (
-            <a
-              class="font-heading font-bold underline-offset-4 hover:underline"
-              style="color: var(--pop-text-link);"
-              href={`mailto:${CONTACT_EMAIL}`}
-            >
-              Lieber per E-Mail: {CONTACT_EMAIL}
-            </a>
-          )
-        }
-      </div>
-    </div>
-  </div>
-  <div class="pop-flames" aria-hidden="true"></div>
-</section>
+<CtaSection {...props} />
