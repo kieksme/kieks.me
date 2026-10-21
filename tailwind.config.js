@@ -36,6 +36,28 @@ export default {
           600: '#BF006B',
           700: '#800047',
         },
+        yellow: {
+          DEFAULT: '#FFD60A',
+          50: '#FFF8D6',
+          500: '#FFD60A',
+        },
+        purple: {
+          DEFAULT: '#9747FF',
+          deep: '#7B2FF7',
+          500: '#9747FF',
+        },
+        red: {
+          DEFAULT: '#E8202A',
+          500: '#E8202A',
+        },
+        pop: {
+          page: 'var(--pop-page-bg)',
+          surface: 'var(--pop-surface)',
+          hero: 'var(--pop-hero-bg)',
+          band: 'var(--pop-band-bg)',
+          footer: 'var(--pop-footer-bg)',
+          ink: 'var(--pop-ink)',
+        },
       },
       fontFamily: {
         sans: ['var(--aw-font-sans, ui-sans-serif)', ...defaultTheme.fontFamily.sans],

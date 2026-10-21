@@ -95,33 +95,46 @@ const otherProjects = [
   <ServiceHero
     title="Unsere MCP-Server: Open Source und einsatzbereit."
     subtitle="Mit diesen Servern steuern KI-Assistenten wie Claude, Cursor oder VS Code bekannte Dienste direkt. Der Code liegt öffentlich auf GitHub."
+    badge="Projekte · MCP-Server"
   />
 
-  <section class="not-prose py-12 md:py-16">
+  <section class="not-prose py-12 md:py-16" style="background: var(--pop-page-bg);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <p class="text-sm text-muted mb-8">
+      <p class="text-sm mb-8" style="color: var(--pop-text-secondary);">
         Beschreibungen aus den jeweiligen Repo-READMEs (Stand 21.10.2026), übersetzt. Vor Veröffentlichung kurz
         gegenprüfen.
       </p>
       <div class="grid gap-6 md:grid-cols-2">
         {
           servers.map((server) => (
-            <article class="border border-navy-100 dark:border-navy-300 rounded-lg p-6 bg-white dark:bg-navy/40">
-              <h2 class="font-heading text-xl font-bold text-navy dark:text-white">{server.name}</h2>
-              <p class="mt-3 text-muted">{server.description}</p>
+            <article class="pop-card p-6">
+              <h2 class="font-heading text-xl font-extrabold lowercase" style="color: var(--pop-text-primary);">
+                {server.name}
+              </h2>
+              <p class="mt-3" style="color: var(--pop-text-secondary);">
+                {server.description}
+              </p>
               <dl class="mt-4 text-sm space-y-1">
                 <div>
-                  <dt class="inline font-semibold text-navy dark:text-aqua">npm:</dt>
-                  <dd class="inline ml-1 font-mono text-muted">{server.npm}</dd>
+                  <dt class="inline font-semibold" style="color: var(--pop-text-primary);">
+                    npm:
+                  </dt>
+                  <dd class="inline ml-1 font-mono" style="color: var(--pop-text-secondary);">
+                    {server.npm}
+                  </dd>
                 </div>
                 <div>
-                  <dt class="inline font-semibold text-navy dark:text-aqua">Lizenz:</dt>
-                  <dd class="inline ml-1 text-muted">{server.license}</dd>
+                  <dt class="inline font-semibold" style="color: var(--pop-text-primary);">
+                    Lizenz:
+                  </dt>
+                  <dd class="inline ml-1" style="color: var(--pop-text-secondary);">
+                    {server.license}
+                  </dd>
                 </div>
               </dl>
               <a
                 href={server.url}
-                class="inline-block mt-4 font-medium underline-offset-4 hover:underline"
+                class="inline-block mt-4 font-heading font-bold underline-offset-4 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >

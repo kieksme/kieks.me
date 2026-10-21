@@ -11,15 +11,8 @@ export interface Props {
 const { label = 'Offener Punkt', class: className = '' } = Astro.props;
 ---
 
-<aside
-  class:list={[
-    'my-4 rounded border border-dashed border-fuchsia-600 bg-fuchsia-50 px-4 py-3 text-sm text-navy dark:border-fuchsia-500 dark:bg-navy-400 dark:text-white',
-    className,
-  ]}
-  data-placeholder="true"
-  role="note"
->
-  <p class="font-heading font-semibold text-fuchsia-700 dark:text-fuchsia-100">{label}</p>
+<aside class:list={['pop-note my-4 text-sm', className]} data-placeholder="true" role="note">
+  <p class="font-heading font-extrabold lowercase tracking-wide">{label}</p>
   <div class="mt-1 font-mono text-[0.9em] leading-relaxed">
     <slot />
   </div>

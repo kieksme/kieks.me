@@ -3,14 +3,61 @@ import Layout from '~/layouts/PageLayout.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Button from '~/components/ui/Button.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import Features from '~/components/widgets/Features.astro';
+import KantenDivider from '~/components/ui/KantenDivider.astro';
 
 const metadata = {
   title: 'KI & MCP-Integration für Unternehmen',
   description:
     'kieks.me verbindet KI-Assistenten über das Model Context Protocol mit Ihren Systemen: eigene MCP-Server, abgesicherter Zugriff, Agent-Skills für Ihr Team.',
 };
+
+const offers = [
+  {
+    title: 'MCP-Server für Ihre Systeme',
+    description: 'Wir entwickeln MCP-Server für Ihre internen Anwendungen oder für Dienste, die Sie nutzen.',
+    accent: 'aqua',
+  },
+  {
+    title: 'Lokal oder als Dienst',
+    description:
+      'Lokal über stdio auf dem Rechner der Nutzer oder als Remote-Server über Streamable HTTP, abgesichert per Bearer-Token oder OAuth 2.1.',
+    accent: 'fuchsia',
+  },
+  {
+    title: 'Agent-Skills',
+    description:
+      'Wiederverwendbare Arbeitsanweisungen für KI-Coding-Assistenten, damit Ihr Team KI einheitlich und geprüft einsetzt.',
+    accent: 'aqua',
+  },
+  {
+    title: 'Einordnung und Auswahl',
+    description:
+      'Welche Abläufe sich für KI eignen und welche nicht. Welche Rechte ein Assistent braucht und welche nicht.',
+    accent: 'fuchsia',
+  },
+];
+
+const steps = [
+  {
+    num: '01',
+    title: 'Verstehen',
+    description: 'Welche Aufgabe soll ein KI-Assistent übernehmen, mit welchen Daten?',
+    tone: 'aqua',
+  },
+  {
+    num: '02',
+    title: 'Eingrenzen',
+    description: 'Funktionen, Rechte und Grenzen festlegen. Lesen und Schreiben trennen wir bewusst.',
+    tone: 'fuchsia',
+  },
+  { num: '03', title: 'Umsetzen', description: 'MCP-Server entwickeln, testen und dokumentieren.', tone: 'yellow' },
+  {
+    num: '04',
+    title: 'Übergeben',
+    description: 'Code, Dokumentation und auf Wunsch Skills für Ihr Team.',
+    tone: 'purple',
+  },
+];
 ---
 
 <Layout metadata={metadata}>
@@ -18,88 +65,141 @@ const metadata = {
     title="KI, die mit Ihren Systemen arbeitet, nicht an ihnen vorbei."
     subtitle="Wir verbinden KI-Assistenten wie Claude, Cursor oder VS Code über das Model Context Protocol (MCP) mit Ihren Werkzeugen und Daten, so gezielt und nachvollziehbar wie nötig."
     ctaText="KI-Vorhaben besprechen"
+    badge="Leistung: KI & MCP"
+    burstLabel="mcp"
   />
 
-  <section class="not-prose py-12 md:py-16">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Was ist MCP?</h2>
-      <p class="mt-4 text-lg text-muted leading-relaxed">
+  <!-- Was ist MCP -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--aqua">Grundlagen</span>
+      <h2 class="pop-display pop-display--aqua-offset text-3xl md:text-4xl mt-4">Was ist MCP?</h2>
+      <p class="mt-4 text-lg leading-relaxed max-w-3xl" style="color: var(--pop-text-secondary);">
         Das Model Context Protocol ist ein offener Standard, über den KI-Assistenten auf Werkzeuge und Daten zugreifen.
         Statt Informationen per Copy-and-paste in einen Chat zu kopieren, ruft der Assistent definierte Funktionen auf,
         zum Beispiel „Server-Snapshot anlegen“ oder „Statistik abrufen“. Welche Funktionen das sind, bestimmen Sie.
       </p>
+
+      <div class="mt-10 flex flex-col md:flex-row items-stretch gap-3 md:gap-2">
+        <div
+          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center"
+          style="background: var(--pop-aqua); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy); color: var(--pop-navy);"
+        >
+          ki-assistent
+        </div>
+        <div
+          class="hidden md:flex items-center justify-center px-1 font-heading font-black text-2xl"
+          style="color: var(--pop-yellow);"
+        >
+          →
+        </div>
+        <div
+          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center"
+          style="background: var(--pop-yellow); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy); color: var(--pop-navy);"
+        >
+          mcp-server
+        </div>
+        <div
+          class="hidden md:flex items-center justify-center px-1 font-heading font-black text-2xl"
+          style="color: var(--pop-yellow);"
+        >
+          →
+        </div>
+        <div
+          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center text-white"
+          style="background: var(--pop-purple); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy);"
+        >
+          Ihre Systeme
+        </div>
+      </div>
     </div>
   </section>
 
-  <Features
-    title="Was wir für Sie tun"
-    items={[
-      {
-        title: 'MCP-Server für Ihre Systeme',
-        description: 'Wir entwickeln MCP-Server für Ihre internen Anwendungen oder für Dienste, die Sie nutzen.',
-        icon: 'tabler:server',
-      },
-      {
-        title: 'Lokal oder als Dienst',
-        description:
-          'Lokal über stdio auf dem Rechner der Nutzer oder als Remote-Server über Streamable HTTP, abgesichert per Bearer-Token oder OAuth 2.1.',
-        icon: 'tabler:lock',
-      },
-      {
-        title: 'Agent-Skills',
-        description:
-          'Wiederverwendbare Arbeitsanweisungen für KI-Coding-Assistenten, damit Ihr Team KI einheitlich und geprüft einsetzt.',
-        icon: 'tabler:brain',
-      },
-      {
-        title: 'Einordnung und Auswahl',
-        description:
-          'Welche Abläufe sich für KI eignen und welche nicht. Welche Rechte ein Assistent braucht und welche nicht.',
-        icon: 'tabler:list-check',
-      },
-    ]}
-  />
+  <!-- Was wir tun -->
+  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--fuchsia">Leistungen</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was wir für Sie tun</h2>
+      <div class="mt-8 grid sm:grid-cols-2 gap-5">
+        {
+          offers.map((o) => (
+            <article
+              class="p-6"
+              style={`background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); border-left: 6px solid var(--pop-${o.accent}); box-shadow: 6px 6px 0 0 var(--pop-${o.accent});`}
+            >
+              <h3 class="font-heading font-extrabold text-lg lowercase" style="color: var(--pop-text-primary);">
+                {o.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
+                {o.description}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
-  <Steps
-    title="So arbeiten wir"
-    items={[
-      {
-        title: 'Verstehen',
-        description: 'Welche Aufgabe soll ein KI-Assistent übernehmen, mit welchen Daten?',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'Eingrenzen',
-        description: 'Funktionen, Rechte und Grenzen festlegen. Lesen und Schreiben trennen wir bewusst.',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'Umsetzen',
-        description: 'MCP-Server entwickeln, testen und dokumentieren.',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'Übergeben',
-        description: 'Code, Dokumentation und auf Wunsch Skills für Ihr Team.',
-        icon: 'tabler:number-4',
-      },
-    ]}
-  />
+  <!-- Ablauf -->
+  <section class="not-prose relative overflow-hidden" style="background: var(--pop-navy);">
+    <KantenDivider from="navy" class="relative dark:hidden" />
+    <div class="hidden dark:block relative" style="background: var(--pop-aqua);">
+      <KantenDivider from="aqua" />
+    </div>
+    <div class="dark:bg-[var(--pop-aqua)]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-16">
+        <span class="pop-badge">Ablauf</span>
+        <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white dark:text-navy">So arbeiten wir</h2>
+        <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {
+            steps.map((s) => (
+              <article
+                class:list={['pop-service-card', `pop-service-card--${s.tone}`]}
+                style="background: var(--pop-surface);"
+              >
+                <div class="pop-service-card__head">
+                  <span class="pop-service-card__num">{s.num}</span>
+                </div>
+                <div class="pop-service-card__body">
+                  <h3 class="pop-service-card__title">{s.title}</h3>
+                  <p class="text-sm" style="color: var(--pop-text-secondary);">
+                    {s.description}
+                  </p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Nachweis statt Versprechen</h2>
-      <p class="mt-4 text-lg text-muted">
+  <!-- Nachweis -->
+  <section
+    class="not-prose relative overflow-hidden pop-zigzag-top py-14 md:py-16"
+    style="background: var(--pop-purple);"
+  >
+    <div class="absolute inset-0 pop-halftone" style="--pop-hero-dots: #ff008f; opacity: 0.25;" aria-hidden="true">
+    </div>
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6">
+      <span class="pop-badge pop-badge--lime">Open Source</span>
+      <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">Nachweis statt Versprechen</h2>
+      <p class="mt-4 text-lg text-white/90">
         Unsere eigenen MCP-Server sind öffentlich auf GitHub und als npm-Pakete verfügbar. Sie können sich den Code
         vorab ansehen.
       </p>
       <div class="mt-6">
         <Button variant="primary" text="Zu unseren MCP-Servern" href="/projekte/mcp-server" />
       </div>
-      <p class="mt-6 text-sm text-muted">
-        Hinweis: „nachvollziehbar und mit klaren Zugriffsrechten“ ist durch Token- bzw. OAuth-2.1-Absicherung in
-        kieksme/mcp-http-kit belegt. Keine weitergehende Sicherheits- oder Datenschutzzusage.
-      </p>
+      <aside
+        class="mt-8 p-4 text-sm"
+        style="background: var(--pop-note-bg); color: var(--pop-note-text); border: 2.5px dashed var(--pop-navy);"
+        role="note"
+      >
+        <strong class="font-heading">Hinweis:</strong>
+        „nachvollziehbar und mit klaren Zugriffsrechten“ ist durch Token- bzw. OAuth-2.1-Absicherung in kieksme/mcp-http-kit
+        belegt. Keine weitergehende Sicherheits- oder Datenschutzzusage.
+      </aside>
     </div>
   </section>
 

@@ -1,75 +1,516 @@
 /**
- * „mit Kanten“ visual language
- * Inspired by NULLzuEINS Design System avatar (Figma 394:19):
- * offset jagged/torn-paper polygons in Aqua / Fuchsia / Navy / light grey.
- * Prefer CSS clip-path + SVG — no heavy decorative images.
+ * kieks.me Pop-Art / „mit Kanten“
+ * Hard offset shadows, zig-zag dividers, halftone, sharp corners.
+ * Tokens: brand-colors.css (Figma Pop Light/Dark).
  */
 
 :root {
-  --kanten-clip-card: polygon(0% 3%, 4% 0%, 97% 0%, 100% 4%, 100% 96%, 97% 100%, 3% 100%, 0% 97%);
-  --kanten-clip-btn: polygon(0% 12%, 3% 0%, 97% 0%, 100% 14%, 100% 88%, 97% 100%, 3% 100%, 0% 86%);
-  --kanten-clip-panel: polygon(0% 0%, 100% 0%, 100% 92%, 96% 100%, 4% 100%, 0% 94%);
-  --kanten-offset: 0.55rem;
+  --kanten-clip-card: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  --kanten-clip-btn: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  --kanten-offset: var(--pop-offset, 0.5rem);
 }
 
-/* Angular buttons — override AstroWind rounded-full */
+/* ——— Buttons: hard pop offset ——— */
 .btn,
 .btn-primary,
 .btn-secondary,
 .btn-tertiary {
   border-radius: 0 !important;
-  clip-path: var(--kanten-clip-btn);
+  border-width: var(--pop-border-width) !important;
+  border-style: solid !important;
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .btn-primary {
-  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 rgb(0 255 220 / 55%);
+  background: var(--pop-yellow) !important;
+  border-color: var(--pop-navy) !important;
+  color: var(--pop-navy) !important;
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
 }
 
 .btn-primary:hover {
-  box-shadow: 0.35rem 0.35rem 0 0 rgb(255 0 143 / 45%);
+  transform: translate(2px, 2px);
+  box-shadow: calc(var(--kanten-offset) - 2px) calc(var(--kanten-offset) - 2px) 0 0 var(--pop-fuchsia);
 }
 
-.dark .btn-primary {
-  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 rgb(255 0 143 / 40%);
+.btn-secondary {
+  background: var(--pop-surface) !important;
+  border-color: var(--pop-navy) !important;
+  color: var(--pop-navy) !important;
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-navy);
 }
 
-/* Angular cards / feature panels */
+.dark .btn-secondary {
+  background: var(--pop-ink) !important;
+  border-color: var(--pop-aqua) !important;
+  color: var(--pop-hero-text) !important;
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
+}
+
+.btn-secondary:hover {
+  transform: translate(2px, 2px);
+  box-shadow: calc(var(--kanten-offset) - 2px) calc(var(--kanten-offset) - 2px) 0 0 var(--pop-navy);
+}
+
+.dark .btn-secondary:hover {
+  box-shadow: calc(var(--kanten-offset) - 2px) calc(var(--kanten-offset) - 2px) 0 0 var(--pop-fuchsia);
+}
+
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--pop-fuchsia);
+  outline-offset: 3px;
+}
+
+/* ——— Cards ——— */
+.pop-card,
 .kanten-card {
   position: relative;
   isolation: isolate;
-  clip-path: var(--kanten-clip-card);
-  background: #fff;
-  border: 1px solid rgb(30 42 69 / 10%);
+  background: var(--pop-card-bg);
+  color: var(--pop-card-text);
+  border: var(--pop-border-width) solid var(--pop-navy);
+  border-radius: 0;
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-aqua);
 }
 
+.dark .pop-card,
 .dark .kanten-card {
-  background: rgb(47 65 105 / 55%);
-  border-color: rgb(255 255 255 / 10%);
+  border-color: var(--pop-aqua);
 }
 
+.pop-card--fuchsia,
+.kanten-card--fuchsia {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
+}
+
+.pop-card--purple {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-purple);
+}
+
+.pop-card--yellow {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-yellow);
+}
+
+.pop-card--navy,
+.kanten-card--navy {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-navy);
+}
+
+/* Remove old ::before offset (replaced by box-shadow) */
 .kanten-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  transform: translate(var(--kanten-offset), var(--kanten-offset));
-  background: #00ffdc;
-  clip-path: var(--kanten-clip-card);
-  opacity: 0.55;
+  content: none;
+}
+
+/* ——— Pop badge / label ——— */
+.pop-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  border: var(--pop-border-width) solid var(--pop-navy);
+  background: var(--pop-yellow);
+  color: var(--pop-navy);
+  box-shadow: 4px 4px 0 0 var(--pop-fuchsia);
+}
+
+.pop-badge--aqua {
+  background: var(--pop-aqua);
+  box-shadow: 4px 4px 0 0 var(--pop-navy);
+}
+
+.pop-badge--fuchsia {
+  background: var(--pop-fuchsia);
+  color: var(--pop-white);
+  box-shadow: 4px 4px 0 0 var(--pop-aqua);
+}
+
+.pop-badge--lime {
+  background: #b8f53a;
+  box-shadow: 4px 4px 0 0 var(--pop-navy);
+}
+
+/* ——— Display headings (mockup lowercase) ——— */
+.pop-display {
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  text-transform: lowercase;
+  color: var(--pop-text-primary);
+}
+
+.pop-display--offset {
+  text-shadow: 3px 3px 0 var(--pop-fuchsia);
+}
+
+.dark .pop-display--offset {
+  text-shadow: 3px 3px 0 var(--pop-fuchsia);
+}
+
+.pop-display--aqua-offset {
+  text-shadow: 3px 3px 0 var(--pop-aqua);
+}
+
+/* ——— Halftone ——— */
+.pop-halftone {
+  background-image: radial-gradient(circle, var(--pop-hero-dots) 1.1px, transparent 1.2px);
+  background-size: 10px 10px;
+  background-position: 0 0;
+  opacity: 0.18;
   pointer-events: none;
 }
 
-.kanten-card--fuchsia::before {
-  background: #ff008f;
-  opacity: 0.35;
+.dark .pop-halftone {
+  opacity: 0.22;
 }
 
-.kanten-card--navy::before {
-  background: #1e2a45;
-  opacity: 0.25;
+/* ——— Zigzag section edges via clip-path ——— */
+.pop-zigzag-top {
+  clip-path: polygon(
+    0% 12px,
+    4% 0,
+    8% 12px,
+    12% 0,
+    16% 12px,
+    20% 0,
+    24% 12px,
+    28% 0,
+    32% 12px,
+    36% 0,
+    40% 12px,
+    44% 0,
+    48% 12px,
+    52% 0,
+    56% 12px,
+    60% 0,
+    64% 12px,
+    68% 0,
+    72% 12px,
+    76% 0,
+    80% 12px,
+    84% 0,
+    88% 12px,
+    92% 0,
+    96% 12px,
+    100% 0,
+    100% 100%,
+    0% 100%
+  );
 }
 
-/* Hero atmosphere blocks (pure CSS, no images) */
+.pop-zigzag-both {
+  clip-path: polygon(
+    0% 12px,
+    4% 0,
+    8% 12px,
+    12% 0,
+    16% 12px,
+    20% 0,
+    24% 12px,
+    28% 0,
+    32% 12px,
+    36% 0,
+    40% 12px,
+    44% 0,
+    48% 12px,
+    52% 0,
+    56% 12px,
+    60% 0,
+    64% 12px,
+    68% 0,
+    72% 12px,
+    76% 0,
+    80% 12px,
+    84% 0,
+    88% 12px,
+    92% 0,
+    96% 12px,
+    100% 0,
+    100% calc(100% - 12px),
+    96% 100%,
+    92% calc(100% - 12px),
+    88% 100%,
+    84% calc(100% - 12px),
+    80% 100%,
+    76% calc(100% - 12px),
+    72% 100%,
+    68% calc(100% - 12px),
+    64% 100%,
+    60% calc(100% - 12px),
+    56% 100%,
+    52% calc(100% - 12px),
+    48% 100%,
+    44% calc(100% - 12px),
+    40% 100%,
+    36% calc(100% - 12px),
+    32% 100%,
+    28% calc(100% - 12px),
+    24% 100%,
+    20% calc(100% - 12px),
+    16% 100%,
+    12% calc(100% - 12px),
+    8% 100%,
+    4% calc(100% - 12px),
+    0% 100%
+  );
+}
+
+/* ——— Starburst ——— */
+.pop-starburst {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 18rem);
+  aspect-ratio: 1;
+  clip-path: polygon(
+    50% 0%,
+    61% 18%,
+    80% 8%,
+    78% 28%,
+    100% 35%,
+    82% 48%,
+    95% 68%,
+    72% 68%,
+    70% 90%,
+    50% 78%,
+    30% 90%,
+    28% 68%,
+    5% 68%,
+    18% 48%,
+    0% 35%,
+    22% 28%,
+    20% 8%,
+    39% 18%
+  );
+  background: var(--pop-yellow);
+}
+
+.pop-starburst__label {
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  text-transform: lowercase;
+  color: var(--pop-navy);
+  text-align: center;
+  line-height: 1.05;
+  padding: 1rem;
+}
+
+.pop-starburst--fuchsia {
+  background: var(--pop-fuchsia);
+}
+
+.pop-starburst--fuchsia .pop-starburst__label {
+  color: var(--pop-white);
+}
+
+.pop-starburst--aqua {
+  background: var(--pop-aqua);
+}
+
+.pop-starburst--lime {
+  background: #b8f53a;
+}
+
+/* ——— Service card header bands ——— */
+.pop-service-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--pop-card-bg);
+  border: var(--pop-border-width) solid var(--pop-navy);
+  color: var(--pop-card-text);
+}
+
+.pop-service-card__head {
+  position: relative;
+  padding: 1.25rem 1.25rem 1rem;
+  min-height: 5.5rem;
+  background-image: radial-gradient(circle, rgb(30 42 69 / 18%) 1px, transparent 1.2px);
+  background-size: 8px 8px;
+}
+
+.pop-service-card__num {
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--pop-navy);
+  opacity: 0.9;
+}
+
+.pop-service-card__body {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pop-service-card__title {
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  text-transform: lowercase;
+  color: var(--pop-text-primary);
+}
+
+.pop-service-card__link {
+  margin-top: auto;
+  font-weight: 700;
+  color: var(--pop-text-link);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.pop-service-card--aqua {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-aqua);
+}
+.pop-service-card--aqua .pop-service-card__head {
+  background-color: var(--pop-aqua);
+}
+
+.pop-service-card--fuchsia {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
+}
+.pop-service-card--fuchsia .pop-service-card__head {
+  background-color: var(--pop-fuchsia);
+}
+.pop-service-card--fuchsia .pop-service-card__num {
+  color: var(--pop-white);
+}
+
+.pop-service-card--purple {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-purple);
+}
+.pop-service-card--purple .pop-service-card__head {
+  background-color: var(--pop-purple);
+}
+.pop-service-card--purple .pop-service-card__num {
+  color: var(--pop-white);
+}
+
+.pop-service-card--yellow {
+  box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-yellow);
+}
+.pop-service-card--yellow .pop-service-card__head {
+  background-color: var(--pop-yellow);
+}
+
+.dark .pop-service-card {
+  border-color: var(--pop-aqua);
+}
+.dark .pop-service-card__body {
+  background: var(--pop-surface);
+}
+
+/* ——— Project row ——— */
+.pop-project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--pop-card-bg);
+  border: var(--pop-border-width) solid var(--pop-navy);
+  color: var(--pop-text-primary);
+  font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-decoration: none;
+  box-shadow: 5px 5px 0 0 var(--pop-aqua);
+  transition: transform 0.15s ease;
+}
+
+.pop-project-row:hover {
+  transform: translate(2px, 2px);
+  color: var(--pop-text-primary);
+}
+
+.pop-project-row--fuchsia {
+  box-shadow: 5px 5px 0 0 var(--pop-fuchsia);
+}
+.pop-project-row--yellow {
+  box-shadow: 5px 5px 0 0 var(--pop-yellow);
+}
+.pop-project-row--purple {
+  box-shadow: 5px 5px 0 0 var(--pop-purple);
+}
+
+.dark .pop-project-row {
+  border-color: var(--pop-aqua);
+}
+
+/* ——— Note / placeholder box ——— */
+.pop-note {
+  background: var(--pop-note-bg);
+  color: var(--pop-note-text);
+  border: var(--pop-border-width) solid var(--pop-navy);
+  box-shadow: 5px 5px 0 0 var(--pop-fuchsia);
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+}
+
+.dark .pop-note {
+  border-color: var(--pop-yellow);
+  box-shadow: 5px 5px 0 0 var(--pop-navy);
+}
+
+/* ——— Flame footer accent ——— */
+.pop-flames {
+  display: block;
+  width: 100%;
+  height: 2.75rem;
+  background: linear-gradient(180deg, var(--pop-yellow) 0%, #ff6b1a 55%, var(--pop-red) 100%);
+  clip-path: polygon(
+    0% 40%,
+    3% 10%,
+    6% 45%,
+    10% 0%,
+    14% 50%,
+    18% 5%,
+    22% 42%,
+    26% 0%,
+    30% 48%,
+    34% 8%,
+    38% 40%,
+    42% 0%,
+    46% 45%,
+    50% 5%,
+    54% 50%,
+    58% 0%,
+    62% 42%,
+    66% 8%,
+    70% 48%,
+    74% 0%,
+    78% 40%,
+    82% 10%,
+    86% 45%,
+    90% 0%,
+    94% 42%,
+    97% 8%,
+    100% 40%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+/* ——— Legacy hero blocks (kept for other pages) ——— */
 .kanten-hero-bg {
   position: absolute;
   inset: 0;
@@ -111,7 +552,6 @@
   clip-path: polygon(0% 0%, 100% 6%, 94% 100%, 6% 96%);
 }
 
-/* Section divider — jagged SVG band */
 .kanten-divider {
   display: block;
   width: 100%;
@@ -126,7 +566,6 @@
   display: block;
 }
 
-/* Heading accent — bold with optional offset slab */
 .kanten-heading {
   position: relative;
   display: inline-block;
@@ -144,9 +583,41 @@
   clip-path: polygon(0% 20%, 100% 0%, 100% 100%, 0% 80%);
 }
 
+/* FAQ diamond markers */
+.pop-faq-mark {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  background: var(--pop-yellow);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+
+.pop-faq-mark--aqua {
+  background: var(--pop-aqua);
+}
+
+.pop-faq-mark--fuchsia {
+  background: var(--pop-fuchsia);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .pop-project-row {
+    transition: none;
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .pop-project-row:hover {
+    transform: none;
+  }
+
   .btn-primary,
   .btn-primary:hover {
-    box-shadow: none;
+    box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
   }
 }

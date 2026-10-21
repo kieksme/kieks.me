@@ -1,11 +1,12 @@
 ---
-import '@fontsource/hanken-grotesk/300.css';
 import '@fontsource/hanken-grotesk/400.css';
-import '@fontsource/hanken-grotesk/500.css';
 import '@fontsource/hanken-grotesk/700.css';
+import '@fontsource/hanken-grotesk/800.css';
+import '@fontsource/hanken-grotesk/900.css';
 import '@fontsource/source-sans-3/400.css';
 import '@fontsource/source-sans-3/600.css';
 import '~/assets/styles/brand-colors.css';
+import '~/assets/styles/kanten.css';
 ---
 
 <style is:inline>
@@ -14,52 +15,60 @@ import '~/assets/styles/brand-colors.css';
     --aw-font-serif: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
     --aw-font-heading: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 
-    /* Brand choice: primary = Navy, secondary = Navy 400, accent = Fuchsia (brand guide TBD) */
-    --aw-color-primary: rgb(30 42 69);
-    --aw-color-secondary: rgb(47 65 105);
-    --aw-color-accent: rgb(255 0 143);
+    --aw-color-primary: #1e2a45;
+    --aw-color-secondary: #2f4169;
+    --aw-color-accent: #ff008f;
 
-    --aw-color-text-heading: rgb(30 42 69);
-    --aw-color-text-default: rgb(51 51 51);
-    --aw-color-text-muted: rgb(102 102 102);
-    --aw-color-bg-page: rgb(255 255 255);
-    --aw-color-bg-page-dark: rgb(30 42 69);
+    --aw-color-text-heading: #1e2a45;
+    --aw-color-text-default: #1e2a45;
+    --aw-color-text-muted: #4a5370;
+    --aw-color-bg-page: #f4f5f9;
+    --aw-color-bg-page-dark: #12151c;
 
-    --aw-color-link: rgb(0 107 95);
-    --aw-color-link-hover: rgb(0 255 220);
+    --aw-color-link: #c8006f;
+    --aw-color-link-hover: #ff008f;
 
     ::selection {
-      background-color: rgb(0 255 220 / 35%);
+      background-color: rgb(0 255 220 / 40%);
     }
   }
 
   .dark {
-    --aw-font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
-    --aw-font-serif: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
-    --aw-font-heading: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --aw-color-primary: #00bfa5;
+    --aw-color-secondary: #00ffdc;
+    --aw-color-accent: #ff008f;
 
-    --aw-color-primary: rgb(0 191 165);
-    --aw-color-secondary: rgb(0 255 220);
-    --aw-color-accent: rgb(255 0 143);
+    --aw-color-text-heading: #f0f2f9;
+    --aw-color-text-default: #f0f2f9;
+    --aw-color-text-muted: #b9bfcf;
+    --aw-color-bg-page: #12151c;
 
-    --aw-color-text-heading: rgb(247 248 248);
-    --aw-color-text-default: rgb(229 236 246);
-    --aw-color-text-muted: rgb(229 236 246 / 66%);
-    --aw-color-bg-page: rgb(30 42 69);
-
-    --aw-color-link: rgb(0 255 220);
-    --aw-color-link-hover: rgb(179 255 245);
+    --aw-color-link: #ff4fb0;
+    --aw-color-link-hover: #00ffdc;
 
     ::selection {
-      background-color: rgb(255 0 143 / 40%);
-      color: snow;
+      background-color: rgb(255 0 143 / 45%);
+      color: #fff;
     }
   }
 
-  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary) {
+  html {
+    background-color: var(--aw-color-bg-page);
+  }
+
+  body {
+    background-color: var(--aw-color-bg-page);
+    color: var(--aw-color-text-default);
+  }
+
+  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary):not(.pop-project-row):not(
+      .pop-service-card__link
+    ) {
     color: var(--aw-color-link);
   }
-  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary):hover {
+  a:not(.btn):not(.btn-primary):not(.btn-secondary):not(.btn-tertiary):not(.pop-project-row):not(
+      .pop-service-card__link
+    ):hover {
     color: var(--aw-color-link-hover);
   }
 </style>

@@ -156,7 +156,7 @@ const alt = imageAlt ?? name;
     position: relative;
     display: inline-block;
     font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
-    font-weight: 700;
+    font-weight: 900;
     font-size: clamp(1.35rem, 3vw, 1.75rem);
     line-height: 1;
     color: #1e2a45;
@@ -172,8 +172,20 @@ const alt = imageAlt ?? name;
       0 3px 0 #00ffdc;
   }
 
+  .edge-avatar--fuchsia .edge-avatar__name {
+    text-shadow:
+      -2px -2px 0 #ff008f,
+      2px -2px 0 #ff008f,
+      -2px 2px 0 #ff008f,
+      2px 2px 0 #ff008f,
+      -3px 0 0 #ff008f,
+      3px 0 0 #ff008f,
+      0 -3px 0 #ff008f,
+      0 3px 0 #ff008f;
+  }
+
   .dark .edge-avatar__name {
-    color: #ffffff;
+    color: #f0f2f9;
   }
 
   .edge-avatar__role {

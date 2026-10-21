@@ -3,7 +3,7 @@ export interface Props {
   /** Fill colour of the jagged band (matches the section below or above) */
   class?: string;
   flip?: boolean;
-  from?: 'white' | 'navy' | 'aqua' | 'navy-50';
+  from?: 'white' | 'navy' | 'aqua' | 'navy-50' | 'page' | 'fuchsia' | 'purple' | 'yellow' | 'surface' | 'ink';
 }
 
 const { class: className = '', flip = false, from = 'white' } = Astro.props;
@@ -13,6 +13,12 @@ const fills: Record<string, string> = {
   navy: '#1E2A45',
   aqua: '#00FFDC',
   'navy-50': '#F0F2F5',
+  page: 'var(--pop-page-bg)',
+  fuchsia: '#FF008F',
+  purple: '#9747FF',
+  yellow: '#FFD60A',
+  surface: 'var(--pop-surface)',
+  ink: 'var(--pop-ink)',
 };
 const fill = fills[from] ?? fills.white;
 ---
@@ -23,12 +29,12 @@ const fill = fills[from] ?? fills.white;
       flip ? (
         <path
           fill={fill}
-          d="M0,40 L0,18 L80,28 L180,8 L320,24 L450,4 L580,22 L720,6 L860,26 L980,10 L1100,22 L1200,12 L1200,40 Z"
+          d="M0,40 L0,18 L40,28 L80,6 L120,24 L160,4 L200,26 L240,8 L280,22 L320,2 L360,24 L400,10 L440,28 L480,4 L520,22 L560,8 L600,26 L640,6 L680,24 L720,2 L760,22 L800,10 L840,28 L880,4 L920,22 L960,8 L1000,26 L1040,6 L1080,24 L1120,2 L1160,20 L1200,12 L1200,40 Z"
         />
       ) : (
         <path
           fill={fill}
-          d="M0,0 L1200,0 L1200,22 L1100,12 L980,28 L860,8 L720,26 L580,6 L450,24 L320,4 L180,22 L80,6 L0,18 Z"
+          d="M0,0 L1200,0 L1200,22 L1160,12 L1120,28 L1080,8 L1040,24 L1000,4 L960,22 L920,10 L880,28 L840,6 L800,24 L760,2 L720,22 L680,8 L640,26 L600,4 L560,22 L520,10 L480,28 L440,6 L400,24 L360,2 L320,22 L280,10 L240,28 L200,6 L160,24 L120,4 L80,22 L40,10 L0,18 Z"
         />
       )
     }

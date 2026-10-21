@@ -8,42 +8,60 @@ export interface Props {
   subtitle: string;
   ctaText?: string;
   ctaHref?: string;
+  badge?: string;
   id?: string;
+  /** Optional accent word shown in a starburst (e.g. „mcp“) */
+  burstLabel?: string;
 }
 
-const { title, subtitle, ctaText = 'Erstgespräch buchen', ctaHref = BOOKING_URL, id } = Astro.props;
+const {
+  title,
+  subtitle,
+  ctaText = 'Erstgespräch buchen',
+  ctaHref = BOOKING_URL,
+  badge = 'Leistung',
+  id,
+  burstLabel,
+} = Astro.props;
 ---
 
-<section class="relative overflow-hidden not-prose" {...id ? { id } : {}}>
-  <div class="absolute inset-0 bg-navy" aria-hidden="true"></div>
-  <div class="kanten-hero-bg" aria-hidden="true">
-    <span class="kanten-hero-bg__block kanten-hero-bg__block--aqua"></span>
-    <span class="kanten-hero-bg__block kanten-hero-bg__block--fuchsia"></span>
-    <span class="kanten-hero-bg__block kanten-hero-bg__block--grey"></span>
-  </div>
+<section class="relative overflow-hidden not-prose" style="background: var(--pop-hero-bg);" {...id ? { id } : {}}>
+  <div class="absolute inset-0 pop-halftone" aria-hidden="true"></div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-    <div class="max-w-3xl">
-      <h1
-        class="font-heading text-4xl md:text-5xl font-bold leading-tight tracking-tight text-white motion-safe:animate-slide-up"
-      >
-        {title}
-      </h1>
-      <p class="mt-6 text-lg md:text-xl text-white/85 max-w-[42rem] motion-safe:animate-fade">
-        {subtitle}
-      </p>
-      <div class="mt-8 motion-safe:animate-fade">
-        <Button
-          variant="primary"
-          text={ctaText}
-          href={ctaHref}
-          icon="tabler:calendar-event"
-          class="!bg-aqua !border-aqua !text-navy hover:!bg-aqua-600 hover:!border-aqua-600"
-        />
+    <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
+      <div class="max-w-3xl">
+        <span class="pop-badge mb-5">{badge}</span>
+        <h1
+          class="pop-display pop-display--offset text-4xl sm:text-5xl md:text-[3.5rem] mt-5"
+          style="color: var(--pop-hero-heading);"
+        >
+          {title}
+        </h1>
+        <p class="mt-6 text-lg md:text-xl max-w-[42rem]" style="color: var(--pop-hero-text);">
+          {subtitle}
+        </p>
+        <div class="mt-8">
+          <Button variant="primary" text={ctaText} href={ctaHref} icon="tabler:calendar-event" />
+        </div>
       </div>
+      {
+        burstLabel && (
+          <div class="justify-self-center lg:justify-self-end relative">
+            <div
+              class="pop-starburst pop-starburst--fuchsia"
+              style="outline: 4px solid var(--pop-navy); outline-offset: 4px;"
+            >
+              <span
+                class="pop-starburst__label"
+                style="font-size: clamp(2rem, 6vw, 3.25rem); color: #fff; text-shadow: 3px 3px 0 #1e2a45;"
+              >
+                {burstLabel}
+              </span>
+            </div>
+          </div>
+        )
+      }
     </div>
   </div>
-  <KantenDivider from="white" class="relative text-white dark:hidden" />
-  <div class="hidden dark:block relative">
-    <KantenDivider from="navy" />
-  </div>
+  <KantenDivider from="page" class="relative" />
 </section>
