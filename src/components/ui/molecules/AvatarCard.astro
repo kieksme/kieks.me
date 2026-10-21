@@ -1,45 +1,57 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
+import Note from '~/components/ui/atoms/Note.astro';
 import vector1 from '~/assets/pop/654-1674_team__imgVector1.svg?url';
+import vector2 from '~/assets/pop/654-1674_team__imgVector2.svg?url';
+import vector3 from '~/assets/pop/654-1674_team__imgVector3.svg?url';
 
 export interface Props {
   name: string;
   label: string;
   image: ImageMetadata;
   imageAlt: string;
+  /** Shown as preview-only Note when starting with ⟦ */
   role?: string;
   class?: string;
 }
 
 const { name, label, image, imageAlt, role, class: className = '' } = Astro.props;
 const display = label.toLocaleLowerCase('de-DE');
+const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PLATZHALTER')));
 ---
 
 <figure class:list={['pop-avatar flex flex-col items-center gap-[18px] w-full max-w-[400px]', className]}>
   <div class="pop-avatar__box relative w-[min(100%,361px)] aspect-[361/499]">
+    <!-- Polygon layers: grey offset → magenta → aqua (SPEC §3.8 / ref 654:1674) -->
     <img
       src={vector1}
       alt=""
       aria-hidden="true"
-      class="pop-avatar-layer absolute w-[94%] h-auto left-0 top-[2%]"
-      style="filter: brightness(0) saturate(100%) invert(90%);"
+      class="pop-avatar-layer absolute left-0 top-[1.8%] w-[94.5%] h-auto"
+      width="341"
+      height="448"
+      decoding="async"
     />
     <img
-      src={vector1}
+      src={vector2}
       alt=""
       aria-hidden="true"
-      class="pop-avatar-layer absolute w-[94%] h-auto left-[5%] top-[1%]"
-      style="filter: brightness(0) saturate(100%) invert(22%) sepia(98%) saturate(5000%) hue-rotate(305deg);"
+      class="pop-avatar-layer absolute left-[5.5%] top-[0.8%] w-[94.5%] h-auto"
+      width="341"
+      height="448"
+      decoding="async"
     />
     <img
-      src={vector1}
+      src={vector3}
       alt=""
       aria-hidden="true"
-      class="pop-avatar-layer absolute w-[94%] h-auto left-[3%] top-[3%]"
-      style="filter: brightness(0) saturate(100%) invert(88%) sepia(48%) saturate(2000%) hue-rotate(121deg);"
+      class="pop-avatar-layer absolute left-[3.3%] top-[3%] w-[94.5%] h-auto"
+      width="341"
+      height="448"
+      decoding="async"
     />
-    <div class="absolute left-[2%] top-0 w-[86%] h-[88%] overflow-hidden" style="clip-path: url(#avatar-clip);">
+    <div class="absolute left-[2%] top-0 w-[86%] h-[88%] overflow-hidden">
       <Picture
         class="w-full h-full object-cover object-top"
         src={image}
@@ -51,19 +63,25 @@ const display = label.toLocaleLowerCase('de-DE');
         decoding="async"
       />
     </div>
+    <!-- 96px name with aqua contour -->
     <figcaption
-      class="absolute left-1/2 -translate-x-1/2 bottom-[8%] z-10 font-heading font-black lowercase text-[clamp(2.5rem,8vw,6rem)] leading-none tracking-[-0.05em] whitespace-nowrap"
+      class="absolute left-1/2 -translate-x-1/2 bottom-[4%] z-10 font-heading font-black lowercase text-[clamp(2.75rem,10vw,6rem)] leading-none tracking-[-0.05em] whitespace-nowrap pointer-events-none"
       style="color: var(--pop-navy); -webkit-text-stroke: 10px var(--pop-aqua); paint-order: stroke fill;"
     >
       {display}
     </figcaption>
   </div>
   {
-    role && (
-      <p class="text-center text-sm max-w-[22rem]" style="color: var(--text-secondary);">
-        {role}
-      </p>
-    )
+    role &&
+      (isPlaceholder ? (
+        <Note label="⟦PLATZHALTER D10⟧" class="w-full max-w-[361px]">
+          {role.replace(/^⟦PLATZHALTER D10:\s*/, '').replace(/⟧$/, '') || 'Rolle und 1–2 Sätze, selbst formuliert'}
+        </Note>
+      ) : (
+        <p class="text-center text-sm max-w-[22rem]" style="color: var(--text-secondary);">
+          {role}
+        </p>
+      ))
   }
   <span class="sr-only">{name}</span>
 </figure>

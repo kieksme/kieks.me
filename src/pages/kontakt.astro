@@ -1,47 +1,65 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import Placeholder from '~/components/common/Placeholder.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import Note from '~/components/ui/atoms/Note.astro';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
 import { BOOKING_URL, CONTACT_RESPONSE_DAYS, HAS_BOOKING_URL } from '~/config/site';
 
 const metadata = {
   title: 'Kontakt',
   description: 'Schreiben Sie kieks.me GbR oder buchen Sie ein Erstgespräch. Wir melden uns bei Ihnen.',
 };
+
+const field =
+  'block w-full border-[3px] border-[var(--ink)] bg-[var(--surface)] px-3.5 py-2.5 text-base outline-none focus:shadow-[4px_4px_0_0_var(--pop-aqua)]';
 ---
 
 <Layout metadata={metadata}>
-  <div class="relative px-6 py-16 isolate sm:py-24 lg:px-8 not-prose">
-    <div class="kanten-hero-bg opacity-40" aria-hidden="true">
-      <span class="kanten-hero-bg__block kanten-hero-bg__block--aqua"></span>
-      <span class="kanten-hero-bg__block kanten-hero-bg__block--fuchsia"></span>
-    </div>
-    <div class="relative max-w-2xl mx-auto text-center">
-      <span class="pop-badge">Kontakt</span>
-      <h1 class="pop-display text-4xl sm:text-5xl mt-4 text-balance">Kontakt</h1>
-      <p class="mt-4 text-lg" style="color: var(--pop-text-secondary);">
+  <section class="relative overflow-hidden not-prose py-16 md:py-24" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={390}
+      height={420}
+      pitch={16}
+      origin="top-right"
+      d0={10.7}
+      k={0.02}
+      color="var(--hero-dots)"
+      opacity={0.2}
+    />
+    <div class="relative mx-auto max-w-[720px] px-5 md:px-20 text-center flex flex-col items-center gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Kontakt</Sticker>
+      <Heading level={1} size="l" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)" shadowSize="6px 6px 0">
+        kontakt
+      </Heading>
+      <Lead size="l" class="!text-[color:var(--hero-text)]">
         Schreiben Sie uns, wir melden uns innerhalb von {CONTACT_RESPONSE_DAYS} Werktagen. Oder buchen Sie direkt ein Erstgespräch.
-      </p>
+      </Lead>
       {
         HAS_BOOKING_URL ? (
-          <p class="mt-4">
-            <a href={BOOKING_URL} class="font-semibold underline-offset-4 hover:underline">
-              Erstgespräch buchen →
-            </a>
-          </p>
+          <TextLink href={BOOKING_URL}>Erstgespräch buchen</TextLink>
         ) : (
-          <Placeholder label="⟦PLATZHALTER D1⟧" class="mt-4 text-left">
+          <Note label="⟦PLATZHALTER D1⟧" class="text-left w-full">
             Buchungslink noch nicht gesetzt — CTAs führen auf diese Kontaktseite (src/config/site.ts → BOOKING_URL).
-          </Placeholder>
+          </Note>
         )
       }
     </div>
+  </section>
+
+  <div class="not-prose py-12 md:py-16" style="background: var(--page-bg);">
     <form
       name="contact"
       action="/kontakt-erfolgreich"
       data-netlify="true"
       netlify-honeypot="bot-field"
       method="POST"
-      class="relative max-w-xl mx-auto mt-12 sm:mt-16 kanten-card p-6 sm:p-8"
+      class="mx-auto max-w-xl px-5 border-[3px] border-[var(--ink)] bg-[var(--surface)] p-6 sm:p-8"
+      style="box-shadow: 8px 8px 0 0 var(--pop-fuchsia);"
     >
       <p class="hidden">
         <label>Nicht ausfüllen: <input name="bot-field" /></label>
@@ -49,66 +67,43 @@ const metadata = {
       <input type="hidden" name="form-name" value="contact" />
       <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
         <div>
-          <label for="first-name" class="block font-semibold text-navy dark:text-slate-200 text-sm">Vorname</label>
+          <label for="first-name" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);"
+            >Vorname</label
+          >
           <div class="mt-2.5">
-            <input
-              type="text"
-              name="first-name"
-              id="first-name"
-              autocomplete="given-name"
-              required
-              class="block w-full border border-navy-100 bg-white dark:bg-navy-400 dark:border-navy-300 px-3.5 py-2 text-base text-navy dark:text-white outline-none focus:border-aqua-700 focus:ring-2 focus:ring-aqua-700/30"
-            />
+            <input type="text" name="first-name" id="first-name" autocomplete="given-name" required class={field} />
           </div>
         </div>
         <div>
-          <label for="last-name" class="block font-semibold text-navy dark:text-slate-200 text-sm">Nachname</label>
+          <label for="last-name" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);"
+            >Nachname</label
+          >
           <div class="mt-2.5">
-            <input
-              type="text"
-              name="last-name"
-              id="last-name"
-              autocomplete="family-name"
-              required
-              class="block w-full border border-navy-100 bg-white dark:bg-navy-400 dark:border-navy-300 px-3.5 py-2 text-base text-navy dark:text-white outline-none focus:border-aqua-700 focus:ring-2 focus:ring-aqua-700/30"
-            />
+            <input type="text" name="last-name" id="last-name" autocomplete="family-name" required class={field} />
           </div>
         </div>
         <div class="sm:col-span-2">
-          <label for="company" class="block font-semibold text-navy dark:text-slate-200 text-sm">Firma</label>
+          <label for="company" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);"
+            >Firma</label
+          >
           <div class="mt-2.5">
-            <input
-              type="text"
-              name="company"
-              id="company"
-              autocomplete="organization"
-              class="block w-full border border-navy-100 bg-white dark:bg-navy-400 dark:border-navy-300 px-3.5 py-2 text-base text-navy dark:text-white outline-none focus:border-aqua-700 focus:ring-2 focus:ring-aqua-700/30"
-            />
+            <input type="text" name="company" id="company" autocomplete="organization" class={field} />
           </div>
         </div>
         <div class="sm:col-span-2">
-          <label for="email" class="block font-semibold text-navy dark:text-slate-200 text-sm">E-Mail</label>
+          <label for="email" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);"
+            >E-Mail</label
+          >
           <div class="mt-2.5">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              autocomplete="email"
-              required
-              class="block w-full border border-navy-100 bg-white dark:bg-navy-400 dark:border-navy-300 px-3.5 py-2 text-base text-navy dark:text-white outline-none focus:border-aqua-700 focus:ring-2 focus:ring-aqua-700/30"
-            />
+            <input type="email" name="email" id="email" autocomplete="email" required class={field} />
           </div>
         </div>
         <div class="sm:col-span-2">
-          <label for="message" class="block font-semibold text-navy dark:text-slate-200 text-sm">Nachricht</label>
+          <label for="message" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);"
+            >Nachricht</label
+          >
           <div class="mt-2.5">
-            <textarea
-              name="message"
-              id="message"
-              rows="4"
-              required
-              class="block w-full border border-navy-100 bg-white dark:bg-navy-400 dark:border-navy-300 px-3.5 py-2 text-base text-navy dark:text-white outline-none focus:border-aqua-700 focus:ring-2 focus:ring-aqua-700/30"
-            ></textarea>
+            <textarea name="message" id="message" rows="4" required class={field}></textarea>
           </div>
         </div>
         <div class="flex gap-x-3 sm:col-span-2 items-start">
@@ -118,20 +113,18 @@ const metadata = {
             id="datenschutz"
             value="accepted"
             required
-            class="mt-1 h-4 w-4 accent-aqua-700 border-navy-300"
+            class="mt-1 h-4 w-4 accent-[var(--pop-aqua)] border-[var(--ink)]"
           />
-          <label for="datenschutz" class="text-sm text-muted">
+          <label for="datenschutz" class="text-sm" style="color: var(--text-secondary);">
             Ich habe die
-            <a href="/datenschutz" class="font-semibold text-aqua-700 hover:text-aqua dark:text-aqua"
-              >Datenschutzerklärung</a
-            >
+            <a href="/datenschutz" class="font-semibold" style="color: var(--text-link);">Datenschutzerklärung</a>
             gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage einverstanden.
             {/* ⟦rechtlich prüfen lassen⟧ */}
           </label>
         </div>
       </div>
       <div class="mt-10">
-        <button type="submit" class="btn btn-primary w-full">Absenden</button>
+        <Button variant="primary" type="submit" text="Absenden" class="w-full" />
       </div>
     </form>
   </div>

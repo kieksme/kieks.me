@@ -1,9 +1,19 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import ServiceHero from '~/components/widgets/ServiceHero.astro';
-import SectionCTA from '~/components/widgets/SectionCTA.astro';
-import Button from '~/components/ui/Button.astro';
-import KantenDivider from '~/components/ui/KantenDivider.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import Note from '~/components/ui/atoms/Note.astro';
+import FeatureCard from '~/components/ui/molecules/FeatureCard.astro';
+import SchemaBox from '~/components/ui/molecules/SchemaBox.astro';
+import StepCard from '~/components/ui/molecules/StepCard.astro';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
+import burstMcp from '~/assets/pop/659-963_ki-hero-art-mcp__imgBurst.svg?url';
+import { BOOKING_URL } from '~/config/site';
 
 const metadata = {
   title: 'KI & MCP-Integration für Unternehmen',
@@ -15,25 +25,29 @@ const offers = [
   {
     title: 'MCP-Server für Ihre Systeme',
     description: 'Wir entwickeln MCP-Server für Ihre internen Anwendungen oder für Dienste, die Sie nutzen.',
-    accent: 'aqua',
+    edge: 'aqua' as const,
+    shadow: 'aqua' as const,
   },
   {
     title: 'Lokal oder als Dienst',
     description:
       'Lokal über stdio auf dem Rechner der Nutzer oder als Remote-Server über Streamable HTTP, abgesichert per Bearer-Token oder OAuth 2.1.',
-    accent: 'fuchsia',
+    edge: 'fuchsia' as const,
+    shadow: 'fuchsia' as const,
   },
   {
     title: 'Agent-Skills',
     description:
       'Wiederverwendbare Arbeitsanweisungen für KI-Coding-Assistenten, damit Ihr Team KI einheitlich und geprüft einsetzt.',
-    accent: 'aqua',
+    edge: 'yellow' as const,
+    shadow: 'fuchsia' as const,
   },
   {
     title: 'Einordnung und Auswahl',
     description:
       'Welche Abläufe sich für KI eignen und welche nicht. Welche Rechte ein Assistent braucht und welche nicht.',
-    accent: 'fuchsia',
+    edge: 'purple' as const,
+    shadow: 'purple' as const,
   },
 ];
 
@@ -42,186 +56,181 @@ const steps = [
     num: '01',
     title: 'Verstehen',
     description: 'Welche Aufgabe soll ein KI-Assistent übernehmen, mit welchen Daten?',
-    tone: 'aqua',
+    accent: 'aqua' as const,
+    rotate: 1.5,
   },
   {
     num: '02',
     title: 'Eingrenzen',
     description: 'Funktionen, Rechte und Grenzen festlegen. Lesen und Schreiben trennen wir bewusst.',
-    tone: 'fuchsia',
+    accent: 'fuchsia' as const,
+    rotate: -1.5,
   },
-  { num: '03', title: 'Umsetzen', description: 'MCP-Server entwickeln, testen und dokumentieren.', tone: 'yellow' },
+  {
+    num: '03',
+    title: 'Umsetzen',
+    description: 'MCP-Server entwickeln, testen und dokumentieren.',
+    accent: 'yellow' as const,
+    rotate: 1.5,
+  },
   {
     num: '04',
     title: 'Übergeben',
     description: 'Code, Dokumentation und auf Wunsch Skills für Ihr Team.',
-    tone: 'purple',
+    accent: 'purple' as const,
+    rotate: -1.5,
   },
 ];
 ---
 
 <Layout metadata={metadata}>
-  <ServiceHero
-    title="KI, die mit Ihren Systemen arbeitet, nicht an ihnen vorbei."
-    subtitle="Wir verbinden KI-Assistenten wie Claude, Cursor oder VS Code über das Model Context Protocol (MCP) mit Ihren Werkzeugen und Daten, so gezielt und nachvollziehbar wie nötig."
-    ctaText="KI-Vorhaben besprechen"
-    badge="Leistung: KI & MCP"
-    burstLabel="mcp"
-  />
-
-  <!-- Was ist MCP -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--aqua">Grundlagen</span>
-      <h2 class="pop-display pop-display--aqua-offset text-3xl md:text-4xl mt-4">Was ist MCP?</h2>
-      <p class="mt-4 text-lg leading-relaxed max-w-3xl" style="color: var(--pop-text-secondary);">
-        Das Model Context Protocol ist ein offener Standard, über den KI-Assistenten auf Werkzeuge und Daten zugreifen.
-        Statt Informationen per Copy-and-paste in einen Chat zu kopieren, ruft der Assistent definierte Funktionen auf,
-        zum Beispiel „Server-Snapshot anlegen“ oder „Statistik abrufen“. Welche Funktionen das sind, bestimmen Sie.
-      </p>
-
-      <div class="mt-10 flex flex-col md:flex-row items-stretch gap-3 md:gap-2">
-        <div
-          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center"
-          style="background: var(--pop-aqua); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy); color: var(--pop-navy);"
-        >
-          ki-assistent
+  <!-- 4.1 Hero -->
+  <section class="relative overflow-hidden not-prose" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={620}
+      height={560}
+      pitch={20}
+      origin="top-right"
+      d0={14.78}
+      k={0.018}
+      color="var(--hero-dots)"
+      opacity={0.22}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
+      <div class="grid lg:grid-cols-[800fr_460fr] gap-10 items-start">
+        <div class="flex flex-col gap-7 max-w-[800px]">
+          <Sticker color="yellow" shadow="fuchsia" rotate={3}>Leistung · KI & MCP</Sticker>
+          <Heading
+            level={1}
+            size="l"
+            color="var(--hero-heading)"
+            shadowColor="var(--pop-fuchsia)"
+            shadowSize="6px 6px 0"
+          >
+            ki, die mit ihren systemen arbeitet, nicht an ihnen vorbei.
+          </Heading>
+          <Lead size="l" class="!text-[color:var(--hero-text)]">
+            Wir verbinden KI-Assistenten wie Claude, Cursor oder VS Code über das Model Context Protocol (MCP) mit Ihren
+            Werkzeugen und Daten, so gezielt und nachvollziehbar wie nötig.
+          </Lead>
+          <Button variant="primary" shadow="fuchsia" href={BOOKING_URL} text="KI-Vorhaben besprechen" />
         </div>
-        <div
-          class="hidden md:flex items-center justify-center px-1 font-heading font-black text-2xl"
-          style="color: var(--pop-yellow);"
-        >
-          →
-        </div>
-        <div
-          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center"
-          style="background: var(--pop-yellow); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy); color: var(--pop-navy);"
-        >
-          mcp-server
-        </div>
-        <div
-          class="hidden md:flex items-center justify-center px-1 font-heading font-black text-2xl"
-          style="color: var(--pop-yellow);"
-        >
-          →
-        </div>
-        <div
-          class="flex-1 p-5 font-heading font-black lowercase text-xl text-center text-white"
-          style="background: var(--pop-purple); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-navy);"
-        >
-          Ihre Systeme
+        <div class="relative justify-self-center w-full max-w-[460px] aspect-[460/440]">
+          <img
+            src={burstMcp}
+            alt=""
+            class="motion-safe:pop-spin-slow absolute inset-0 m-auto w-[91%] h-auto"
+            width="420"
+            height="420"
+            decoding="async"
+          />
+          <p
+            class="absolute left-[12%] top-[28%] font-heading font-black lowercase text-[clamp(4rem,12vw,9.375rem)] leading-none text-white motion-safe:pop-wobble"
+            style="--pop-rotate: 8deg; transform: rotate(8deg); text-shadow: 8px 8px 0 var(--pop-aqua); -webkit-text-stroke: 4px var(--pop-navy); paint-order: stroke fill;"
+          >
+            mcp
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Was wir tun -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--fuchsia">Leistungen</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was wir für Sie tun</h2>
-      <div class="mt-8 grid sm:grid-cols-2 gap-5">
-        {
-          offers.map((o) => (
-            <article
-              class="p-6"
-              style={`background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); border-left: 6px solid var(--pop-${o.accent}); box-shadow: 6px 6px 0 0 var(--pop-${o.accent});`}
-            >
-              <h3 class="font-heading font-extrabold text-lg lowercase" style="color: var(--pop-text-primary);">
-                {o.title}
-              </h3>
-              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
-                {o.description}
-              </p>
-            </article>
-          ))
-        }
+  <ZigzagDivider top="var(--hero-bg)" bottom="var(--surface)" />
+
+  <!-- 4.2 Was ist MCP -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--surface); border-bottom: 4px solid var(--ink);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20">
+      <div class="flex flex-col gap-6 max-w-[900px]">
+        <Sticker color="aqua" shadow="fuchsia" rotate={3}>Grundlagen</Sticker>
+        <Heading level={2} size="l">was ist mcp?</Heading>
+        <Lead>
+          Das Model Context Protocol ist ein offener Standard, über den KI-Assistenten auf Werkzeuge und Daten
+          zugreifen. Statt Informationen per Copy-and-paste in einen Chat zu kopieren, ruft der Assistent definierte
+          Funktionen auf, zum Beispiel „Server-Snapshot anlegen“ oder „Statistik abrufen“. Welche Funktionen das sind,
+          bestimmen Sie.
+        </Lead>
+      </div>
+      <div class="mt-11 flex flex-col md:flex-row md:flex-wrap md:items-center gap-3.5">
+        <SchemaBox label={'ki-<br />assistent'} color="aqua" rotate={3} showArrow={true} />
+        <SchemaBox label={'mcp-<br />server'} color="yellow" rotate={-2} showArrow={true} />
+        <SchemaBox label={'ihre<br />systeme'} color="purple" rotate={2} />
       </div>
     </div>
   </section>
 
-  <!-- Ablauf -->
-  <section class="not-prose relative overflow-hidden" style="background: var(--pop-navy);">
-    <KantenDivider from="navy" class="relative dark:hidden" />
-    <div class="hidden dark:block relative" style="background: var(--pop-aqua);">
-      <KantenDivider from="aqua" />
-    </div>
-    <div class="dark:bg-[var(--pop-aqua)]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-16">
-        <span class="pop-badge">Ablauf</span>
-        <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white dark:text-navy">So arbeiten wir</h2>
-        <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {
-            steps.map((s) => (
-              <article
-                class:list={['pop-service-card', `pop-service-card--${s.tone}`]}
-                style="background: var(--pop-surface);"
-              >
-                <div class="pop-service-card__head">
-                  <span class="pop-service-card__num">{s.num}</span>
-                </div>
-                <div class="pop-service-card__body">
-                  <h3 class="pop-service-card__title">{s.title}</h3>
-                  <p class="text-sm" style="color: var(--pop-text-secondary);">
-                    {s.description}
-                  </p>
-                </div>
-              </article>
-            ))
-          }
-        </div>
+  <!-- 4.3 Was wir tun -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="fuchsia" shadow="aqua" rotate={-2}>Leistungen</Sticker>
+      <Heading level={2} size="l">was wir für sie tun</Heading>
+      <div class="grid sm:grid-cols-2 gap-7 pt-3">
+        {offers.map((o) => <FeatureCard title={o.title} description={o.description} edge={o.edge} shadow={o.shadow} />)}
       </div>
     </div>
   </section>
 
-  <!-- Nachweis -->
-  <section
-    class="not-prose relative overflow-hidden pop-zigzag-top py-14 md:py-16"
-    style="background: var(--pop-purple);"
-  >
-    <div class="absolute inset-0 pop-halftone" style="--pop-hero-dots: #ff008f; opacity: 0.25;" aria-hidden="true">
+  <ZigzagDivider top="var(--page-bg)" bottom="var(--band-bg)" />
+
+  <!-- 4.4 So arbeiten wir -->
+  <section class="not-prose py-16 md:py-[88px]" style="background: var(--band-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Ablauf</Sticker>
+      <Heading level={2} size="l" color="var(--band-text)" shadowColor="var(--pop-fuchsia)"> so arbeiten wir </Heading>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-2">
+        {steps.map((s) => <StepCard {...s} />)}
+      </div>
     </div>
-    <div class="relative max-w-3xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--lime">Open Source</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">Nachweis statt Versprechen</h2>
-      <p class="mt-4 text-lg text-white/90">
+  </section>
+
+  <ZigzagDivider top="var(--band-bg)" bottom="var(--pop-purple-deep)" />
+
+  <!-- 4.5 Nachweis -->
+  <section class="relative overflow-hidden not-prose py-16 md:py-24" style="background: var(--pop-purple-deep);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={700}
+      height={480}
+      pitch={22}
+      origin="top-right"
+      d0={15.8}
+      k={0.0188}
+      color="#ff008f"
+      opacity={0.55}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6 max-w-[760px]">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Open Source</Sticker>
+      <Heading level={2} size="l" color="#fff" shadowColor="var(--pop-navy)"> nachweis statt versprechen </Heading>
+      <Lead tone="onColor" class="!text-white max-w-[760px]">
         Unsere eigenen MCP-Server sind öffentlich auf GitHub und als npm-Pakete verfügbar. Sie können sich den Code
         vorab ansehen.
-      </p>
-      <div class="mt-6">
-        <Button variant="primary" text="Zu unseren MCP-Servern" href="/projekte/mcp-server" />
-      </div>
-      <aside
-        class="mt-8 p-4 text-sm"
-        style="background: var(--pop-note-bg); color: var(--pop-note-text); border: 2.5px dashed var(--pop-navy);"
-        role="note"
-      >
-        <strong class="font-heading">Hinweis:</strong>
-        „nachvollziehbar und mit klaren Zugriffsrechten“ ist durch Token- bzw. OAuth-2.1-Absicherung in kieksme/mcp-http-kit
-        belegt. Keine weitergehende Sicherheits- oder Datenschutzzusage.
-      </aside>
+      </Lead>
+      <Button variant="primary" href="/projekte/mcp-server" text="Zu unseren MCP-Servern" />
+      <Note label="Hinweis" class="max-w-[620px]">
+        „nachvollziehbar und mit klaren Zugriffsrechten“ ist durch Token- bzw. OAuth-2.1-Absicherung in
+        kieksme/mcp-http-kit belegt. Keine weitergehende Sicherheits- oder Datenschutzzusage.
+      </Note>
     </div>
   </section>
 
-  <section class="not-prose py-12 md:py-14" style="background: var(--pop-surface);">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h3 class="font-heading font-extrabold text-xl md:text-2xl lowercase" style="color: var(--pop-text-primary);">
-        Und wohin mit all den Skills?
-      </h3>
-      <p class="mt-3 text-lg" style="color: var(--pop-text-secondary);">
+  <section class="not-prose py-12 md:py-14" style="background: var(--surface);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 max-w-3xl">
+      <Heading level={3} size="s">und wohin mit all den skills?</Heading>
+      <Lead class="mt-3">
         Sobald mehrere Teams eigene Skills, MCP-Server und Agents bauen, brauchen Sie einen gemeinsamen, geprüften Ort
         dafür.
-      </p>
+      </Lead>
       <p class="mt-4">
-        <a class="font-heading font-bold underline-offset-4 hover:underline" href="/agent-hub">
-          Mehr zum Agent-Hub →
-        </a>
+        <TextLink href="/agent-hub">Mehr zum Agent-Hub</TextLink>
       </p>
     </div>
   </section>
 
-  <SectionCTA
-    title="Haben Sie ein System, mit dem Ihre KI sprechen soll?"
+  <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />
+
+  <!-- 4.6 CTA -->
+  <CtaSection
+    title="haben sie ein system, mit dem ihre ki sprechen soll?"
     text="Erzählen Sie uns davon. In 30 Minuten klären wir, ob und wie ein MCP-Server dafür sinnvoll ist."
   />
 </Layout>

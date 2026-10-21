@@ -6,14 +6,14 @@ import Sticker from '~/components/ui/atoms/Sticker.astro';
 
 export interface Props {
   class?: string;
-  showOpenSource?: boolean;
+  /** true = always; false = never; auto = mobile always, desktop only in dark (SPEC §3.2 / §6) */
+  showOpenSource?: boolean | 'auto';
 }
 
-const { class: className = '', showOpenSource = true } = Astro.props;
+const { class: className = '', showOpenSource = 'auto' } = Astro.props;
 ---
 
 <div class:list={['relative w-full max-w-[520px] aspect-square mx-auto', className]}>
-  <!-- Light: combined SVG -->
   <img
     src={heroArt}
     alt=""
@@ -22,7 +22,6 @@ const { class: className = '', showOpenSource = true } = Astro.props;
     height="520"
     decoding="async"
   />
-  <!-- Dark: separate burst + finger for animation -->
   <div class="hidden dark:block absolute inset-0">
     <img
       src={burstDark}
@@ -42,8 +41,14 @@ const { class: className = '', showOpenSource = true } = Astro.props;
     />
   </div>
   {
-    showOpenSource && (
-      <div class="absolute top-[5%] right-[8%] z-10 motion-safe:pop-wobble" style="--pop-rotate: -8deg;">
+    showOpenSource !== false && (
+      <div
+        class:list={[
+          'absolute top-[5%] right-[8%] z-10 motion-safe:pop-wobble',
+          showOpenSource === true ? 'block' : 'max-md:block md:hidden dark:md:block',
+        ]}
+        style="--pop-rotate: -8deg;"
+      >
         <Sticker color="fuchsia" shadow="aqua" rotate={-8} size="md">
           open source!
         </Sticker>

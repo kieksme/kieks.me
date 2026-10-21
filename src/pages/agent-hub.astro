@@ -6,8 +6,16 @@
  * TODO ⟦PLATZHALTER: Preisrahmen Agent-Hub, Angabe folgt von André⟧ — visible block shows „Preisrahmen folgt“ until set
  */
 import Layout from '~/layouts/PageLayout.astro';
-import Button from '~/components/ui/Button.astro';
-import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import Marker from '~/components/ui/atoms/Marker.astro';
+import FeatureCard from '~/components/ui/molecules/FeatureCard.astro';
+import StepCard from '~/components/ui/molecules/StepCard.astro';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import AgentHubFlow from '~/components/ui/AgentHubFlow.astro';
 import { BOOKING_URL } from '~/config/site';
 
@@ -22,33 +30,33 @@ const offers = [
     title: 'Hub-Design',
     description:
       'Struktur, Repository, Versionierung und Verteilweg passend zu Ihren Werkzeugen, etwa Claude Code, Codex oder Google Cloud Agent Registry.',
-    accent: 'aqua',
+    edge: 'aqua' as const,
   },
   {
     title: 'Review-Prozess',
     description: 'Prüfkriterien, Rollen und ein Service-Level, damit das Review kein Flaschenhals wird.',
-    accent: 'fuchsia',
+    edge: 'fuchsia' as const,
   },
   {
     title: 'Richtlinien und Durchsetzung',
     description:
       'Allowlists für Marketplaces und MCP-Server, Managed Settings und Verteilung über Ihre bestehenden Werkzeuge.',
-    accent: 'aqua',
+    edge: 'aqua' as const,
   },
   {
     title: 'Skills, MCP-Server und Agents entwickeln',
     description: 'Wir bauen die Komponenten, die Ihre Teams wirklich brauchen, und bringen sie geprüft in den Hub.',
-    accent: 'fuchsia',
+    edge: 'fuchsia' as const,
   },
   {
     title: 'Identitäten und Secrets',
     description: 'Sichere Anbindung von MCP-Servern an Ihre Systeme und Zugangsdaten.',
-    accent: 'aqua',
+    edge: 'aqua' as const,
   },
   {
     title: 'Betrieb und Monitoring',
     description: 'Nachvollziehen, was wo installiert ist, mit Audit-Trail und Begleitung im laufenden Betrieb.',
-    accent: 'fuchsia',
+    edge: 'fuchsia' as const,
   },
 ];
 
@@ -64,25 +72,29 @@ const steps = [
     num: '01',
     title: 'Bestandsaufnahme',
     description: 'Welche Skills, MCP-Server und Agents nutzen Ihre Teams heute, und woher kommen sie?',
-    tone: 'aqua',
+    accent: 'aqua' as const,
+    rotate: 1.5,
   },
   {
     num: '02',
     title: 'Konzept',
     description: 'Hub-Struktur, Review-Gate und Richtlinien für Ihre Umgebung.',
-    tone: 'fuchsia',
+    accent: 'fuchsia' as const,
+    rotate: -1.5,
   },
   {
     num: '03',
     title: 'Aufbau',
     description: 'Wir richten den Hub ein und überführen die ersten Komponenten.',
-    tone: 'yellow',
+    accent: 'yellow' as const,
+    rotate: 1.5,
   },
   {
     num: '04',
     title: 'Begleitung',
     description: 'Wir unterstützen beim Betrieb und entwickeln neue Komponenten mit Ihnen.',
-    tone: 'purple',
+    accent: 'purple' as const,
+    rotate: -1.5,
   },
 ];
 
@@ -106,97 +118,109 @@ const flowSteps = [
       'Richtlinien legen fest, dass auf Entwicklerrechnern und in der CI nur Freigegebenes landet. Öffentliche Marketplaces bleiben außen vor.',
   },
 ];
+
+const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero -->
-  <section class="relative overflow-hidden not-prose md:-mt-[76px]" style="background: var(--pop-hero-bg);">
-    <div class="absolute inset-0 pop-halftone" aria-hidden="true"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20">
-      <span class="pop-badge">Agent-Hub</span>
-      <h1
-        class="pop-display pop-display--offset text-4xl sm:text-5xl md:text-[3.25rem] mt-5 max-w-4xl"
-        style="color: var(--pop-hero-heading);"
-      >
-        Ein Ort für alle Skills, MCP-Server und Agents Ihres Unternehmens
-      </h1>
-      <p class="mt-6 text-lg md:text-xl max-w-3xl" style="color: var(--pop-hero-text);">
-        Irgendwo in Ihrem Unternehmen gibt es denselben Skill fünfmal: kopiert, leicht verändert, aus dem Internet
-        ergänzt. Niemand hat etwas falsch gemacht, es fehlte nur ein Ort, an dem ein Skill leben, besser werden und
-        Vertrauen aufbauen kann. Diesen Ort bauen wir mit Ihnen auf.
-      </p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-4 items-start">
-        <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
-        <Button variant="primary" text="Erstgespräch vereinbaren" href={BOOKING_URL} icon="tabler:calendar-event" />
-        <Button
-          variant="secondary"
-          text="Zum Fachartikel →"
-          href="https://blog.andrelademann.de/de/posts/warum-unternehmen-einen-agent-hub-brauchen/"
-          target="_blank"
-        />
+  <section class="relative overflow-hidden not-prose" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={620}
+      height={560}
+      pitch={20}
+      origin="top-right"
+      d0={14.78}
+      k={0.018}
+      color="var(--hero-dots)"
+      opacity={0.22}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
+      <div class="flex flex-col gap-7 max-w-[900px]">
+        <Sticker color="yellow" shadow="fuchsia" rotate={3}>Agent-Hub</Sticker>
+        <Heading level={1} size="l" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)" shadowSize="6px 6px 0">
+          ein ort für alle skills, mcp-server und agents ihres unternehmens
+        </Heading>
+        <Lead size="l" class="!text-[color:var(--hero-text)]">
+          Irgendwo in Ihrem Unternehmen gibt es denselben Skill fünfmal: kopiert, leicht verändert, aus dem Internet
+          ergänzt. Niemand hat etwas falsch gemacht, es fehlte nur ein Ort, an dem ein Skill leben, besser werden und
+          Vertrauen aufbauen kann. Diesen Ort bauen wir mit Ihnen auf.
+        </Lead>
+        <div class="flex flex-col sm:flex-row gap-5">
+          <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
+          <Button variant="primary" text="Erstgespräch vereinbaren" href={BOOKING_URL} icon="tabler:calendar-event" />
+          <Button
+            variant="secondary"
+            shadow="aqua"
+            text="Zum Fachartikel →"
+            href="https://blog.andrelademann.de/de/posts/warum-unternehmen-einen-agent-hub-brauchen/"
+            target="_blank"
+          />
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Problem -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--fuchsia">Das Problem</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Mehr als ein Skill-Repository</h2>
-      <p class="mt-4 text-lg leading-relaxed" style="color: var(--pop-text-secondary);">
+  <ZigzagDivider top="var(--hero-bg)" bottom="var(--surface)" />
+
+  <section class="not-prose py-16 md:py-24" style="background: var(--surface);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 max-w-3xl flex flex-col gap-6">
+      <Sticker color="fuchsia" shadow="aqua" rotate={3}>Das Problem</Sticker>
+      <Heading level={2} size="l">mehr als ein skill-repository</Heading>
+      <Lead>
         Skills, MCP-Server und Agents haben sehr unterschiedliche Risikoprofile. Ein Skill ist überwiegend Markdown mit
         gelegentlichem Skript. Ein MCP-Server ist laufende Software mit Netzwerkzugriff und Zugangsdaten. Ein Agent
         bündelt Anweisungen, Werkzeuge und Berechtigungen. Ein Ordner namens „skills“ wird dem nicht gerecht – ein
         Agent-Hub schon.
-      </p>
+      </Lead>
     </div>
   </section>
 
-  <!-- How it works -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--aqua">Ablauf</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Ein Hub, ein Review-Gate</h2>
-
-      <ol class="mt-8 grid sm:grid-cols-2 gap-4 list-none p-0 m-0">
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Ablauf</Sticker>
+      <Heading level={2} size="l">ein hub, ein review-gate</Heading>
+      <ol class="mt-2 grid sm:grid-cols-2 gap-5 list-none p-0 m-0">
         {
           flowSteps.map((s, i) => (
             <li
-              class="p-5"
-              style="background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); box-shadow: 6px 6px 0 0 var(--pop-aqua);"
+              class="p-5 bg-[var(--surface)] border-[3px] border-[var(--ink)]"
+              style={`box-shadow: 6px 6px 0 0 var(--pop-${flowColors[i % 4]});`}
             >
               <p class="font-heading font-black text-2xl" style="color: var(--pop-fuchsia);">
                 {String(i + 1).padStart(2, '0')}
               </p>
-              <h3 class="font-heading font-extrabold text-lg lowercase mt-1" style="color: var(--pop-text-primary);">
+              <h3 class="font-heading font-extrabold text-lg lowercase mt-1" style="color: var(--text-primary);">
                 {s.title}
               </h3>
-              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--text-secondary);">
                 {s.description}
               </p>
             </li>
           ))
         }
       </ol>
-
-      <div class="mt-10">
+      <div class="mt-6">
         <AgentHubFlow />
       </div>
     </div>
   </section>
 
-  <!-- Why it matters -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-navy);">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge">Sicherheit</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4 text-white">Das Internet ist keine Paketquelle</h2>
-      <p class="mt-4 text-lg leading-relaxed text-white/90">
+  <ZigzagDivider top="var(--page-bg)" bottom="var(--pop-navy)" />
+
+  <section class="not-prose py-16 md:py-24" style="background: var(--pop-navy);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 max-w-3xl flex flex-col gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Sicherheit</Sticker>
+      <Heading level={2} size="l" color="#fff" shadowColor="var(--pop-fuchsia)">
+        das internet ist keine paketquelle
+      </Heading>
+      <Lead tone="onColor" class="!text-white/90">
         Ein Skill ist Software: Er kann einen Agenten anweisen, Befehle auszuführen, und eigene Skripte mitbringen. Jede
         ungeprüfte Installation ist ungeprüfte Codeausführung. Koi Security hat Anfang 2026 alle 2.857 Skills im
         öffentlichen Marketplace ClawHub geprüft und 341 bösartige gefunden (
         <a
           href="https://labs.cloudsecurityalliance.org/research/csa-research-note-openclaw-clawhub-supply-chain-risk-2026070/"
-          class="font-bold underline underline-offset-4 hover:text-aqua"
+          class="font-bold underline underline-offset-4"
           style="color: var(--pop-aqua);"
           target="_blank"
           rel="noopener"
@@ -205,46 +229,36 @@ const flowSteps = [
         </a>
         ). Scanner helfen, ersetzen aber kein Review. Für Unternehmen mit hohen Sicherheitsanforderungen, etwa im KRITIS-Umfeld,
         ist ein kontrollierter Hub deshalb Pflicht.
-      </p>
+      </Lead>
     </div>
   </section>
 
-  <!-- Offers -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--fuchsia">Leistungen</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was wir für Sie tun</h2>
-      <div class="mt-8 grid sm:grid-cols-2 gap-5">
-        {
-          offers.map((o) => (
-            <article
-              class="p-6"
-              style={`background: var(--pop-card-bg); border: 2.5px solid var(--pop-navy); border-left: 6px solid var(--pop-${o.accent}); box-shadow: 6px 6px 0 0 var(--pop-${o.accent});`}
-            >
-              <h3 class="font-heading font-extrabold text-lg lowercase" style="color: var(--pop-text-primary);">
-                {o.title}
-              </h3>
-              <p class="mt-2 text-sm leading-relaxed" style="color: var(--pop-text-secondary);">
-                {o.description}
-              </p>
-            </article>
-          ))
-        }
+  <ZigzagDivider top="var(--pop-navy)" bottom="var(--page-bg)" />
+
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="fuchsia" shadow="aqua" rotate={-2}>Leistungen</Sticker>
+      <Heading level={2} size="l">was wir für sie tun</Heading>
+      <div class="grid sm:grid-cols-2 gap-7">
+        {offers.map((o) => <FeatureCard title={o.title} description={o.description} edge={o.edge} />)}
       </div>
     </div>
   </section>
 
-  <!-- Benefits -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-surface);">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge pop-badge--aqua">Ihr Nutzen</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">Was Sie davon haben</h2>
-      <ul class="mt-8 space-y-4 list-none p-0 m-0">
+  <section class="not-prose py-16 md:py-24" style="background: var(--surface); border-top: 4px solid var(--ink);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 max-w-3xl flex flex-col gap-6">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Ihr Nutzen</Sticker>
+      <Heading level={2} size="l">was sie davon haben</Heading>
+      <ul class="mt-2 space-y-4 list-none p-0 m-0">
         {
-          benefits.map((b) => (
-            <li class="flex gap-3 items-start">
-              <span class="pop-faq-mark pop-faq-mark--aqua mt-1.5" aria-hidden="true" />
-              <span class="text-lg" style="color: var(--pop-text-primary);">
+          benefits.map((b, i) => (
+            <li class="flex gap-5 items-start">
+              <Marker
+                variant="diamond"
+                color={(['aqua', 'fuchsia', 'yellow', 'purple'] as const)[i % 4]}
+                class="mt-1.5"
+              />
+              <span class="text-lg" style="color: var(--text-primary);">
                 {b}
               </span>
             </li>
@@ -254,33 +268,17 @@ const flowSteps = [
     </div>
   </section>
 
-  <!-- Process -->
-  <section class="not-prose py-14 md:py-16" style="background: var(--pop-page-bg);">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <span class="pop-badge">Vorgehen</span>
-      <h2 class="pop-display text-3xl md:text-4xl mt-4">So starten wir</h2>
-      <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {
-          steps.map((s) => (
-            <article class:list={['pop-service-card', `pop-service-card--${s.tone}`]}>
-              <div class="pop-service-card__head">
-                <span class="pop-service-card__num">{s.num}</span>
-              </div>
-              <div class="pop-service-card__body">
-                <h3 class="pop-service-card__title">{s.title}</h3>
-                <p class="text-sm" style="color: var(--pop-text-secondary);">
-                  {s.description}
-                </p>
-              </div>
-            </article>
-          ))
-        }
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Vorgehen</Sticker>
+      <Heading level={2} size="l">so starten wir</Heading>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {steps.map((s) => <StepCard {...s} />)}
       </div>
-
       {/* TODO ⟦PLATZHALTER: Preisrahmen Agent-Hub, Angabe folgt von André⟧ */}
       <aside
-        class="mt-10 max-w-xl p-6"
-        style="background: var(--pop-yellow); border: 2.5px solid var(--pop-navy); box-shadow: 8px 8px 0 0 var(--pop-fuchsia); color: var(--pop-navy);"
+        class="mt-4 max-w-xl p-6 border-[3px] border-[var(--ink)]"
+        style="background: var(--pop-yellow); box-shadow: 8px 8px 0 0 var(--pop-fuchsia); color: var(--pop-navy);"
         aria-label="Preisrahmen"
       >
         <p class="font-heading font-extrabold lowercase text-sm tracking-wide">Preisrahmen</p>
@@ -292,9 +290,11 @@ const flowSteps = [
     </div>
   </section>
 
+  <ZigzagDivider top="var(--page-bg)" bottom="var(--pop-fuchsia)" />
+
   <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
-  <SectionCTA
-    title="Wie heißt diese Schicht bei Ihnen?"
+  <CtaSection
+    title="wie heißt diese schicht bei ihnen?"
     text="Skill-Repository, Agent-Hub, Registry oder noch gar nichts? Lassen Sie uns darüber sprechen, wie Ihr Unternehmen Skills, MCP-Server und Agents sicher und gemeinsam nutzt."
     ctaText="Erstgespräch vereinbaren"
   />

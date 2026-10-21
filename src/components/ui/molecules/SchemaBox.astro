@@ -1,0 +1,54 @@
+---
+import pfeil from '~/assets/pop/659-969_was-ist-mcp__imgPfeil.svg?url';
+
+/** MCP schema flow box — SPEC §4.2 */
+export interface Props {
+  label: string;
+  color: 'aqua' | 'yellow' | 'purple';
+  rotate?: number;
+  showArrow?: boolean;
+  class?: string;
+}
+
+const { label, color, rotate = 0, showArrow = false, class: className = '' } = Astro.props;
+const bgs = {
+  aqua: 'var(--pop-aqua)',
+  yellow: 'var(--pop-yellow)',
+  purple: 'var(--pop-purple-deep)',
+};
+const text = color === 'purple' ? '#fff' : 'var(--pop-navy)';
+---
+
+<div class:list={['contents', className]}>
+  <div
+    class="pop-schema-box w-full md:w-[220px] py-[26px] px-4 text-center border-4 border-[var(--ink)] font-heading font-black text-[26px] leading-tight lowercase"
+    style={`--pop-rotate: ${rotate}deg; background: ${bgs[color]}; color: ${text}; box-shadow: 8px 8px 0 0 var(--ink); transform: rotate(${rotate}deg);`}
+    set:html={label}
+  />
+  {
+    showArrow && (
+      <img
+        src={pfeil}
+        alt=""
+        class="motion-safe:pop-arrow hidden md:block w-16 h-10 shrink-0"
+        width="64"
+        height="40"
+        decoding="async"
+      />
+    )
+  }
+</div>
+
+<style>
+  .pop-schema-box {
+    transition: transform 0.3s ease;
+  }
+  .pop-schema-box:hover {
+    transform: rotate(0deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-schema-box:hover {
+      transform: rotate(var(--pop-rotate, 0deg));
+    }
+  }
+</style>

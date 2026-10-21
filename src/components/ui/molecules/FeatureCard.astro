@@ -1,0 +1,46 @@
+---
+/** KI offer card with 22px left color edge — SPEC §4.3 */
+export interface Props {
+  title: string;
+  description: string;
+  edge: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  shadow?: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  class?: string;
+}
+
+const { title, description, edge, shadow = edge === 'yellow' ? 'fuchsia' : edge, class: className = '' } = Astro.props;
+
+const colors = {
+  aqua: 'var(--pop-aqua)',
+  fuchsia: 'var(--pop-fuchsia)',
+  yellow: 'var(--pop-yellow)',
+  purple: 'var(--pop-purple)',
+};
+---
+
+<article
+  class:list={['pop-feature-card flex overflow-hidden bg-[var(--surface)] border-[3px] border-[var(--ink)]', className]}
+  style={`box-shadow: 8px 8px 0 0 ${colors[shadow]};`}
+>
+  <span class="w-[22px] shrink-0 self-stretch" style={`background: ${colors[edge]};`} aria-hidden="true"></span>
+  <div class="flex flex-col gap-2.5 pt-6 pb-[26px] px-6">
+    <h3 class="font-heading font-extrabold text-2xl leading-[30px]" style="color: var(--text-primary);">{title}</h3>
+    <p class="text-lg leading-7" style="color: var(--text-secondary);">{description}</p>
+  </div>
+</article>
+
+<style>
+  .pop-feature-card {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .pop-feature-card:hover {
+    transform: translate(-3px, -3px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-feature-card:hover {
+      transform: none;
+    }
+  }
+</style>

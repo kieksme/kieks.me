@@ -1,0 +1,25 @@
+---
+import heroBurst from '~/assets/pop/661-962_hero-art-dark__imgBurstGelb.svg?url';
+import cspBurst from '~/assets/pop/654-1669_csp-art__imgBurst.svg?url';
+import mcpBurst from '~/assets/pop/659-963_ki-hero-art-mcp__imgBurst.svg?url';
+
+export interface Props {
+  variant?: 'hero' | 'csp' | 'mcp';
+  spin?: boolean;
+  class?: string;
+  width?: number;
+  height?: number;
+}
+
+const { variant = 'hero', spin = true, class: className = '', width = 400, height = 400 } = Astro.props;
+const src = variant === 'csp' ? cspBurst : variant === 'mcp' ? mcpBurst : heroBurst;
+---
+
+<img
+  src={src}
+  alt=""
+  class:list={[spin && 'motion-safe:pop-spin-slow', className]}
+  width={width}
+  height={height}
+  decoding="async"
+/>

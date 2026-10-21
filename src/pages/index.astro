@@ -16,8 +16,8 @@ import MarqueeBand from '~/components/ui/organisms/MarqueeBand.astro';
 import HeroArtFinger from '~/components/ui/organisms/HeroArtFinger.astro';
 import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
-import avatarAndre from '~/assets/brand/avatars/kieksme-avatar-alademann.png';
-import avatarThomas from '~/assets/brand/avatars/kieksme-avatar-tschoene.png';
+import avatarAndre from '~/assets/pop/654-1674_team__imgAndre1.png';
+import avatarThomas from '~/assets/pop/654-1674_team__imgThomas.png';
 import cspBurst from '~/assets/pop/654-1669_csp-art__imgBurst.svg?url';
 
 const metadata = {
@@ -188,7 +188,7 @@ const faqsRight = [
       <Lead class="mt-6 max-w-[760px]">
         Fünf Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht.
       </Lead>
-      <div class="mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-7">
+      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-7">
         {services.map((s) => <ServiceCard {...s} />)}
       </div>
       <Note label="⟦ENTSCHEIDUNG D6⟧" class="mt-6 max-w-[640px]">
@@ -313,11 +313,11 @@ const faqsRight = [
       <Sticker color="yellow" shadow="fuchsia" rotate={3}>FAQ</Sticker>
       <Heading level={2} size="l">häufige fragen</Heading>
       <Lead>Kurz und ehrlich beantwortet.</Lead>
-      <div class="grid md:grid-cols-2 gap-x-16">
+      <div class="grid md:grid-cols-2 gap-x-16" id="faq-list">
         <div>
           {
             faqsLeft.map((f) => (
-              <FaqItem title={f.title} color={f.color}>
+              <FaqItem title={f.title} color={f.color} open={true}>
                 {f.body}
               </FaqItem>
             ))
@@ -326,7 +326,7 @@ const faqsRight = [
         <div>
           {
             faqsRight.map((f) => (
-              <FaqItem title={f.title} color={f.color}>
+              <FaqItem title={f.title} color={f.color} open={true}>
                 {f.body}
               </FaqItem>
             ))
@@ -334,6 +334,14 @@ const faqsRight = [
         </div>
       </div>
     </div>
+    <script>
+      // SPEC §6: mobile FAQ as accordion (closed); desktop stays open
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        document.querySelectorAll('#faq-list details.pop-faq-item').forEach((el) => {
+          el.removeAttribute('open');
+        });
+      }
+    </script>
   </section>
 
   <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />

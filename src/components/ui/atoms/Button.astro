@@ -47,21 +47,17 @@ const cls = [
   variants[variant],
   className,
 ].join(' ');
+const style = `--pop-shadow: ${shadowColor}; box-shadow: 6px 6px 0 0 ${shadowColor};`;
 ---
 
 {
   type === 'button' || type === 'submit' || type === 'reset' || !href ? (
-    <button type={type ?? 'button'} class={cls} style={`box-shadow: 6px 6px 0 0 ${shadowColor};`}>
+    <button type={type ?? 'button'} class={cls} style={style}>
       {text ? <Fragment set:html={text} /> : <slot />}
       {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-0.5 inline-block" />}
     </button>
   ) : (
-    <a
-      href={href}
-      class={cls}
-      style={`box-shadow: 6px 6px 0 0 ${shadowColor};`}
-      {...(target ? { target, rel: 'noopener noreferrer' } : {})}
-    >
+    <a href={href} class={cls} style={style} {...(target ? { target, rel: 'noopener noreferrer' } : {})}>
       {text ? <Fragment set:html={text} /> : <slot />}
       {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-0.5 inline-block" />}
     </a>
@@ -71,11 +67,11 @@ const cls = [
 <style>
   .pop-btn:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 0 var(--pop-shadow, var(--pop-fuchsia)) !important;
+    box-shadow: 8px 8px 0 0 var(--pop-shadow) !important;
   }
   .pop-btn:active {
     transform: translate(4px, 4px);
-    box-shadow: 2px 2px 0 0 var(--pop-shadow, var(--pop-fuchsia)) !important;
+    box-shadow: 2px 2px 0 0 var(--pop-shadow) !important;
   }
   @media (prefers-reduced-motion: reduce) {
     .pop-btn:hover,

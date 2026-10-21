@@ -1,13 +1,17 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import Button from '~/components/ui/Button.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import Note from '~/components/ui/atoms/Note.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import Placeholder from '~/components/common/Placeholder.astro';
-import EdgeAvatar from '~/components/ui/EdgeAvatar.astro';
+import AvatarCard from '~/components/ui/molecules/AvatarCard.astro';
 import { BOOKING_URL, CONTACT_EMAIL, CSP_DEMO_URL } from '~/config/site';
-import avatarAndre from '~/assets/brand/avatars/kieksme-avatar-alademann.png';
-import avatarThomas from '~/assets/brand/avatars/kieksme-avatar-tschoene.png';
+import avatarAndre from '~/assets/pop/654-1674_team__imgAndre1.png';
+import avatarThomas from '~/assets/pop/654-1674_team__imgThomas.png';
 
 const metadata = {
   title: 'CSP by kieks.me · Serviceportal für IT-Dienstleister und Service Desks',
@@ -20,35 +24,43 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section
-    class="relative overflow-hidden not-prose md:-mt-[76px] pop-zigzag-both"
-    style="background: var(--pop-purple);"
-  >
-    <div class="absolute inset-0 pop-halftone" style="--pop-hero-dots: #ff008f;" aria-hidden="true"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16">
-      <span class="pop-badge pop-badge--aqua">CSP · Ihr Serviceportal. Ihr Code. Ihre Freiheit.</span>
-      <h1 class="pop-display text-4xl md:text-5xl mt-5 text-white max-w-4xl">
-        Status, Zuständigkeit, Antwort: Ihre Kunden finden sie, bevor sie anrufen.
-      </h1>
-      <p class="mt-6 text-lg text-white/90 max-w-3xl">
+  <section class="relative overflow-hidden not-prose" style="background: var(--pop-purple-deep);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={700}
+      height={560}
+      pitch={22}
+      origin="top-right"
+      d0={15.8}
+      k={0.0178}
+      color="#ff008f"
+      opacity={0.55}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 flex flex-col gap-7 max-w-4xl">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>CSP · Ihr Serviceportal. Ihr Code. Ihre Freiheit.</Sticker>
+      <Heading level={1} size="l" color="#fff" shadowColor="var(--pop-navy)" shadowSize="6px 6px 0">
+        status, zuständigkeit, antwort: ihre kunden finden sie, bevor sie anrufen.
+      </Heading>
+      <Lead tone="onColor" class="!text-white/90 max-w-3xl">
         Wir verbinden Ihre Servicequellen in einem eigenen Open-Source-Portal, mit direktem menschlichem Support und
         einer Übergabe, mit der Ihr Team selbst weiterentwickeln kann.
-      </p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+      </Lead>
+      <div class="flex flex-col sm:flex-row gap-5">
         <Button variant="primary" text="30-Minuten-Gespräch buchen" href={BOOKING_URL} icon="tabler:calendar-event" />
         <Button
           variant="secondary"
+          shadow="aqua"
           text="Demo ansehen (synthetische Daten)"
           href={CSP_DEMO_URL.startsWith('http') || CSP_DEMO_URL.startsWith('/') ? CSP_DEMO_URL : '#demo-placeholder'}
         />
       </div>
-      <p class="mt-6 text-sm text-white/80">
+      <p class="text-sm text-white/80">
         Open Source · MIT · Ihr Ticketsystem bleibt · Kein verpflichtendes Abo · Direkter Kontakt auch ohne KI
       </p>
-      <Placeholder label="⟦PLATZHALTER / D4 / D5⟧" class="mt-6 max-w-2xl">
+      <Note label="⟦PLATZHALTER / D4 / D5⟧" class="max-w-2xl">
         URL: kieks.me/csp oder csp.kieks.me. Design derzeit kieks.me-Marke (nicht CSP Petrol/Lime). Demo-URL:
         {CSP_DEMO_URL}
-      </Placeholder>
+      </Note>
     </div>
   </section>
 
@@ -170,9 +182,9 @@ const metadata = {
           <li><strong>Slack:</strong> echte Slack-Anbindung noch ungetestet.</li>
           <li><strong>Telegram:</strong> echte Verbindung noch ungetestet.</li>
         </ul>
-        <Placeholder label="⟦PLATZHALTER D9⟧" class="mt-4">
+        <Note label="⟦PLATZHALTER D9⟧" class="mt-4">
           Status aktualisieren, sobald eine Anbindung live verifiziert ist.
-        </Placeholder>
+        </Note>
       </div>
       <div>
         <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Messen statt versprechen</h2>
@@ -213,9 +225,9 @@ const metadata = {
           und Betriebsanleitung. Weitere Betreuung nur, wenn Sie sie ausdrücklich beauftragen.
         </li>
       </ol>
-      <Placeholder label="⟦PLATZHALTER D7⟧" class="mt-6">
+      <Note label="⟦PLATZHALTER D7⟧" class="mt-6">
         Preisrahmen nur, falls entschieden. Sonst keine Preise und keine Personentage nennen.
-      </Placeholder>
+      </Note>
     </div>
   </section>
 
@@ -279,20 +291,19 @@ const metadata = {
         direkt mit den Menschen, die Ihr Portal einrichten und übergeben.
       </p>
       <div class="mt-8 flex flex-col sm:flex-row gap-10">
-        <EdgeAvatar
+        <AvatarCard
           name="André Lademann"
           label="andré"
           image={avatarAndre}
           imageAlt="André Lademann, Gesellschafter der kieks.me GbR"
           role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
         />
-        <EdgeAvatar
+        <AvatarCard
           name="Thomas Schöne"
           label="thomas"
           image={avatarThomas}
           imageAlt="Thomas Schöne, Gesellschafter der kieks.me GbR"
           role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
-          variant="fuchsia"
         />
       </div>
       <p class="mt-6 text-muted">Produktcode, Plugin-Dokumentation und Kunden-Skills liegen öffentlich auf GitHub.</p>
