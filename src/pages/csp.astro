@@ -1,0 +1,383 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+import KantenDivider from '~/components/ui/KantenDivider.astro';
+import EdgeAvatar from '~/components/ui/EdgeAvatar.astro';
+import { BOOKING_URL, CONTACT_EMAIL, CSP_DEMO_URL } from '~/config/site';
+import avatarAndre from '~/assets/brand/avatars/kieksme-avatar-alademann.png';
+import avatarThomas from '~/assets/brand/avatars/kieksme-avatar-tschoene.png';
+
+const metadata = {
+  title: 'CSP by kieks.me · Serviceportal für IT-Dienstleister und Service Desks',
+  description:
+    'Open-Source-Serviceportal für IT-Dienstleister und Service Desks: Status, Bereitschaft und Wissen vor Ihrem Ticketsystem. Einrichtung, Integration, Übergabe.',
+  ignoreTitleTemplate: true,
+};
+
+/** Design note: /csp uses kieks.me brand (Navy/Aqua/Fuchsia, Hanken Grotesk), not CSP Petrol/Lime — ⟦ENTSCHEIDUNG D5⟧ */
+---
+
+<Layout metadata={metadata}>
+  <section class="relative overflow-hidden not-prose md:-mt-[76px]">
+    <div class="absolute inset-0 bg-navy" aria-hidden="true"></div>
+    <div class="kanten-hero-bg" aria-hidden="true">
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--aqua"></span>
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--fuchsia"></span>
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--grey"></span>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16">
+      <p class="text-aqua font-heading font-semibold tracking-wide mb-4">
+        CSP · Ihr Serviceportal. Ihr Code. Ihre Freiheit.
+      </p>
+      <h1 class="font-heading text-4xl md:text-5xl font-bold text-white leading-tight max-w-4xl">
+        Status, Zuständigkeit, Antwort: Ihre Kunden finden sie, bevor sie anrufen.
+      </h1>
+      <p class="mt-6 text-lg text-white/85 max-w-3xl">
+        Wir verbinden Ihre Servicequellen in einem eigenen Open-Source-Portal, mit direktem menschlichem Support und
+        einer Übergabe, mit der Ihr Team selbst weiterentwickeln kann.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+        <Button
+          variant="primary"
+          text="30-Minuten-Gespräch buchen"
+          href={BOOKING_URL}
+          icon="tabler:calendar-event"
+          class="!bg-aqua !border-aqua !text-navy hover:!bg-aqua-600"
+        />
+        <Button
+          variant="secondary"
+          text="Demo ansehen (synthetische Daten)"
+          href={CSP_DEMO_URL.startsWith('http') || CSP_DEMO_URL.startsWith('/') ? CSP_DEMO_URL : '#demo-placeholder'}
+          class="!border-white/40 !text-white hover:!bg-white/10"
+        />
+      </div>
+      <p class="mt-6 text-sm text-white/70">
+        Open Source · MIT · Ihr Ticketsystem bleibt · Kein verpflichtendes Abo · Direkter Kontakt auch ohne KI
+      </p>
+      <Placeholder label="⟦PLATZHALTER / D4 / D5⟧" class="mt-6 max-w-2xl !bg-navy-400/80 !border-aqua/40 !text-white">
+        URL: kieks.me/csp oder csp.kieks.me. Design derzeit kieks.me-Marke (nicht CSP Petrol/Lime). Demo-URL:
+        {CSP_DEMO_URL}
+      </Placeholder>
+    </div>
+    <KantenDivider from="white" class="relative dark:hidden" />
+  </section>
+
+  <section class="not-prose py-12 md:py-16" id="demo-placeholder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-3xl font-bold text-navy dark:text-white">Drei Situationen aus dem Service-Alltag</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {
+          [
+            {
+              t: 'Störung, und alle rufen gleichzeitig an.',
+              d: 'Ihre Kunden wollen wissen, ob es an ihnen liegt oder an Ihnen.',
+            },
+            {
+              t: '„Wer ist heute zuständig?“',
+              d: 'Die Frage kostet Zeit, obwohl der Schichtplan längst existiert.',
+            },
+            {
+              t: 'Dieselbe Frage zum fünften Mal in dieser Woche.',
+              d: 'Die Antwort steht irgendwo, nur nicht dort, wo Ihre Kunden suchen.',
+            },
+          ].map((item) => (
+            <article class="kanten-card p-6">
+              <h3 class="font-heading font-bold text-lg text-navy dark:text-white">{item.t}</h3>
+              <p class="mt-2 text-muted">{item.d}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto">
+      <h2 class="font-heading text-3xl font-bold text-navy dark:text-white">
+        Ein Einstieg für alles, was vor dem Ticket kommt
+      </h2>
+      <p class="mt-4 text-lg text-muted max-w-3xl">
+        CSP bündelt die Informationen, die Ihre Servicekunden am häufigsten suchen, in einem Portal mit Ihrer Marke.
+      </p>
+      <table class="mt-8 w-full text-left text-sm border-collapse min-w-[40rem]">
+        <thead>
+          <tr class="border-b-2 border-navy text-navy dark:text-aqua dark:border-aqua">
+            <th class="py-3 pr-4 font-heading">Modul</th>
+            <th class="py-3 pr-4 font-heading">Was es zeigt</th>
+            <th class="py-3 font-heading">Einrichtungsstand (CSP 0.13.4)</th>
+          </tr>
+        </thead>
+        <tbody class="text-muted">
+          <tr class="border-b border-navy-100 dark:border-navy-300">
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">Kontakt</td>
+            <td class="py-3 pr-4">Hotline und Notfallkontakt, direkt erreichbar</td>
+            <td class="py-3">Öffentliches Portalmodul</td>
+          </tr>
+          <tr class="border-b border-navy-100 dark:border-navy-300">
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">Bereitschaft (SIGNL4)</td>
+            <td class="py-3 pr-4">Team, Schichten, vCards und aktuelle Alerts</td>
+            <td class="py-3">Provider-Verbindung pro Projekt prüfen</td>
+          </tr>
+          <tr class="border-b border-navy-100 dark:border-navy-300">
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">Systemstatus (Uptime Kuma)</td>
+            <td class="py-3 pr-4">Monitorstatus und Vorfälle Ihrer Statusseite</td>
+            <td class="py-3">Provider-Verbindung pro Projekt prüfen</td>
+          </tr>
+          <tr class="border-b border-navy-100 dark:border-navy-300">
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">Inhalte</td>
+            <td class="py-3 pr-4">Prozesse, Links zu Ihrem Ticketsystem, Ticketvorlagen, FAQ</td>
+            <td class="py-3">Öffentliches Portalmodul</td>
+          </tr>
+          <tr class="border-b border-navy-100 dark:border-navy-300">
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">KI-Chat (optional)</td>
+            <td class="py-3 pr-4">Antworten aus den Quellen Ihres Portals, mit OpenAI, Azure OpenAI oder Ollama</td>
+            <td class="py-3">Provider-Verbindung pro Projekt prüfen</td>
+          </tr>
+          <tr>
+            <td class="py-3 pr-4 font-semibold text-navy dark:text-white">Datadog (optional)</td>
+            <td class="py-3 pr-4">Cases, Monitorstatus, SLOs und Bereitschaften</td>
+            <td class="py-3">Live-Anbindung noch ungetestet, lokale Demo vorhanden</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="mt-4 text-sm text-muted">
+        Produktbilder zeigen synthetische Demodaten. Die Standardmodule sind öffentlich lesbar. Veröffentlichte Inhalte
+        müssen dafür geeignet sein.
+      </p>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-10">
+      <div>
+        <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+          Kein Systemwechsel. Ein zusätzlicher Einstieg.
+        </h2>
+        <p class="mt-4 text-lg text-muted">
+          Ihr Ticketsystem, Ihr Monitoring und Ihre ITSM-Prozesse bleiben. CSP verlinkt Ihr vorhandenes Ticketsystem und
+          stellt Vorlagen bereit. Der KI-Chat legt keine Tickets an und verändert keine Alerts oder Schichten. CSP ist
+          keine Migration und keine fertige Mandantenplattform: Je Servicekunde entsteht eine eigene Instanz.
+        </p>
+      </div>
+      <div>
+        <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+          KI ist ein Angebot, keine Hürde.
+        </h2>
+        <p class="mt-4 text-lg text-muted">
+          Ihre Kunden können den KI-Assistenten jederzeit überspringen. Die Hotline ist direkt erreichbar, ganz ohne KI.
+          Mit einem eingerichteten Support-Plugin können sie im Chat schon vor der ersten KI-Nachricht eine echte Person
+          anfordern. Der Bot pausiert, Ihr Serviceteam übernimmt.
+        </p>
+        <p class="mt-3 text-sm text-muted">
+          Die Chat-Übernahme benötigt eines der Support-Plugins für Microsoft Teams, Slack oder Telegram. Besetzung und
+          Antwortzeiten richten sich nach Ihren vereinbarten Servicezeiten.
+        </p>
+        <ul class="mt-4 space-y-2 text-muted list-disc pl-5">
+          <li>
+            <strong>Microsoft Teams</strong> (mit Entra-Anmeldung): lokale Demo vorhanden, Live-Anbindung laut Katalog noch
+            zu verifizieren.
+          </li>
+          <li><strong>Slack:</strong> echte Slack-Anbindung noch ungetestet.</li>
+          <li><strong>Telegram:</strong> echte Verbindung noch ungetestet.</li>
+        </ul>
+        <Placeholder label="⟦PLATZHALTER D9⟧" class="mt-4">
+          Status aktualisieren, sobald eine Anbindung live verifiziert ist.
+        </Placeholder>
+      </div>
+      <div>
+        <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Messen statt versprechen</h2>
+        <p class="mt-4 text-lg text-muted">
+          Ein optionaler KI-Assistent beantwortet wiederkehrende Fragen aus den freigegebenen Quellen Ihres Portals und
+          bereitet Anliegen für Ihr Team vor. Was das in Ihrem Support bewirkt, messen wir gemeinsam im Pilot, nicht
+          vorab im Marketing.
+        </p>
+        <p class="mt-3 inline-block bg-aqua text-navy font-heading font-bold px-3 py-1 text-sm">Pilot mit Messung</p>
+        <p class="mt-3 text-muted">
+          Vollständig beantwortet, vorbereitet, an Menschen übergeben, falsch beantwortet: Wir zählen jede Kategorie
+          getrennt. Dass der direkte Weg zum Menschen funktioniert, ist ein eigenes Abnahmekriterium.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+        Klein anfangen, sauber messen, dann entscheiden.
+      </h2>
+      <ol class="mt-6 space-y-4 text-muted list-decimal pl-5">
+        <li>
+          <strong class="text-navy dark:text-white">30-Minuten-Orientierung:</strong> Problem, heutiger Ablauf und mögliche
+          Pilotgrenze. Unverbindlich ⟦BESTÄTIGEN: kostenlos⟧.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Readiness- und Scope-Phase:</strong> Quellen, Berechtigungen, Datenrollen,
+          Betriebsverantwortung, Servicezeiten und Abnahmekriterien. Aufwand wird separat vereinbart.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Pilot:</strong> eine Kundenorganisation, eine wiederkehrende Anfrageart,
+          ein menschlicher Supportkanal, eine freigegebene Wissensbasis und ausgewählte vorhandene Quellen.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Ausbau und Übergabe:</strong> dokumentierter Code, Skills, UI/CI-Tokens
+          und Betriebsanleitung. Weitere Betreuung nur, wenn Sie sie ausdrücklich beauftragen.
+        </li>
+      </ol>
+      <Placeholder label="⟦PLATZHALTER D7⟧" class="mt-6">
+        Preisrahmen nur, falls entschieden. Sonst keine Preise und keine Personentage nennen.
+      </Placeholder>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+        Einmal integrieren. Dauerhaft selbst bestimmen.
+      </h2>
+      <ul class="mt-6 space-y-3 text-muted list-disc pl-5">
+        <li>
+          <strong class="text-navy dark:text-white">Keine CSP-Lizenzgebühr:</strong> Das Produkt steht unter MIT. Sie können
+          es nutzen, verändern und in Ihrer eigenen Infrastruktur betreiben.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Kein verpflichtendes Abo:</strong> Einrichtung und Integration werden
+          als individuelles Projekt vereinbart.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Kein Zwang zum Anbieter:</strong> Sie erhalten Projektstand, Konfiguration,
+          Dokumentation und Skills. Ihr Team oder ein anderer Dienstleister kann weiterarbeiten.
+        </li>
+        <li>
+          <strong class="text-navy dark:text-white">Klare Fremdkosten:</strong> Hosting, SIGNL4, Microsoft- und Slack-Dienste
+          sowie KI-Anbieter können eigene Kosten verursachen. Wir besprechen sie vorab und weisen sie separat aus.
+        </li>
+      </ul>
+      <p class="mt-4 text-sm text-muted">Die Nutzung der CSP-Markenassets ist gesondert geregelt.</p>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Ein ehrlicher Selbst-Check</h2>
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <div class="kanten-card p-5">
+          <h3 class="font-heading font-bold text-navy dark:text-white">Gute Voraussetzungen</h3>
+          <ul class="mt-3 space-y-2 text-sm text-muted list-disc pl-4">
+            <li>B2B-Support mit wiederkehrenden Fragen zu Status, Zuständigkeit oder bekannten Abläufen.</li>
+            <li>Servicequellen wie Monitoring, Schichtplan, FAQ oder Ticketsystem, die bleiben sollen.</li>
+            <li>Eine Person verantwortet den Service; eine technische Ansprechperson kann die Übergabe übernehmen.</li>
+          </ul>
+        </div>
+        <div class="kanten-card kanten-card--fuchsia p-5">
+          <h3 class="font-heading font-bold text-navy dark:text-white">Eher (noch) nicht passend</h3>
+          <ul class="mt-3 space-y-2 text-sm text-muted list-disc pl-4">
+            <li>Sie brauchen sofort eine vollständige ITSM- oder Mandantenplattform.</li>
+            <li>Für Integration und Betrieb ist kein Budget vorgesehen.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+        Zwei Ansprechpartner. Kein Callcenter.
+      </h2>
+      <p class="mt-4 text-lg text-muted max-w-3xl">
+        CSP ist ein Angebot der kieks.me GbR aus Leipzig, Gesellschafter André Lademann und Thomas Schöne. Sie sprechen
+        direkt mit den Menschen, die Ihr Portal einrichten und übergeben.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-10">
+        <EdgeAvatar
+          name="André Lademann"
+          label="andré"
+          image={avatarAndre}
+          imageAlt="André Lademann, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+        />
+        <EdgeAvatar
+          name="Thomas Schöne"
+          label="thomas"
+          image={avatarThomas}
+          imageAlt="Thomas Schöne, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+          variant="fuchsia"
+        />
+      </div>
+      <p class="mt-6 text-muted">Produktcode, Plugin-Dokumentation und Kunden-Skills liegen öffentlich auf GitHub.</p>
+      <div class="mt-3 flex flex-wrap gap-4">
+        <a href="https://github.com/kieksme/csp" target="_blank" rel="noopener noreferrer">github.com/kieksme/csp →</a>
+        <a href="https://github.com/kieksme/csp-brand" target="_blank" rel="noopener noreferrer"
+          >github.com/kieksme/csp-brand →</a
+        >
+      </div>
+    </div>
+  </section>
+
+  <FAQs
+    title="Häufige Fragen"
+    columns={1}
+    classes={{ container: 'max-w-4xl' }}
+    items={[
+      {
+        title: 'Was genau bezahlen wir?',
+        description:
+          'Die vereinbarte Einrichtung, Anpassung, Integration und Übergabe. CSP selbst ist Open Source unter MIT. Ein individuelles Angebot macht den Projektumfang und separate Anbieter- oder Infrastrukturkosten transparent.',
+      },
+      {
+        title: 'Gibt es ein Abonnement oder laufende Lizenzkosten?',
+        description:
+          'Für CSP gibt es keine Lizenzgebühr und bei unserem Integrationsangebot kein verpflichtendes Abo. Hosting, externe Dienste und KI-Nutzung können laufende Kosten verursachen. Spätere Unterstützung oder Erweiterungen beauftragen Sie separat.',
+      },
+      {
+        title: 'Ersetzt CSP unser Ticketsystem?',
+        description:
+          'Nein. CSP ist der Einstieg vor Ihrem Ticketsystem. Das Inhalte-Modul verlinkt Ihr vorhandenes System und bietet Vorlagen. Der KI-Chat legt keine Tickets an.',
+      },
+      {
+        title: 'Bekommt jeder unserer Servicekunden ein eigenes Portal?',
+        description:
+          'Ja, jede Kundeninstanz wird eigenständig mit eigener Marke und eigener Modulauswahl betrieben. Eine fertig abgenommene Mandantenplattform ist CSP nicht.',
+      },
+      {
+        title: 'Wer betreibt das Portal?',
+        description:
+          'Das legen wir im Projekt fest: Ihr Team, Ihr Hoster oder eine andere vereinbarte Lösung. Frontend und API laufen pro Kunde getrennt.',
+      },
+      {
+        title: 'Können unsere Kunden die KI jederzeit überspringen?',
+        description:
+          'Ja. Die Hotline bietet direkten Kontakt ohne KI. Mit einem eingerichteten Teams-, Slack- oder Telegram-Plugin können Kunden im Chat vor der ersten KI-Nachricht eine Person anfordern. Es gelten Ihre vereinbarten Servicezeiten.',
+      },
+      {
+        title: 'Sind unsere Informationen automatisch privat?',
+        description:
+          'Nein. Die Standardmodule sind öffentlich. Veröffentlichte Inhalte müssen dafür geeignet sein. Geschützte Supportgespräche und die zugehörige Anmeldung werden separat eingerichtet. Datenfreigaben, KI-Anbieter und Betrieb klären wir im Projekt.',
+      },
+      {
+        title: 'Können wir CSP als eigenes Serviceangebot an unsere Kunden weitergeben?',
+        description:
+          '⟦PLATZHALTER D8: Antwort klären. Laut Strategie dürfen MSPs eigene laufende Serviceverträge anbieten. Markenrechte sind getrennt vom MIT-Code geregelt.⟧',
+      },
+    ]}
+  />
+
+  <SectionCTA
+    title="Passt ein eigenes Serviceportal zu Ihrer Supportlandschaft?"
+    text="Im Erstgespräch klären wir Ihre Quellen, den menschlichen Supportkanal und einen messbaren Pilotumfang. 30 Minuten, unverbindlich ⟦BESTÄTIGEN⟧."
+    ctaText="30-Minuten-Gespräch buchen"
+    showEmailLink={true}
+  />
+  <div class="text-center pb-10 -mt-2 px-4">
+    <p class="text-sm text-muted">
+      Sie wählen einen Termin im Kalender von kieks.me. ⟦PLATZHALTER: Buchungstool und Datenschutzhinweis⟧ · E-Mail:{
+        ' '
+      }
+      {CONTACT_EMAIL}
+    </p>
+  </div>
+</Layout>

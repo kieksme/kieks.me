@@ -1,0 +1,197 @@
+---
+/**
+ * „mit Kanten“ team avatar
+ * Layered offset jagged shapes (light grey → fuchsia → aqua) + cut-out portrait.
+ * Portraits: kieks.me.brand source/avatars/. Optimized via astro:assets (AVIF/WebP).
+ * Visual reference: Figma NULLzuEINS Design System node 394:19.
+ */
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+
+export interface Props {
+  name: string;
+  /** Display label under/over the portrait (lowercase preferred) */
+  label?: string;
+  /** Cut-out portrait from brand repo (transparent PNG). Omit for placeholder slot. */
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Leave ⟦PLATZHALTER⟧ when role/bio is not in the copy file */
+  role?: string;
+  variant?: 'aqua' | 'fuchsia';
+  class?: string;
+}
+
+const { name, label, image, imageAlt, role, variant = 'aqua', class: className = '' } = Astro.props;
+
+const displayLabel = (label ?? name).toLocaleLowerCase('de-DE');
+const alt = imageAlt ?? name;
+---
+
+<figure class:list={['edge-avatar', `edge-avatar--${variant}`, className]}>
+  <div class="edge-avatar__stack">
+    <span class="edge-avatar__shape edge-avatar__shape--grey" aria-hidden="true"></span>
+    <span class="edge-avatar__shape edge-avatar__shape--fuchsia" aria-hidden="true"></span>
+    <span class="edge-avatar__shape edge-avatar__shape--aqua">
+      {
+        image ? (
+          <Picture
+            class="edge-avatar__photo"
+            src={image}
+            alt={alt}
+            width={320}
+            height={320}
+            widths={[160, 240, 320]}
+            sizes="(max-width: 640px) 160px, 240px"
+            formats={['avif', 'webp']}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <span class="edge-avatar__placeholder">
+            <span class="edge-avatar__placeholder-mark">⟦PLATZHALTER: Foto⟧</span>
+          </span>
+        )
+      }
+    </span>
+  </div>
+  <figcaption class="edge-avatar__caption">
+    <span class="edge-avatar__name">{displayLabel}</span>
+    {role && <span class="edge-avatar__role">{role}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .edge-avatar {
+    --ea-size: clamp(11rem, 28vw, 15rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: var(--ea-size);
+  }
+
+  .edge-avatar__stack {
+    position: relative;
+    width: var(--ea-size);
+    height: var(--ea-size);
+  }
+
+  .edge-avatar__shape {
+    position: absolute;
+    inset: 8%;
+    clip-path: polygon(
+      6% 2%,
+      28% 0%,
+      62% 3%,
+      88% 1%,
+      100% 14%,
+      97% 42%,
+      100% 68%,
+      90% 92%,
+      62% 100%,
+      28% 97%,
+      4% 88%,
+      0% 58%,
+      2% 28%
+    );
+  }
+
+  .edge-avatar__shape--grey {
+    inset: 2%;
+    background: #cccccc;
+    transform: translate(-0.65rem, -0.75rem);
+    z-index: 0;
+  }
+
+  .edge-avatar__shape--fuchsia {
+    inset: 5%;
+    background: #ff008f;
+    transform: translate(0.55rem, -0.35rem);
+    z-index: 1;
+  }
+
+  .edge-avatar__shape--aqua {
+    background: #00ffdc;
+    z-index: 2;
+    overflow: hidden;
+    display: grid;
+    place-items: end center;
+  }
+
+  .edge-avatar--fuchsia .edge-avatar__shape--fuchsia {
+    background: #1e2a45;
+  }
+
+  .edge-avatar__photo {
+    width: 108%;
+    height: auto;
+    max-width: none;
+    object-fit: cover;
+    object-position: center top;
+    transform: translateY(4%);
+  }
+
+  .edge-avatar__placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    background: rgb(30 42 69 / 12%);
+  }
+
+  .edge-avatar__placeholder-mark {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: #1e2a45;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .edge-avatar__caption {
+    text-align: center;
+  }
+
+  .edge-avatar__name {
+    position: relative;
+    display: inline-block;
+    font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    line-height: 1;
+    color: #1e2a45;
+    text-transform: lowercase;
+    text-shadow:
+      -2px -2px 0 #00ffdc,
+      2px -2px 0 #00ffdc,
+      -2px 2px 0 #00ffdc,
+      2px 2px 0 #00ffdc,
+      -3px 0 0 #00ffdc,
+      3px 0 0 #00ffdc,
+      0 -3px 0 #00ffdc,
+      0 3px 0 #00ffdc;
+  }
+
+  .dark .edge-avatar__name {
+    color: #ffffff;
+  }
+
+  .edge-avatar__role {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    color: #666666;
+    max-width: 16rem;
+  }
+
+  .dark .edge-avatar__role {
+    color: rgb(229 236 246 / 70%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .edge-avatar__shape--grey,
+    .edge-avatar__shape--fuchsia {
+      transform: none;
+    }
+  }
+</style>

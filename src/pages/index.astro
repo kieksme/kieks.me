@@ -1,167 +1,248 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-
-import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
-import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import Button from '~/components/ui/Button.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import KantenDivider from '~/components/ui/KantenDivider.astro';
+import EdgeAvatar from '~/components/ui/EdgeAvatar.astro';
+import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
+import avatarAndre from '~/assets/brand/avatars/kieksme-avatar-alademann.png';
+import avatarThomas from '~/assets/brand/avatars/kieksme-avatar-tschoene.png';
 
 const metadata = {
-  title: 'kieks.me',
+  title: 'kieks.me – Software, KI und Cloud für den Mittelstand | Leipzig',
+  description:
+    'kieks.me GbR aus Leipzig: Web- und Softwareentwicklung, KI-Anbindung über MCP, Cloud und DevOps sowie Beratung. Offen, ehrlich und mit sauberer Übergabe.',
   ignoreTitleTemplate: true,
 };
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero Widget ******************* -->
+  <!-- Hero — „mit Kanten“ layered angular blocks, no soft hero photo -->
+  <section class="relative overflow-hidden not-prose md:-mt-[76px]">
+    <div class="absolute inset-0 bg-navy" aria-hidden="true"></div>
+    <div class="kanten-hero-bg" aria-hidden="true">
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--aqua"></span>
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--fuchsia"></span>
+      <span class="kanten-hero-bg__block kanten-hero-bg__block--grey"></span>
+    </div>
+    {/* ⟦PLATZHALTER: Hero-Motiv⟧ — CSS shapes until a dedicated photo is chosen */}
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-16 md:pb-20">
+      <div class="max-w-3xl">
+        <p
+          class="font-heading text-aqua text-sm md:text-base font-semibold tracking-wide mb-4 motion-safe:animate-fade-in"
+        >
+          kieks.me GbR · Leipzig
+        </p>
+        <h1
+          class="font-heading text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.15] tracking-tight text-white motion-safe:animate-slide-up"
+        >
+          Ihre Software. Ihr Code. Unsere Erfahrung.
+        </h1>
+        <p class="mt-6 text-lg md:text-xl text-white/85 max-w-[40rem] motion-safe:animate-fade">
+          Wir entwickeln, integrieren und übergeben, damit Sie danach selbst weiterkommen. Von KI- und MCP-Anbindung
+          über Cloud und DevOps bis zur Web- und Softwareentwicklung für den Mittelstand.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 motion-safe:animate-fade">
+          <Button
+            variant="primary"
+            text="Erstgespräch buchen"
+            href={BOOKING_URL}
+            icon="tabler:calendar-event"
+            class="!bg-aqua !border-aqua !text-navy hover:!bg-aqua-600 hover:!border-aqua-600"
+          />
+          <Button
+            variant="secondary"
+            text="Leistungen ansehen"
+            href="#leistungen"
+            class="!border-white/40 !text-white hover:!bg-white/10"
+          />
+        </div>
+        <Placeholder label="⟦BESTÄTIGEN⟧" class="mt-8 max-w-xl !bg-navy-400/80 !border-aqua/40 !text-white">
+          Claim „Ihre Software. Ihr Code. Unsere Erfahrung.“ als Unternehmens-Claim freigeben (D2).
+        </Placeholder>
+      </div>
+    </div>
+    <KantenDivider from="white" class="relative dark:hidden" />
+  </section>
 
-  <Hero
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Erstgespräch vereinbaren',
-        href: '/kontakt',
-        icon: 'tabler:calendar-event',
-      },
-      { text: 'Mehr erfahren', href: '#mehr' },
-    ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: 'kieks.me Hero Image' }}
-  >
-    <Fragment slot="title">
-      kieks.me <span class="hidden xl:inline">👉</span><br />
-      <span class="text-accent dark:text-white highlight"> Software für den Mittelstand</span>
-    </Fragment>
+  <!-- Werte-Leiste -->
+  <section class="bg-aqua-50 dark:bg-navy-400 not-prose">
+    <div class="max-w-6xl px-4 py-5 mx-auto text-center sm:px-6">
+      <p class="font-heading font-semibold text-navy dark:text-white">
+        <span class="text-aqua-700 dark:text-aqua">Unsere Haltung:</span>
+        Einfach statt kompliziert. Bewährt statt modisch. Offen statt abhängig.
+      </p>
+    </div>
+  </section>
 
-    <Fragment slot="subtitle">
-      <span class="hidden sm:inline">
-        <span class="font-semibold">Zusammen</span> finden wir für Sie die passende Softwarelösung.
-      </span>
-      Mit jahrelanger Erfahrung in der Softwareentwicklung und dem Umgang mit dem Mittelstand, helfen wir Ihnen, die passende
-      Softwarelösung zu finden.
-    </Fragment>
-  </Hero>
-
-  <!-- Note Widget ******************* -->
-
-  <Note />
-
-  <!-- Features Widget *************** -->
-
-  <Features
-    id="mehr"
-    tagline="Mehr über uns"
-    title="Was wir für sie tun können"
-    subtitle="kieks.me sind Experten für Softwareentwicklung und Beratung. Wir helfen Ihnen, die passende Softwarelösung für Ihr Unternehmen zu finden."
+  <!-- Leistungen -->
+  <Features2
+    id="leistungen"
+    tagline="Leistungen"
+    title="Was wir für Sie tun"
+    subtitle="Vier Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht."
+    columns={2}
     items={[
       {
-        title: 'Moderene Technologien',
+        title: 'KI & MCP',
         description:
-          'Wir arbeiten mit den neuesten Technologien und Tools, um sicherzustellen, dass Ihre Softwarelösung auf dem neuesten Stand ist.',
-        icon: 'tabler:brand-tailwind',
+          'Wir binden KI-Assistenten über das Model Context Protocol an Ihre Systeme und Daten an, nachvollziehbar und mit klaren Zugriffsrechten.',
+        icon: 'tabler:robot',
+        callToAction: { text: 'Mehr zu KI & MCP', href: '/leistungen/ki-mcp' },
       },
       {
-        title: 'Weiterentwicklung',
-        description:
-          'Sie haben bereits eine Softwarelösung, die Sie nutzen. Wir helfen Ihnen, diese zu verbessern und zu erweitern.',
-        icon: 'tabler:components',
+        title: 'Cloud & DevOps',
+        description: 'Infrastruktur als Code, automatisierte Builds und Deployments, verlässlicher Betrieb.',
+        icon: 'tabler:cloud',
+        callToAction: { text: 'Mehr zu Cloud & DevOps', href: '/leistungen/cloud-devops' },
       },
       {
-        title: 'Anbindung von Systemen',
-        description:
-          'Sie haben verschiedene Systeme, die miteinander kommunizieren müssen. Wir helfen Ihnen, diese zu verbinden.',
-        icon: 'tabler:api',
+        title: 'Web- & Softwareentwicklung',
+        description: 'Websites, Webanwendungen und Schnittstellen, neu entwickelt oder gezielt weiterentwickelt.',
+        icon: 'tabler:code',
+        callToAction: { text: 'Mehr zur Entwicklung', href: '/leistungen/entwicklung' },
       },
       {
-        title: 'Social Media',
-        description: 'Sie möchten Ihre Social Media Kanäle verbessern. Wir helfen Ihnen, dies zu erreichen.',
-        icon: 'tabler:rocket',
-      },
-      {
-        title: 'Suchmaschinenoptimierung (SEO)',
-        description: 'Sie möchten, dass Ihre Webseite besser gefunden wird. Wir helfen Ihnen, dies zu erreichen.',
-        icon: 'tabler:arrows-right-left',
-      },
-      {
-        title: 'Offen für ihre Ideen',
-        description:
-          'Wir sind neugierig, Ihre Ideen zu hören. Wir helfen Ihnen, diese in eine Softwarelösung umzusetzen.',
-        icon: 'tabler:bulb',
+        title: 'Beratung & Workshops',
+        description: 'Gemeinsam klären, was sich lohnt, bevor die erste Zeile Code entsteht.',
+        icon: 'tabler:users',
+        callToAction: { text: 'Mehr zu Beratung', href: '/leistungen/beratung' },
       },
     ]}
   />
-  <!-- FAQs Widget ******************* -->
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
+    <Placeholder label="⟦ENTSCHEIDUNG D6⟧">
+      Social Media und SEO waren bisher eigene Leistungen. Hier bewusst nicht als Kachel. Weglassen oder als Teil von
+      „Web- & Softwareentwicklung“ nennen?
+    </Placeholder>
+  </div>
+
+  <!-- Open Source Teaser -->
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <p class="text-base text-secondary dark:text-aqua font-bold tracking-wide uppercase">Aus unserer Werkstatt</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold mt-2 text-navy dark:text-white">
+        Open Source, öffentlich nachprüfbar
+      </h2>
+      <p class="mt-4 text-lg text-muted max-w-3xl">
+        Wir veröffentlichen eigene MCP-Server, zum Beispiel für Contabo, Swetrix, Listmonk und Balena, sowie
+        Agent-Skills und Werkzeuge auf GitHub. So sehen Sie vor dem ersten Gespräch, wie wir arbeiten.
+      </p>
+      <div class="mt-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <Button variant="primary" text="Unsere MCP-Server ansehen" href="/projekte/mcp-server" />
+        <a href={GITHUB_ORG_URL} class="underline-offset-4 hover:underline" target="_blank" rel="noopener noreferrer">
+          Alle Projekte auf GitHub →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CSP Teaser -->
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <p class="text-base text-secondary dark:text-aqua font-bold tracking-wide uppercase">Unser Produkt</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold mt-2 text-navy dark:text-white">
+        CSP: ein eigenes Serviceportal für IT-Dienstleister
+      </h2>
+      <p class="mt-4 text-lg text-muted max-w-3xl">
+        Das Customer Service Portal bündelt Status, Bereitschaft, Ansprechpartner und Supportwissen vor Ihrem
+        vorhandenen Ticketsystem. Open Source unter MIT, mit direktem Weg zum Menschen.
+      </p>
+      <div class="mt-6">
+        <Button variant="primary" text="CSP kennenlernen" href="/csp" />
+      </div>
+      <Placeholder label="⟦PLATZHALTER / D4⟧" class="mt-6 max-w-2xl">
+        Ziel-URL: kieks.me/csp oder csp.kieks.me — siehe Entscheidung D4.
+      </Placeholder>
+    </div>
+  </section>
+
+  <!-- Über uns — EdgeAvatar „mit Kanten“ (cut-outs from kieks.me.brand) -->
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-navy dark:text-white kanten-heading">
+        Wer dahintersteht
+      </h2>
+      <p class="mt-4 text-lg text-muted max-w-3xl">
+        kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig. Sie sprechen bei uns direkt mit den
+        Menschen, die Ihr Projekt umsetzen.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row gap-10 sm:gap-16 items-start">
+        <EdgeAvatar
+          name="André Lademann"
+          label="andré"
+          image={avatarAndre}
+          imageAlt="André Lademann, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+        />
+        <EdgeAvatar
+          name="Thomas Schöne"
+          label="thomas"
+          image={avatarThomas}
+          imageAlt="Thomas Schöne, Gesellschafter der kieks.me GbR"
+          role="⟦PLATZHALTER D10: Rolle und 1–2 Sätze, selbst formuliert⟧"
+          variant="fuchsia"
+        />
+      </div>
+      <Placeholder label="⟦PLATZHALTER D10⟧" class="mt-8 max-w-2xl">
+        Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden. Fotos aus
+        kieks.me.brand/source/avatars/ (kieksme-avatar-alademann.png, kieksme-avatar-tschoene.png).
+      </Placeholder>
+    </div>
+  </section>
 
   <FAQs
-    title="Dinge die wir oft gefragt werden"
-    subtitle="Kunden fragen, wir antworten. Hier sind einige der häufigsten Fragen, die wir erhalten."
-    tagline="FAQs"
-    classes={{ container: 'max-w-6xl' }}
+    tagline="FAQ"
+    title="Häufige Fragen"
+    subtitle="Kurz und ehrlich beantwortet."
+    columns={1}
+    classes={{ container: 'max-w-4xl' }}
     items={[
       {
         title: 'Warum kieks.me und nicht eine andere Agentur?',
         description:
-          'Die Frage ist berechtigt. Es gibt viele Mitbewerber in diesem Bereich. Offenheit, Ehrlichkeit und Transparenz sind unsere drei wichtigen Werte. Wir sind offen und ehrlich mit unseren Kunden und wir glauben, dass diese Werte unser Unternehmen auszeichnen.',
+          'Bei uns arbeiten Sie direkt mit den Gesellschaftern, ohne Zwischenstationen. Offenheit, Ehrlichkeit und Transparenz sind für uns keine Schlagworte: Wir sagen Ihnen auch, wenn sich etwas nicht lohnt. Und Sie erhalten am Ende Code und Dokumentation, mit denen Ihr Team oder ein anderer Dienstleister weiterarbeiten kann.',
       },
       {
-        title: 'Was brauchen wir für die Erstellung eines Websites?',
+        title: 'Für welche Unternehmen arbeiten Sie?',
         description:
-          'Wir benötigen von Ihnen Informationen über Ihr Unternehmen, Ihre Produkte und Dienstleistungen. Wir benötigen auch Informationen über Ihre Zielgruppe und Ihre Ziele. Mit diesen Informationen können wir eine Website erstellen, die zu Ihrem Unternehmen passt.',
+          'Vor allem für mittelständische Unternehmen und IT-Dienstleister, die ihre Software, ihre Systemlandschaft oder ihren Support pragmatisch verbessern möchten. ⟦BESTÄTIGEN: Zielgruppe⟧',
       },
       {
-        title: 'Wie lange dauert die Erstellung einer Website?',
+        title: 'Was brauchen Sie von uns für den Start?',
         description:
-          'Die Dauer der Erstellung einer Website hängt von verschiedenen Faktoren ab, wie z.B. der Größe der Website, den Anforderungen des Kunden und der Komplexität der Website. In der Regel dauert die Erstellung einer Website zwischen 4 und 8 Wochen.',
+          'Ein Ziel, eine Ansprechperson und Zugang zu den Informationen, um die es geht: Systeme, Abläufe, Zielgruppe. Den Rest klären wir im Erstgespräch.',
       },
       {
-        title: 'Wie viel kostet die Erstellung einer Website?',
+        title: 'Wie lange dauert ein Projekt?',
         description:
-          'Die Kosten für die Erstellung einer Website variieren je nach Größe und Komplexität der Website. In der Regel kostet die Erstellung einer Website zwischen 1.000 und 10.000 Euro.',
+          'Das hängt vom Umfang ab. Eine Website setzen wir in der Regel in 4 bis 8 Wochen um ⟦BESTÄTIGEN: bisherige Angabe⟧. Für größere Vorhaben nennen wir Ihnen nach dem Erstgespräch einen realistischen Zeitrahmen.',
       },
       {
-        title: 'Wie kann ich die Website pflegen?',
+        title: 'Was kostet das?',
         description:
-          'Sie können die Website selbst pflegen oder wir können die Website für Sie pflegen. Wenn Sie die Website selbst pflegen möchten, können wir Ihnen eine Schulung geben, wie Sie die Website pflegen können. Wenn Sie möchten, dass wir die Website für Sie pflegen, können wir Ihnen ein Wartungspaket anbieten.',
+          'Auch das hängt vom Umfang ab. Sie erhalten ein schriftliches Angebot, bevor Kosten entstehen. Eine Website kostet in der Regel zwischen 1.000 und 10.000 Euro ⟦BESTÄTIGEN: bisherige Angabe, noch aktuell?⟧. Alle Preise verstehen sich netto zuzüglich der gesetzlichen Umsatzsteuer.',
       },
       {
-        title: 'Was passiert, wenn ich mit der Website nicht zufrieden bin?',
+        title: 'Wer pflegt die Lösung danach?',
         description:
-          'Wir möchten, dass Sie mit der Website zufrieden sind. Wenn Sie mit der Website nicht zufrieden sind, werden wir alles tun, um sicherzustellen, dass Sie mit der Website zufrieden sind. Wir werden Änderungen an der Website vornehmen, bis Sie mit der Website zufrieden sind.',
+          'Ganz wie Sie möchten. Sie können selbst weitermachen, wir schulen Ihr Team dafür. Oder wir übernehmen die Pflege im Rahmen eines Wartungsvertrags ⟦BESTÄTIGEN: Wartungsangebot existiert⟧.',
+      },
+      {
+        title: 'Was passiert, wenn Sie nicht zufrieden sind?',
+        description:
+          'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab. ⟦BESTÄTIGEN: Einschränkung gegenüber unbegrenztem Nachbesserungsversprechen⟧',
       },
     ]}
   />
 
-  <!-- Stats Widget ****************** 
-  import Stats from '~/components/widgets/Stats.astro';
-
-  <Stats
-    stats={[
-      { title: 'Projekte', amount: '12' },
-      { title: 'APIs', amount: '8' },
-      { title: 'Kunden', amount: '6' },
-      { title: 'Kunden unser Kunden', amount: '248K' },
-    ]}
+  <SectionCTA
+    title="Lernen wir uns kennen"
+    text="Qualität, Tempo und Verlässlichkeit sind wichtig. Am wichtigsten ist aber, dass wir uns gegenseitig respektieren und vertrauen können. Finden wir in 30 Minuten heraus, ob wir zusammenpassen."
+    showEmailLink={true}
   />
-  -->
-
-  <!-- CallToAction Widget *********** -->
-
-  <CallToAction
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Erstgespräch vereinbaren',
-        href: '/kontakt',
-        icon: 'tabler:calendar-event',
-      },
-    ]}
-  >
-    <Fragment slot="title"> Jetzt kennenlernen </Fragment>
-
-    <Fragment slot="subtitle">
-      Qualität, Schnelligkeit und Zuverlässigkeit sind wichtige Werte, doch am wichtigsten ist, das wir uns gegenseitig
-      respektieren und vertrauen können.
-      <br class="hidden md:inline" />Lassen sie uns kennenlernen, ob wir zusammenpassen.
-    </Fragment>
-  </CallToAction>
 </Layout>

@@ -1,0 +1,88 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+
+const metadata = {
+  title: 'Cloud & DevOps: Infrastruktur als Code und Deployments',
+  description:
+    'Infrastruktur als Code, automatisierte Deployments und verlässlicher Betrieb für Ihre Anwendungen. kieks.me richtet ein, dokumentiert und übergibt.',
+};
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="Infrastruktur, die man versteht und wiederholen kann."
+    subtitle="Wir beschreiben Ihre Infrastruktur als Code, automatisieren Builds und Deployments und sorgen dafür, dass Ihr Betrieb nicht an einer einzelnen Person hängt."
+    ctaText="Infrastruktur besprechen"
+  />
+
+  <Features
+    title="Was wir für Sie tun"
+    items={[
+      {
+        title: 'Infrastruktur als Code',
+        description: 'DNS, Hosting und Cloud-Ressourcen versioniert und nachvollziehbar, zum Beispiel mit Terraform.',
+        icon: 'tabler:code',
+      },
+      {
+        title: 'CI/CD',
+        description: 'Automatische Prüfungen, Builds und Deployments, etwa mit GitHub Actions.',
+        icon: 'tabler:git-merge',
+      },
+      {
+        title: 'Container und Self-Hosting',
+        description: 'Anwendungen in Containern betreiben, auf Plattformen wie Coolify oder in Kubernetes-Umgebungen.',
+        icon: 'tabler:box',
+      },
+      {
+        title: 'Monitoring und Bereitschaft',
+        description: 'Status und Alarme sichtbar machen, zum Beispiel mit Uptime Kuma, Datadog oder SIGNL4.',
+        icon: 'tabler:heartbeat',
+      },
+      {
+        title: 'Dokumentation und Übergabe',
+        description: 'Ihr Team weiß, was läuft, warum es läuft und wie man es ändert.',
+        icon: 'tabler:notebook',
+      },
+    ]}
+  />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-8">
+    <Placeholder label="⟦BESTÄTIGEN⟧">
+      Die genannten Werkzeuge stammen aus eigenen Repos (Terraform, GitHub Actions, Docker, Coolify, Kubernetes, Uptime
+      Kuma, Datadog, SIGNL4). Bitte bestätigen, welche davon als Leistung angeboten werden, und ergänzen (z. B. Azure,
+      Contabo, Railway).
+    </Placeholder>
+  </div>
+
+  <Features2
+    title="Ihr Nutzen"
+    columns={3}
+    items={[
+      {
+        title: 'Weniger Handarbeit',
+        description: 'Wiederkehrende Schritte laufen automatisch.',
+        icon: 'tabler:player-play',
+      },
+      {
+        title: 'Weniger Überraschungen',
+        description: 'Änderungen sind versioniert und lassen sich nachvollziehen.',
+        icon: 'tabler:history',
+      },
+      {
+        title: 'Kein Kopfmonopol',
+        description: 'Das Wissen steckt im Code und in der Dokumentation, nicht nur in einem Kopf.',
+        icon: 'tabler:share',
+      },
+    ]}
+  />
+
+  <SectionCTA
+    title="Wo hakt es in Ihrem Betrieb?"
+    text="Ob ein einzelnes Deployment oder die ganze Plattform: Wir schauen es uns gemeinsam an."
+  />
+</Layout>

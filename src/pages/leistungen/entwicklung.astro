@@ -1,0 +1,118 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Features from '~/components/widgets/Features.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+
+const metadata = {
+  title: 'Web- und Softwareentwicklung für den Mittelstand',
+  description:
+    'Websites, Webanwendungen und Schnittstellen, neu oder als Weiterentwicklung. kieks.me aus Leipzig setzt auf bewährte Technik und eine saubere Übergabe.',
+};
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="Software, die zu Ihren Abläufen passt."
+    subtitle="Wir entwickeln Websites, Webanwendungen und Schnittstellen. Neu, wo es sinnvoll ist, als Weiterentwicklung, wo schon etwas Gutes existiert."
+    ctaText="Projekt besprechen"
+  />
+
+  <Features
+    title="Was wir für Sie tun"
+    items={[
+      {
+        title: 'Websites',
+        description: 'Schnell, barrierearm und selbst pflegbar.',
+        icon: 'tabler:world',
+      },
+      {
+        title: 'Webanwendungen',
+        description: 'Von der internen Anwendung bis zur Progressive Web App.',
+        icon: 'tabler:device-desktop',
+      },
+      {
+        title: 'Anbindung von Systemen',
+        description: 'Ihre Systeme sollen miteinander sprechen? Wir verbinden sie über Schnittstellen (APIs).',
+        icon: 'tabler:api',
+      },
+      {
+        title: 'Weiterentwicklung',
+        description:
+          'Sie haben bereits eine Software im Einsatz? Wir verbessern und erweitern sie, statt alles neu zu bauen.',
+        icon: 'tabler:building-bridge',
+      },
+    ]}
+  />
+
+  <section class="not-prose py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Womit wir arbeiten</h2>
+      <p class="mt-4 text-lg text-muted">
+        TypeScript, React, Astro, Fastify und Tailwind CSS, also moderne, verbreitete und gut dokumentierte Technik, für
+        die Sie auch später Entwicklerinnen und Entwickler finden.
+      </p>
+      <Placeholder label="⟦BESTÄTIGEN⟧" class="mt-4">
+        Liste stammt aus unseren Repos. Bitte ergänzen oder kürzen.
+      </Placeholder>
+    </div>
+  </section>
+
+  <Steps
+    title="So läuft ein Projekt"
+    items={[
+      {
+        title: 'Erstgespräch',
+        description: 'Ziel, Zielgruppe und Rahmen klären.',
+        icon: 'tabler:number-1',
+      },
+      {
+        title: 'Angebot',
+        description: 'Schriftlich, mit Umfang und Zeitrahmen.',
+        icon: 'tabler:number-2',
+      },
+      {
+        title: 'Umsetzung',
+        description: 'In Etappen, mit regelmäßigen Zwischenständen.',
+        icon: 'tabler:number-3',
+      },
+      {
+        title: 'Übergabe',
+        description: 'Code, Dokumentation und auf Wunsch eine Schulung.',
+        icon: 'tabler:number-4',
+      },
+    ]}
+  />
+
+  <FAQs
+    title="Häufige Fragen zu Websites"
+    columns={1}
+    classes={{ container: 'max-w-4xl' }}
+    items={[
+      {
+        title: 'Was brauchen Sie von uns für eine neue Website?',
+        description:
+          'Informationen über Ihr Unternehmen, Ihre Produkte und Dienstleistungen, Ihre Zielgruppe und Ihre Ziele. Damit entwickeln wir eine Website, die zu Ihnen passt.',
+      },
+      {
+        title: 'Wie lange dauert das?',
+        description: 'Das hängt von Größe, Anforderungen und Komplexität ab, in der Regel 4 bis 8 Wochen ⟦BESTÄTIGEN⟧.',
+      },
+      {
+        title: 'Was kostet eine Website?',
+        description:
+          'In der Regel zwischen 1.000 und 10.000 Euro netto, je nach Umfang ⟦BESTÄTIGEN⟧. Sie erhalten vorab ein schriftliches Angebot.',
+      },
+      {
+        title: 'Können wir die Website selbst pflegen?',
+        description:
+          'Ja. Wir zeigen Ihrem Team, wie das geht. Alternativ übernehmen wir die Pflege für Sie ⟦BESTÄTIGEN: Wartungsangebot⟧.',
+      },
+    ]}
+  />
+
+  <SectionCTA title="Was soll Ihre Software können?" />
+</Layout>

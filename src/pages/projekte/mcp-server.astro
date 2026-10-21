@@ -1,0 +1,190 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+
+const metadata = {
+  title: 'Open-Source-MCP-Server von kieks.me',
+  description:
+    'MCP-Server von kieks.me für Contabo, Swetrix, Hashnode, Listmonk, Balena und Enhancv. Open Source auf GitHub, als npm-Pakete für Claude, Cursor und VS Code.',
+};
+
+const servers = [
+  {
+    name: 'Contabo MCP',
+    description:
+      'Contabo per MCP-Client verwalten: VPS/VDS, Images, Snapshots, Firewalls, private Netze, DNS, S3-kompatibler Object Storage, Secrets, Domains und Tags.',
+    npm: '@kieksme/contabo-mcp',
+    license: 'GPL-3.0',
+    url: 'https://github.com/kieksme/mcp-contabo',
+  },
+  {
+    name: 'Swetrix MCP',
+    description:
+      'MCP-Server für die Analyseplattform Swetrix. KI-Assistenten fragen Analysedaten ab, erfassen Ereignisse und verwalten Projekte direkt über die Swetrix-API. Drei Pakete: Statistik, Events und Admin.',
+    npm: '@kieksme/swetrix-statistics-mcp, @kieksme/swetrix-events-mcp, @kieksme/swetrix-admin-mcp',
+    license: 'GPL-3.0',
+    url: 'https://github.com/kieksme/mcp-swetrix',
+  },
+  {
+    name: 'Hashnode MCP',
+    description:
+      'MCP-Server für die Hashnode-GraphQL-API: Entwürfe anlegen, Beiträge veröffentlichen, den eigenen Blog verwalten. Hinweis laut README: Die Hashnode-API erfordert seit Mai 2026 einen Pro-Plan.',
+    npm: '@kieksme/hashnode-mcp',
+    license: '⟦PLATZHALTER: auf GitHub keine Lizenz hinterlegt⟧',
+    url: 'https://github.com/kieksme/mcp-hashnode',
+  },
+  {
+    name: 'Listmonk MCP',
+    description:
+      'Deckt die vollständige REST-API des Newsletter-Systems Listmonk ab, laut README 72 Werkzeuge in 14 Kategorien. Lokal über stdio oder als Remote-Server über Streamable HTTP.',
+    npm: '@kieksme/listmonk-mcp',
+    license: 'MIT',
+    url: 'https://github.com/kieksme/mcp-listmonk',
+  },
+  {
+    name: 'Balena MCP',
+    description:
+      'Balena-Flotten und -Geräte verwalten: Releases, Variablen, Tags, Teams und Organisationen. Lokal über stdio oder remote über tokengeschütztes Streamable HTTP.',
+    npm: '@kieksme/balena-mcp',
+    license: 'GPL-3.0',
+    url: 'https://github.com/kieksme/mcp-balena',
+  },
+  {
+    name: 'Enhancv MCP',
+    description:
+      'Enhancv-Lebensläufe aus jedem MCP-Client verwalten: auflisten, lesen, anlegen, hochladen, als PDF exportieren, duplizieren und löschen.',
+    npm: '@kieksme/enhancv-mcp',
+    license: 'GPL-3.0',
+    url: 'https://github.com/kieksme/mcp-enhancv',
+  },
+  {
+    name: 'MCP HTTP Kit',
+    description:
+      'Gemeinsame Basis für unsere MCP-Server: Streamable-HTTP-Transport, Authentifizierung (Bearer-Token und OAuth-2.1-Resource-Server) und Deploy-Werkzeuge.',
+    npm: '@kieksme/mcp-http-kit',
+    license: 'MIT',
+    url: 'https://github.com/kieksme/mcp-http-kit',
+  },
+];
+
+const otherProjects = [
+  {
+    name: 'Agent Skills',
+    description:
+      'Katalog von Agent-Skills der kieks.me GbR, z. B. als Plugin-Bundles für Claude Code (Frontend, Plattform, Daten).',
+    url: 'https://github.com/kieksme/skills',
+    extra: 'https://kieksme.github.io/skills/',
+  },
+  {
+    name: 'Astro Analytics',
+    description: 'VS-Code-Erweiterung, die GA4-Kennzahlen direkt an Astro- und Markdown-Dateien anzeigt.',
+    url: 'https://github.com/kieksme/astro-analytics',
+  },
+  {
+    name: 'CSP',
+    description: 'Customer Service Portal, Open Source unter MIT',
+    url: 'https://github.com/kieksme/csp',
+    page: '/csp',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="Unsere MCP-Server: Open Source und einsatzbereit."
+    subtitle="Mit diesen Servern steuern KI-Assistenten wie Claude, Cursor oder VS Code bekannte Dienste direkt. Der Code liegt öffentlich auf GitHub."
+  />
+
+  <section class="not-prose py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <p class="text-sm text-muted mb-8">
+        Beschreibungen aus den jeweiligen Repo-READMEs (Stand 21.10.2026), übersetzt. Vor Veröffentlichung kurz
+        gegenprüfen.
+      </p>
+      <div class="grid gap-6 md:grid-cols-2">
+        {
+          servers.map((server) => (
+            <article class="border border-navy-100 dark:border-navy-300 rounded-lg p-6 bg-white dark:bg-navy/40">
+              <h2 class="font-heading text-xl font-bold text-navy dark:text-white">{server.name}</h2>
+              <p class="mt-3 text-muted">{server.description}</p>
+              <dl class="mt-4 text-sm space-y-1">
+                <div>
+                  <dt class="inline font-semibold text-navy dark:text-aqua">npm:</dt>
+                  <dd class="inline ml-1 font-mono text-muted">{server.npm}</dd>
+                </div>
+                <div>
+                  <dt class="inline font-semibold text-navy dark:text-aqua">Lizenz:</dt>
+                  <dd class="inline ml-1 text-muted">{server.license}</dd>
+                </div>
+              </dl>
+              <a
+                href={server.url}
+                class="inline-block mt-4 font-medium underline-offset-4 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Auf GitHub ansehen →
+              </a>
+            </article>
+          ))
+        }
+      </div>
+      <Placeholder label="⟦PLATZHALTER D14⟧" class="mt-6">
+        Lizenz für mcp-hashnode auf GitHub hinterlegen.
+      </Placeholder>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+        Weitere Open-Source-Projekte
+      </h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {
+          otherProjects.map((project) => (
+            <article>
+              <h3 class="font-heading text-lg font-bold text-navy dark:text-white">{project.name}</h3>
+              <p class="mt-2 text-muted">{project.description}</p>
+              <div class="mt-3 flex flex-col gap-1 text-sm">
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="underline-offset-4 hover:underline"
+                >
+                  GitHub →
+                </a>
+                {project.extra && (
+                  <a
+                    href={project.extra}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline-offset-4 hover:underline"
+                  >
+                    Dokumentation →
+                  </a>
+                )}
+                {project.page && (
+                  <a href={project.page} class="underline-offset-4 hover:underline">
+                    Seite /csp →
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <SectionCTA
+    title="Sie brauchen einen MCP-Server für Ihr System?"
+    text="Wir entwickeln ihn für Sie, nach denselben Standards wie unsere eigenen Server."
+  />
+  <div class="text-center pb-12 -mt-4">
+    <a href="/leistungen/ki-mcp" class="underline-offset-4 hover:underline">Mehr zu KI & MCP →</a>
+  </div>
+</Layout>

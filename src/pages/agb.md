@@ -1,12 +1,13 @@
 ---
 title: AGB
 layout: ~/layouts/MarkdownLayout.astro
-metadata: Allgemeine Geschäftsbedingungen (AGB) der Kieks.me GbR
+metadata:
+  description: Allgemeine Geschäftsbedingungen (AGB) der kieks.me GbR
 ---
 
 ## 1. Geltungsbereich
 
-- 1.1 Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge, Lieferungen und Leistungen zwischen der Kieks.me GbR (nachfolgend "Anbieter") und ihren Kunden (nachfolgend "Kunde"), soweit nicht ausdrücklich abweichende Vereinbarungen getroffen wurden.
+- 1.1 Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge, Lieferungen und Leistungen zwischen der kieks.me GbR (nachfolgend "Anbieter") und ihren Kunden (nachfolgend "Kunde"), soweit nicht ausdrücklich abweichende Vereinbarungen getroffen wurden.
 - 1.2 Abweichende oder entgegenstehende Bedingungen des Kunden werden nicht Vertragsbestandteil, es sei denn, der Anbieter stimmt ihnen ausdrücklich schriftlich zu.
 
 ## 2. Leistungen und Vertragsschluss
@@ -17,7 +18,7 @@ metadata: Allgemeine Geschäftsbedingungen (AGB) der Kieks.me GbR
 
 ## 3. Vergütung und Zahlungsbedingungen
 
-- 3.1 Alle Preise verstehen sich netto zuüglich der jeweils geltenden gesetzlichen Mehrwertsteuer.
+- 3.1 Alle Preise verstehen sich netto zuzüglich der jeweils geltenden gesetzlichen Mehrwertsteuer.
 - 3.2 Die Zahlung ist ohne Abzug innerhalb von 14 Tagen nach Rechnungsstellung fällig, sofern nicht anders vereinbart.
 - 3.3 Bei Zahlungsverzug ist der Anbieter berechtigt, Verzugszinsen in gesetzlicher Höhe zu verlangen.
 - 3.4 Aufrechnungen oder Zurückbehaltungsrechte des Kunden sind nur zulässig, wenn seine Forderungen rechtskräftig festgestellt oder unbestritten sind.
@@ -48,7 +49,7 @@ metadata: Allgemeine Geschäftsbedingungen (AGB) der Kieks.me GbR
 ## 8. Schlussbestimmungen
 
 - 8.1 Es gilt das Recht der Bundesrepublik Deutschland.
-- 8.2 Gerichtsstand für alle Streitigkeiten aus diesem Vertrag ist, soweit gesetzlich zulässig, der Sitz der Kieks.me GbR.
+- 8.2 Gerichtsstand für alle Streitigkeiten aus diesem Vertrag ist, soweit gesetzlich zulässig, der Sitz der kieks.me GbR.
 - 8.3 Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
 
 Stand: März 2025
