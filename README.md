@@ -1,6 +1,6 @@
 # kieks.me
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/bf38a241-46fb-42ad-8911-0a091de02a22/deploy-status)](https://app.netlify.com/sites/kieksme/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bf38a241-46fb-42ad-8911-0a091de02a22/deploy-status)](https://app.netlify.com/projects/kieksme/deploys)
 
 ## 📝 Description
 
