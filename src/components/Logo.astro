@@ -1,9 +1,24 @@
 ---
-import { SITE } from 'astrowind:config';
+import logoLight from '~/assets/brand/logos/kieks.me-horizontal-aqua-light.svg';
+import logoDark from '~/assets/brand/logos/kieks.me-horizontal-aqua-dark.svg';
 ---
 
-<span
-  class="self-center ml-2 text-2xl font-bold text-gray-900 rtl:ml-0 rtl:mr-2 md:text-xl whitespace-nowrap dark:text-white"
->
-  {SITE?.name}
+{/* Brand logo: aqua variant. ⟦BESTÄTIGEN: Standard-Logovariante aqua | purple | red⟧ */}
+<span class="self-center ml-2 rtl:ml-0 rtl:mr-2 inline-flex items-center">
+  <img
+    src={logoLight.src}
+    alt="kieks.me"
+    width="140"
+    height="32"
+    class="h-7 w-auto min-w-[100px] dark:hidden"
+    decoding="async"
+  />
+  <img
+    src={logoDark.src}
+    alt="kieks.me"
+    width="140"
+    height="32"
+    class="h-7 w-auto min-w-[100px] hidden dark:inline"
+    decoding="async"
+  />
 </span>

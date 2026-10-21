@@ -7,3 +7,11 @@
   for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+[[redirects]]
+  from = "/contact"
+  to = "/kontakt"
+  status = 301
+[[redirects]]
+  from = "/terms"
+  to = "/agb"
+  status = 301

@@ -1,0 +1,52 @@
+---
+export interface Props {
+  /** Fill colour of the jagged band (matches the section below or above) */
+  class?: string;
+  flip?: boolean;
+  from?: 'white' | 'navy' | 'aqua' | 'navy-50';
+}
+
+const { class: className = '', flip = false, from = 'white' } = Astro.props;
+
+const fills: Record<string, string> = {
+  white: '#ffffff',
+  navy: '#1E2A45',
+  aqua: '#00FFDC',
+  'navy-50': '#F0F2F5',
+};
+const fill = fills[from] ?? fills.white;
+---
+
+<div class:list={['kanten-divider', flip && 'kanten-divider--flip', className]} aria-hidden="true">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    {
+      flip ? (
+        <path
+          fill={fill}
+          d="M0,40 L0,18 L80,28 L180,8 L320,24 L450,4 L580,22 L720,6 L860,26 L980,10 L1100,22 L1200,12 L1200,40 Z"
+        />
+      ) : (
+        <path
+          fill={fill}
+          d="M0,0 L1200,0 L1200,22 L1100,12 L980,28 L860,8 L720,26 L580,6 L450,24 L320,4 L180,22 L80,6 L0,18 Z"
+        />
+      )
+    }
+  </svg>
+</div>
+
+<style>
+  .kanten-divider {
+    line-height: 0;
+    width: 100%;
+    color: inherit;
+  }
+  .kanten-divider svg {
+    display: block;
+    width: 100%;
+    height: 2.25rem;
+  }
+  .kanten-divider--flip svg {
+    transform: scaleY(-1);
+  }
+</style>

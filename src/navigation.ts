@@ -1,187 +1,59 @@
-import { getPermalink, getAsset } from './utils/permalinks';
+import { getPermalink } from './utils/permalinks';
+import { BOOKING_URL, GITHUB_ORG_URL } from './config/site';
 
 export const headerData = {
   links: [
-    /*
     {
-      text: 'Homes',
+      text: 'Leistungen',
       links: [
-        {
-          text: 'SaaS',
-          href: getPermalink('/homes/saas'),
-        },
-        {
-          text: 'Startup',
-          href: getPermalink('/homes/startup'),
-        },
-        {
-          text: 'Mobile App',
-          href: getPermalink('/homes/mobile-app'),
-        },
-        {
-          text: 'Personal',
-          href: getPermalink('/homes/personal'),
-        },
+        { text: 'KI & MCP', href: getPermalink('/leistungen/ki-mcp') },
+        { text: 'Cloud & DevOps', href: getPermalink('/leistungen/cloud-devops') },
+        { text: 'Web- & Softwareentwicklung', href: getPermalink('/leistungen/entwicklung') },
+        { text: 'Beratung & Workshops', href: getPermalink('/leistungen/beratung') },
       ],
     },
-    {
-      text: 'Pages',
-      links: [
-        {
-          text: 'Features (Anchor Link)',
-          href: getPermalink('/#features'),
-        },
-        {
-          text: 'Services',
-          href: getPermalink('/services'),
-        },
-        {
-          text: 'Pricing',
-          href: getPermalink('/pricing'),
-        },
-        {
-          text: 'About us',
-          href: getPermalink('/about'),
-        },
-        {
-          text: 'Contact',
-          href: getPermalink('/contact'),
-        },
-        {
-          text: 'Terms',
-          href: getPermalink('/terms'),
-        },
-        {
-          text: 'Privacy policy',
-          href: getPermalink('/privacy'),
-        },
-      ],
-    },
-        
-
-    {
-      text: 'Landing',
-      links: [
-        {
-          text: 'Lead Generation',
-          href: getPermalink('/landing/lead-generation'),
-        },
-        {
-          text: 'Long-form Sales',
-          href: getPermalink('/landing/sales'),
-        },
-        {
-          text: 'Click-Through',
-          href: getPermalink('/landing/click-through'),
-        },
-        {
-          text: 'Product Details (or Services)',
-          href: getPermalink('/landing/product'),
-        },
-        {
-          text: 'Coming Soon or Pre-Launch',
-          href: getPermalink('/landing/pre-launch'),
-        },
-        {
-          text: 'Subscription',
-          href: getPermalink('/landing/subscription'),
-        },
-      ],
-    },
-    {
-      text: 'Blog',
-      links: [
-        {
-          text: 'Blog List',
-          href: getBlogPermalink(),
-        },
-        {
-          text: 'Article',
-          href: getPermalink('get-started-website-with-astro-tailwind-css', 'post'),
-        },
-        {
-          text: 'Article (with MDX)',
-          href: getPermalink('markdown-elements-demo-post', 'post'),
-        },
-        {
-          text: 'Category Page',
-          href: getPermalink('tutorials', 'category'),
-        },
-        {
-          text: 'Tag Page',
-          href: getPermalink('astro', 'tag'),
-        },
-      ],
-    },
-    {
-      text: 'Widgets',
-      href: '#',
-    },
-    */
+    { text: 'MCP-Server', href: getPermalink('/projekte/mcp-server') },
+    { text: 'CSP', href: getPermalink('/csp') },
+    { text: 'Kontakt', href: getPermalink('/kontakt') },
   ],
-  actions: [
-    /*
-    { text: 'Download', href: 'https://github.com/onwidget/astrowind', target: '_blank' }
-     */
-  ],
+  actions: [{ text: 'Erstgespräch buchen', href: BOOKING_URL }],
 };
 
 export const footerData = {
   links: [
-    /*
     {
-      title: 'Product',
+      title: 'Leistungen',
       links: [
-        { text: 'Features', href: '#' },
-        { text: 'Security', href: '#' },
-        { text: 'Team', href: '#' },
-        { text: 'Enterprise', href: '#' },
-        { text: 'Customer stories', href: '#' },
-        { text: 'Pricing', href: '#' },
-        { text: 'Resources', href: '#' },
+        { text: 'KI & MCP', href: getPermalink('/leistungen/ki-mcp') },
+        { text: 'Cloud & DevOps', href: getPermalink('/leistungen/cloud-devops') },
+        { text: 'Web- & Softwareentwicklung', href: getPermalink('/leistungen/entwicklung') },
+        { text: 'Beratung & Workshops', href: getPermalink('/leistungen/beratung') },
       ],
     },
     {
-      title: 'Platform',
+      title: 'Projekte',
       links: [
-        { text: 'Developer API', href: '#' },
-        { text: 'Partners', href: '#' },
-        { text: 'Atom', href: '#' },
-        { text: 'Electron', href: '#' },
-        { text: 'AstroWind Desktop', href: '#' },
+        { text: 'MCP-Server', href: getPermalink('/projekte/mcp-server') },
+        { text: 'Open Source auf GitHub', href: GITHUB_ORG_URL },
       ],
     },
     {
-      title: 'Support',
-      links: [
-        { text: 'Docs', href: '#' },
-        { text: 'Community Forum', href: '#' },
-        { text: 'Professional Services', href: '#' },
-        { text: 'Skills', href: '#' },
-        { text: 'Status', href: '#' },
-      ],
+      title: 'Produkt',
+      links: [{ text: 'CSP', href: getPermalink('/csp') }],
     },
     {
-      title: 'Company',
-      links: [{ text: 'Über', href: '#' }],
+      title: 'Unternehmen',
+      links: [
+        { text: 'Kontakt', href: getPermalink('/kontakt') },
+        { text: 'Erstgespräch buchen', href: BOOKING_URL },
+      ],
     },
-    */
   ],
   secondaryLinks: [
     { text: 'Datenschutzerklärung', href: getPermalink('/datenschutz') },
     { text: 'AGB', href: getPermalink('/agb') },
     { text: 'Impressum', href: getPermalink('/impressum') },
   ],
-  socialLinks: [
-    /*
-    { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
-    { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
-    { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
-    */
-    { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
-    { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/nullzueins' },
-  ],
-  footNote: `
-    Template made by <a class="text-blue-600 underline dark:text-muted" href="https://onwidget.com/"> onWidget</a>
-  `,
+  socialLinks: [{ ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: GITHUB_ORG_URL }],
+  footNote: `© ${new Date().getFullYear()} kieks.me GbR · Leipzig`,
 };

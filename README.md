@@ -1,11 +1,21 @@
 # kieks.me
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/bf38a241-46fb-42ad-8911-0a091de02a22/deploy-status)](https://app.netlify.com/sites/kieksme/deploys)
+Company website of **kieks.me GbR** (Leipzig): software, AI/MCP, cloud & DevOps, consulting.
 
-## 📝 Description
+Built with [Astro](https://astro.build/) 5, hosted on Netlify.
 
-A simple, responsive, and modern personal website built with Astro for kieks.me GbR.
+## Develop
 
-## License
+```bash
+pnpm install
+pnpm run dev
+```
 
-**AstroWind** is licensed under the MIT license — see the [LICENSE](./LICENSE.md) file for details.
+## Check & build
+
+```bash
+pnpm run check
+pnpm run build
+```
+
+Brand assets and guidelines: [kieks.me.brand](https://github.com/kieksme/kieks.me.brand) / [brand.kieks.me](https://brand.kieks.me/).

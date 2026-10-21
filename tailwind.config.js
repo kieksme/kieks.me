@@ -12,6 +12,30 @@ export default {
         accent: 'var(--aw-color-accent)',
         default: 'var(--aw-color-text-default)',
         muted: 'var(--aw-color-text-muted)',
+        aqua: {
+          DEFAULT: '#00FFDC',
+          50: '#E6FFFC',
+          100: '#B3FFF5',
+          500: '#00FFDC',
+          600: '#00BFA5',
+          700: '#006B5F',
+        },
+        navy: {
+          DEFAULT: '#1E2A45',
+          50: '#F0F2F5',
+          100: '#E1E5EB',
+          300: '#5A6B8C',
+          400: '#2F4169',
+          500: '#1E2A45',
+        },
+        fuchsia: {
+          DEFAULT: '#FF008F',
+          50: '#FFE6F5',
+          100: '#FFCCEB',
+          500: '#FF008F',
+          600: '#BF006B',
+          700: '#800047',
+        },
       },
       fontFamily: {
         sans: ['var(--aw-font-sans, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
@@ -21,11 +45,21 @@ export default {
 
       animation: {
         fade: 'fadeInUp 1s both',
+        'fade-in': 'fadeIn 0.8s both',
+        'slide-up': 'slideUp 0.7s both',
       },
 
       keyframes: {
         fadeInUp: {
           '0%': { opacity: 0, transform: 'translateY(2rem)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        slideUp: {
+          '0%': { opacity: 0, transform: 'translateY(1rem)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
         },
       },

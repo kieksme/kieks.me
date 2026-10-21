@@ -1,0 +1,49 @@
+---
+import Button from '~/components/ui/Button.astro';
+import KantenDivider from '~/components/ui/KantenDivider.astro';
+import { BOOKING_URL } from '~/config/site';
+
+export interface Props {
+  title: string;
+  subtitle: string;
+  ctaText?: string;
+  ctaHref?: string;
+  id?: string;
+}
+
+const { title, subtitle, ctaText = 'Erstgespräch buchen', ctaHref = BOOKING_URL, id } = Astro.props;
+---
+
+<section class="relative overflow-hidden not-prose" {...id ? { id } : {}}>
+  <div class="absolute inset-0 bg-navy" aria-hidden="true"></div>
+  <div class="kanten-hero-bg" aria-hidden="true">
+    <span class="kanten-hero-bg__block kanten-hero-bg__block--aqua"></span>
+    <span class="kanten-hero-bg__block kanten-hero-bg__block--fuchsia"></span>
+    <span class="kanten-hero-bg__block kanten-hero-bg__block--grey"></span>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+    <div class="max-w-3xl">
+      <h1
+        class="font-heading text-4xl md:text-5xl font-bold leading-tight tracking-tight text-white motion-safe:animate-slide-up"
+      >
+        {title}
+      </h1>
+      <p class="mt-6 text-lg md:text-xl text-white/85 max-w-[42rem] motion-safe:animate-fade">
+        {subtitle}
+      </p>
+      <div class="mt-8 motion-safe:animate-fade">
+        <Button
+          variant="primary"
+          text={ctaText}
+          href={ctaHref}
+          icon="tabler:calendar-event"
+          class="!bg-aqua !border-aqua !text-navy hover:!bg-aqua-600 hover:!border-aqua-600"
+        />
+      </div>
+    </div>
+  </div>
+  <KantenDivider from="white" class="relative text-white dark:hidden" />
+  <div class="hidden dark:block relative">
+    <KantenDivider from="navy" />
+  </div>
+</section>

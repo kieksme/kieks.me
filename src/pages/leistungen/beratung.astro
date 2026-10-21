@@ -1,0 +1,71 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Features from '~/components/widgets/Features.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+
+const metadata = {
+  title: 'IT-Beratung und Workshops zu KI, Cloud und Software',
+  description:
+    'Erst klären, dann bauen: kieks.me berät zu KI, MCP, Cloud und Softwarearchitektur und vermittelt Wissen in praxisnahen Workshops für Ihr Team.',
+};
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="Erst verstehen. Dann entscheiden. Dann bauen."
+    subtitle="Wir helfen Ihnen, die richtigen Fragen zu stellen, bevor Geld in Technik fließt. Und wir geben unser Wissen so weiter, dass Ihr Team selbst weitermachen kann."
+    ctaText="Beratung anfragen"
+  />
+
+  <Features
+    title="Beratung"
+    items={[
+      {
+        title: 'Bestandsaufnahme',
+        description: 'Welche Systeme, Abläufe und Daten gibt es, und wo hakt es?',
+        icon: 'tabler:search',
+      },
+      {
+        title: 'Einordnung',
+        description: 'Was lohnt sich, was ist Hype, was ist ein guter nächster Schritt?',
+        icon: 'tabler:compass',
+      },
+      {
+        title: 'Entscheidungsvorlage',
+        description: 'Optionen mit Aufwand, Risiken und Abhängigkeiten, ehrlich gegenübergestellt.',
+        icon: 'tabler:file-analytics',
+      },
+    ]}
+  />
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Workshops</h2>
+      <p class="mt-4 text-lg text-muted">Praxisnah, auf Ihre Situation zugeschnitten. Mögliche Themen:</p>
+      <ul class="mt-4 space-y-2 text-muted list-disc pl-5">
+        <li>KI-Assistenten und MCP im eigenen Unternehmen</li>
+        <li>Agent-Skills für Entwicklungsteams</li>
+        <li>Infrastruktur als Code und CI/CD</li>
+        <li>Moderne Webentwicklung mit Astro und React</li>
+      </ul>
+      <Placeholder label="⟦PLATZHALTER⟧" class="mt-6">
+        Formate (vor Ort in Leipzig / remote), Dauer, Teilnehmerzahl, Preise oder „auf Anfrage“. Bisher keine belegten
+        Angaben.
+      </Placeholder>
+    </div>
+  </section>
+
+  <section class="not-prose py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">Unsere Haltung</h2>
+      <p class="mt-4 text-lg text-muted">
+        Wir beraten herstellerunabhängig ⟦BESTÄTIGEN: keine Partnerschaften, die dem widersprechen⟧ und sagen Ihnen
+        auch, wenn wir nicht die Richtigen sind.
+      </p>
+    </div>
+  </section>
+
+  <SectionCTA title="Welche Frage beschäftigt Sie gerade?" />
+</Layout>

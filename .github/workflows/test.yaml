@@ -14,12 +14,14 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      - name: Install and build
-        uses: withastro/action@v3
+      # Pin pnpm (do not use withastro/action → pnpm@latest).
+      # pnpm 12+ ignores package.json#pnpm and requires allowBuilds in
+      # pnpm-workspace.yaml; unreviewed sharp/esbuild builds fail with
+      # ERR_PNPM_IGNORED_BUILDS. Keep check and build on the same pnpm.
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: 22 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
-          package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
-      - name: Check with node
+          version: 9.15.4
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22

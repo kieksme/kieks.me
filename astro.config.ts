@@ -23,12 +23,31 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
+  site: 'https://kieks.me',
+
+  redirects: {
+    '/contact': '/kontakt',
+    '/terms': '/agb',
+  },
 
   integrations: [
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/kontakt-erfolgreich') &&
+        !page.includes('/homes/') &&
+        !page.includes('/landing/') &&
+        !page.includes('/services') &&
+        !page.includes('/about') &&
+        !page.includes('/pricing') &&
+        !page.includes('/contact') &&
+        !page.includes('/terms') &&
+        !page.includes('/blog') &&
+        !page.includes('/category/') &&
+        !page.includes('/tag/'),
+    }),
     mdx(),
     icon({
       include: {
