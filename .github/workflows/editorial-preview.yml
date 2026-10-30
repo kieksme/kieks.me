@@ -1,0 +1,51 @@
+name: Editorial Preview
+
+on:
+  pull_request:
+    paths:
+      - 'preview/**'
+      - 'src/components/editorial/**'
+      - 'test/unit/components/editorial-preview.test.ts'
+      - 'src/pages/docs/editorial-preview.astro'
+      - 'docs/wiki/editorial-preview.md'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'tailwind.config.js'
+      - 'vitest.config.ts'
+      - '.github/workflows/editorial-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: editorial-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASTRO_TELEMETRY_DISABLED: '1'
+      SHARP_IGNORE_GLOBAL_LIBVIPS: '1'
+      DATAHUB_PREVIEW_SECRET: synthetic-ci-preview-secret-never-use-in-production-49271
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Install pinned package manager
+        run: npm install --global pnpm@9.15.4
+      - name: Install website dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install isolated preview dependencies
+        run: pnpm --dir preview install --frozen-lockfile
+      - name: Check website
+        run: pnpm check
+      - name: Run component and security tests
+        run: pnpm exec vitest --run
+      - name: Build private preview
+        run: pnpm --dir preview build
+      - name: Test compiled private preview
+        run: node preview/scripts/smoke.mjs
