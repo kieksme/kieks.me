@@ -54,6 +54,16 @@ export default [
     },
   },
   {
-    ignores: ['dist', 'node_modules', '.github', 'types.generated.d.ts', '.astro', 'figma/**'],
+    ignores: [
+      'dist',
+      'node_modules',
+      '.github',
+      'types.generated.d.ts',
+      '.astro',
+      'figma/**',
+      'preview/dist/**',
+      'preview/node_modules/**',
+      'preview/.astro/**',
+    ],
   },
 ];

@@ -1,0 +1,218 @@
+---
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import FaqItem from '~/components/ui/molecules/FaqItem.astro';
+import { plainText, renderRichText, safeMedia, safeHref } from './rich-text';
+export interface Props {
+  collection: string;
+  document: Record<string, unknown>;
+}
+const { collection, document: data } = Astro.props;
+const title = plainText(data.title ?? data.name ?? data.question) || 'Noch ohne Überschrift';
+const image = safeMedia(data.heroImage ?? data.image ?? data.photo);
+const body = renderRichText(
+  data.contentRichText ?? data.descriptionRichText ?? data.bioRichText ?? data.answerRichText
+);
+const fallback = plainText(data.description ?? data.bio ?? data.answer);
+const sections =
+  collection === 'pages' && Array.isArray(data.sections)
+    ? (data.sections.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, 100) as Record<
+        string,
+        unknown
+      >[])
+    : [];
+const links =
+  collection === 'navigation' && Array.isArray(data.links)
+    ? (data.links.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, 100) as Record<
+        string,
+        unknown
+      >[])
+    : [];
+---
+
+<article class="editorial-content" data-editorial-collection={collection}>
+  <div class="editorial-content__eyebrow">
+    {
+      collection === 'team'
+        ? plainText(data.position)
+        : collection === 'faqs'
+          ? plainText(data.category)
+          : plainText(data.kind)
+    }
+  </div>
+  <Heading level={1} size="xl">{title}</Heading>
+  {plainText(data.summary) && <Lead class="mt-8 max-w-3xl">{plainText(data.summary)}</Lead>}
+  {
+    image && (
+      <figure class="editorial-content__hero">
+        <img src={image.url} alt={image.alt} width={image.width} height={image.height} loading="eager" />
+      </figure>
+    )
+  }
+  {
+    collection === 'faqs' ? (
+      <div class="mt-10">
+        <FaqItem title={title} open>
+          <div class="editorial-prose">{body ? <Fragment set:html={body} /> : <p>{fallback}</p>}</div>
+        </FaqItem>
+      </div>
+    ) : (
+      <div class="editorial-prose mt-10">{body ? <Fragment set:html={body} /> : fallback && <p>{fallback}</p>}</div>
+    )
+  }
+  {
+    sections.map((section) => {
+      const sectionImage = safeMedia(section.media);
+      const rich = renderRichText(section.richText);
+      return (
+        <section class="editorial-content__section">
+          {plainText(section.heading) && (
+            <Heading level={2} size="l">
+              {plainText(section.heading)}
+            </Heading>
+          )}
+          <div class="editorial-prose mt-6">
+            {rich ? <Fragment set:html={rich} /> : <p>{plainText(section.body)}</p>}
+          </div>
+          {sectionImage && (
+            <figure>
+              <img
+                src={sectionImage.url}
+                alt={sectionImage.alt}
+                width={sectionImage.width}
+                height={sectionImage.height}
+                loading="lazy"
+              />
+            </figure>
+          )}
+        </section>
+      );
+    })
+  }
+  {
+    collection === 'mcp-projects' && (
+      <nav aria-label="Projektlinks" class="editorial-content__links">
+        {[
+          ['Repository', data.repositoryUrl],
+          ['Dokumentation', data.documentationUrl],
+        ].map(
+          ([label, href]) =>
+            safeHref(href) && (
+              <a href={safeHref(href)!} rel="noopener noreferrer">
+                {label} ↗
+              </a>
+            )
+        )}
+        {plainText(data.license) && <span>Lizenz: {plainText(data.license)}</span>}
+      </nav>
+    )
+  }
+  {
+    links.length > 0 && (
+      <nav aria-label={title} class="editorial-content__links">
+        {links.map((link) => safeHref(link.href) && <a href={safeHref(link.href)!}>{plainText(link.label)}</a>)}
+      </nav>
+    )
+  }
+</article>
+<style is:global>
+  .editorial-content {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding: 64px 32px 100px;
+  }
+  .editorial-content__eyebrow {
+    font: 700 16px/1.5 var(--aw-font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+  }
+  .editorial-content__hero {
+    margin: 48px 0;
+    max-width: 900px;
+  }
+  .editorial-content figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 3px solid var(--pop-ink);
+    box-shadow: 8px 8px 0 var(--pop-aqua);
+  }
+  .editorial-content__section {
+    padding-top: 72px;
+  }
+  .editorial-prose {
+    max-width: 780px;
+    font: 400 22px/1.6 var(--aw-font-sans);
+    overflow-wrap: anywhere;
+  }
+  .editorial-prose p,
+  .editorial-prose ul,
+  .editorial-prose ol,
+  .editorial-prose blockquote,
+  .editorial-prose figure {
+    margin: 0 0 1.2em;
+  }
+  .editorial-prose h2,
+  .editorial-prose h3,
+  .editorial-prose h4 {
+    font-family: var(--aw-font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 1.5em 0 0.6em;
+  }
+  .editorial-prose h2 {
+    font-size: 40px;
+  }
+  .editorial-prose h3 {
+    font-size: 30px;
+  }
+  .editorial-prose ul {
+    list-style: disc;
+    padding-left: 1.4em;
+  }
+  .editorial-prose ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+  .editorial-prose blockquote {
+    border-left: 8px solid var(--pop-fuchsia);
+    padding-left: 24px;
+    font-style: italic;
+  }
+  .editorial-prose a,
+  .editorial-content__links a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    color: var(--text-link);
+  }
+  .editorial-prose code {
+    background: var(--pop-aqua);
+    color: var(--pop-ink);
+    padding: 0.1em 0.25em;
+  }
+  .editorial-content__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 48px;
+    font-weight: 700;
+  }
+  @media (max-width: 767px) {
+    .editorial-content {
+      padding: 40px 20px 64px;
+    }
+    .editorial-prose {
+      font-size: 18px;
+      line-height: 28px;
+    }
+    .editorial-content__section {
+      padding-top: 48px;
+    }
+    .editorial-prose h2 {
+      font-size: 32px;
+    }
+  }
+</style>

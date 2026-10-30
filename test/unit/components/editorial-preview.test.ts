@@ -1,0 +1,188 @@
+import { describe, it, expect } from 'vitest';
+import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import EditorialContent from '../../../src/components/editorial/EditorialContent.astro';
+import { renderRichText, safeMedia, safeHref } from '../../../src/components/editorial/rich-text';
+import { verifyRequest, signature, PREVIEW_PATH, MAX_BODY } from '../../../preview/src/lib/security';
+import { GET as healthProbe } from '../../../preview/src/pages/health';
+import { isPreviewMessage } from '../../../preview/src/lib/client';
+const secret = 'synthetic-only-preview-secret-at-least-32-characters';
+const now = 1900000000000;
+const lexical = (text: string) => ({
+  root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text, format: 1 }] }] },
+});
+function request(
+  body: unknown = { collection: 'pages', id: 1, document: { title: 'Synthetic' } },
+  overrides: Record<string, string> = {},
+  url = PREVIEW_PATH
+) {
+  const raw = typeof body === 'string' ? body : JSON.stringify(body),
+    timestamp = String(now / 1000);
+  return new Request(`https://renderer.invalid${url}`, {
+    method: 'POST',
+    body: raw,
+    headers: {
+      'content-type': 'application/json',
+      'x-preview-timestamp': timestamp,
+      'x-preview-signature': signature(timestamp, raw, secret),
+      ...overrides,
+    },
+  });
+}
+describe('private renderer boundary', () => {
+  it('health exposes only configured status and fails closed without the secret', async () => {
+    const previous = process.env.DATAHUB_PREVIEW_SECRET;
+    try {
+      delete process.env.DATAHUB_PREVIEW_SECRET;
+      const unavailable = healthProbe();
+      expect(unavailable.status).toBe(503);
+      expect(await unavailable.json()).toEqual({ status: 'unavailable' });
+      process.env.DATAHUB_PREVIEW_SECRET = secret;
+      const ready = healthProbe();
+      expect(ready.status).toBe(200);
+      expect(await ready.json()).toEqual({ status: 'ok' });
+      expect(ready.headers.get('cache-control')).toContain('no-store');
+      expect(ready.headers.get('x-robots-tag')).toContain('noindex');
+    } finally {
+      if (previous === undefined) delete process.env.DATAHUB_PREVIEW_SECRET;
+      else process.env.DATAHUB_PREVIEW_SECRET = previous;
+    }
+  });
+  it('accepts only a correctly signed short-lived website envelope', async () => {
+    expect((await verifyRequest(request(), secret, now)).collection).toBe('pages');
+    await expect(verifyRequest(request(), undefined, now)).rejects.toMatchObject({ status: 503 });
+    await expect(verifyRequest(request(), secret, now + 61000)).rejects.toMatchObject({ status: 401 });
+    await expect(verifyRequest(request(), secret, now - 61000)).rejects.toMatchObject({ status: 401 });
+    await expect(
+      verifyRequest(request({}, { 'x-preview-signature': '0'.repeat(64) }), secret, now)
+    ).rejects.toMatchObject({ status: 401 });
+  });
+  it('rejects anonymous, business collections, foreign paths and over-limit streamed body', async () => {
+    await expect(
+      verifyRequest(new Request('https://renderer.invalid/internal/preview'), secret, now)
+    ).rejects.toMatchObject({ status: 404 });
+    await expect(verifyRequest(request({}, { 'x-preview-timestamp': '' }), secret, now)).rejects.toMatchObject({
+      status: 401,
+    });
+    await expect(
+      verifyRequest(request({ collection: 'customers', id: 1, document: { name: 'Private' } }), secret, now)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(verifyRequest(request(undefined, {}, '/other'), secret, now)).rejects.toMatchObject({ status: 404 });
+    await expect(verifyRequest(request('x'.repeat(MAX_BODY + 1)), secret, now)).rejects.toMatchObject({ status: 413 });
+    await expect(
+      verifyRequest(request({}, { 'content-length': String(MAX_BODY + 1) }), secret, now)
+    ).rejects.toMatchObject({ status: 413 });
+  });
+  it('detects a body changed after signing and never includes request contents in errors', async () => {
+    const original = request();
+    const headers = Object.fromEntries(original.headers.entries());
+    await expect(
+      verifyRequest(request({ collection: 'pages', id: 1, document: { title: 'Changed' } }, headers), secret, now)
+    ).rejects.toMatchObject({ status: 401, message: 'Preview unavailable' });
+  });
+  it('binds the HMAC to exact UTF-8 bytes including a prepended BOM', async () => {
+    const original = request();
+    const headers = Object.fromEntries(original.headers.entries());
+    const raw = await original.text();
+    const changed = new Request('https://renderer.invalid/internal/preview', {
+      method: 'POST',
+      headers,
+      body: new Uint8Array([239, 187, 191, ...new TextEncoder().encode(raw)]),
+    });
+    await expect(verifyRequest(changed, secret, now)).rejects.toMatchObject({ status: 401 });
+  });
+  it('requires matching origin, parent source and collection before requesting unsaved preview', () => {
+    const parent = {} as Window;
+    const event = {
+      origin: 'https://datahub.invalid',
+      source: parent,
+      data: { type: 'payload-live-preview', collectionSlug: 'pages', data: { title: 'Unsaved' } },
+    } as unknown as MessageEvent;
+    expect(isPreviewMessage(event, event.origin, parent, 'pages')).toBeTruthy();
+    expect(
+      isPreviewMessage({ ...event, origin: 'https://attacker.invalid' } as MessageEvent, event.origin, parent, 'pages')
+    ).toBeFalsy();
+    expect(isPreviewMessage({ ...event, source: {} } as MessageEvent, event.origin, parent, 'pages')).toBeFalsy();
+    expect(isPreviewMessage(event, event.origin, parent, 'team')).toBeFalsy();
+  });
+});
+describe('safe editorial rendering', () => {
+  it('renders Lexical text formatting but escapes scripts and ignores HTML nodes', () => {
+    expect(renderRichText(lexical('<script>alert(1)</script>'))).toBe(
+      '<p><strong>&lt;script&gt;alert(1)&lt;/script&gt;</strong></p>'
+    );
+    expect(
+      renderRichText({ root: { type: 'root', children: [{ type: 'html', html: '<img onerror=alert(1)>' }] } })
+    ).toBe('');
+    expect(
+      renderRichText({
+        root: {
+          type: 'root',
+          children: [
+            { type: 'link', fields: { url: 'javascript:alert(1)' }, children: [{ type: 'text', text: 'Safe' }] },
+          ],
+        },
+      })
+    ).toBe('Safe');
+  });
+  it('allows only guarded same-origin raster media URLs and rejects traversal/schemes', () => {
+    expect(safeMedia({ url: '/api/media/file/demo.png', mimeType: 'image/png', alt: 'Demo' })?.url).toBe(
+      '/api/media/file/demo.png'
+    );
+    for (const url of [
+      'https://attacker.invalid/a.png',
+      '//attacker.invalid/a.png',
+      '/api/media/file/..%2Fsecret',
+      '/api/media/file/a.png?key=bad',
+      '/api/media/file/%00a.png',
+    ])
+      expect(safeMedia({ url, mimeType: 'image/png' })).toBeNull();
+    expect(safeMedia({ url: '/api/media/file/a.svg', mimeType: 'image/svg+xml' })).toBeNull();
+    expect(safeHref('javascript:alert(1)')).toBeNull();
+    expect(safeHref('//attacker.invalid')).toBeNull();
+  });
+  it('renders the five website content shapes with original components and omits internal fields', async () => {
+    const container = await AstroContainer.create();
+    for (const collection of ['pages', 'services', 'team', 'faqs', 'mcp-projects']) {
+      const html = await container.renderToString(EditorialContent, {
+        props: {
+          collection,
+          document: {
+            title: 'Synthetic title',
+            name: 'Synthetic title',
+            question: 'Synthetic title',
+            summary: 'Summary',
+            descriptionRichText: lexical('Rich content'),
+            editorialNotes: 'INTERNAL_MUST_NOT_APPEAR',
+            customer: { name: 'CRM_MUST_NOT_APPEAR' },
+          },
+        },
+      });
+      expect(html).toContain('Synthetic title');
+      expect(html).toContain('Rich content');
+      expect(html).not.toContain('INTERNAL_MUST_NOT_APPEAR');
+      expect(html).not.toContain('CRM_MUST_NOT_APPEAR');
+    }
+  });
+  it('renders sections and media alt text through escaped attributes', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(EditorialContent, {
+      props: {
+        collection: 'pages',
+        document: {
+          title: 'Demo',
+          sections: [
+            {
+              heading: 'Section',
+              richText: lexical('Body'),
+              media: { url: '/api/media/file/demo.png', mimeType: 'image/png', alt: '" onerror="alert(1)' },
+            },
+          ],
+        },
+      },
+    });
+    expect(html).toContain('Section');
+    expect(html).toContain('Body');
+    expect(html).not.toContain('alt="" onerror=');
+    expect(html).toContain('/api/media/file/demo.png');
+  });
+});
