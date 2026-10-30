@@ -1,7 +1,5 @@
 ---
-import heroArt from '~/assets/pop/652-907_hero-art__imgHeroArt.svg?url';
-import burstDark from '~/assets/pop/661-962_hero-art-dark__imgBurstGelb.svg?url';
-import fingerDark from '~/assets/pop/661-962_hero-art-dark__imgFingerMultiStacked.svg?url';
+import Logo from '~/components/ui/atoms/Logo.astro';
 import Sticker from '~/components/ui/atoms/Sticker.astro';
 
 export interface Props {
@@ -14,32 +12,7 @@ const { class: className = '', showOpenSource = 'auto' } = Astro.props;
 ---
 
 <div class:list={['relative w-full max-w-[520px] aspect-square mx-auto', className]}>
-  <img
-    src={heroArt}
-    alt=""
-    class="dark:hidden w-full h-full object-contain"
-    width="520"
-    height="520"
-    decoding="async"
-  />
-  <div class="hidden dark:block absolute inset-0">
-    <img
-      src={burstDark}
-      alt=""
-      class="motion-safe:pop-spin-slow absolute inset-[5%] w-[90%] h-[90%] object-contain"
-      width="500"
-      height="500"
-      decoding="async"
-    />
-    <img
-      src={fingerDark}
-      alt=""
-      class="motion-safe:pop-tap absolute left-[8%] top-[28%] w-[78%] h-auto"
-      width="400"
-      height="277"
-      decoding="async"
-    />
-  </div>
+  <Logo size="hero" class="w-full" />
   {
     showOpenSource !== false && (
       <div

@@ -12,12 +12,12 @@ export interface Props {
   class?: string;
 }
 
-const { top = 'var(--hero-bg)', bottom = 'var(--band-bg)', height = 26, class: className = '' } = Astro.props;
+const { top = 'var(--hero-bg)', bottom = 'var(--band-bg)', height, class: className = '' } = Astro.props;
 ---
 
 <div
   class:list={['pop-zigzag relative w-full overflow-hidden leading-none', className]}
-  style={`background: ${top}; height: ${height}px;`}
+  style={`background: ${top}; height: ${height ? `${height}px` : 'var(--pop-divider-height)'};`}
   aria-hidden="true"
 >
   <div
@@ -26,3 +26,14 @@ const { top = 'var(--hero-bg)', bottom = 'var(--band-bg)', height = 26, class: c
   >
   </div>
 </div>
+
+<style>
+  .pop-zigzag {
+    --pop-divider-height: 18px;
+  }
+  @media (min-width: 768px) {
+    .pop-zigzag {
+      --pop-divider-height: 26px;
+    }
+  }
+</style>

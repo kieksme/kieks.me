@@ -26,7 +26,18 @@ const {
 } = Astro.props;
 ---
 
-<section class:list={['relative overflow-hidden not-prose', className]} style="background: var(--pop-fuchsia);">
+<section class:list={['pop-cta relative overflow-hidden not-prose', className]} style="background: var(--pop-fuchsia);">
+  <Halftone
+    width={390}
+    height={300}
+    pitch={16}
+    origin="top"
+    d0={9}
+    k={0.03}
+    color="var(--pop-purple)"
+    opacity={0.5}
+    class="md:hidden left-1/2 -translate-x-1/2 top-0"
+  />
   <Halftone
     width={1440}
     height={420}
@@ -34,29 +45,41 @@ const {
     origin="top"
     d0={11.66}
     k={0.0286}
-    color="#9747ff"
+    color="var(--pop-purple)"
     opacity={0.5}
-    class="!relative w-full max-w-none left-0 top-0 opacity-50 md:absolute md:inset-x-0 md:top-0"
+    class="hidden md:block left-1/2 -translate-x-1/2 top-0"
   />
-  <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-10 md:pt-24 pb-8 text-center">
-    <Heading level={2} size="cta" color="#fff" shadowColor="var(--pop-navy)" shadowSize="7px 7px 0" class="mx-auto">
+  <div
+    class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-14 md:pt-[100px] pb-5 md:pb-[30px] text-left md:text-center"
+  >
+    <Heading
+      level={2}
+      size="cta"
+      color="#fff"
+      shadowColor="var(--pop-navy)"
+      class="max-w-[252px] md:max-w-none md:mx-auto"
+    >
       {title}
     </Heading>
-    <SpeechBubble class="mx-auto mt-10 max-w-[820px] text-center">
+    <SpeechBubble
+      class="pop-cta__bubble mx-auto mt-6 md:mt-7 max-w-[820px] text-left md:text-center !px-5 !pt-5 !pb-[22px] md:!px-9 md:!py-7"
+    >
       {
         text && (
-          <p class="text-[22px] leading-8" style="color: var(--text-primary);">
+          <p class="text-lg leading-7 md:text-[22px] md:leading-8" style="color: var(--text-primary);">
             {text}
           </p>
         )
       }
-      <div class="mt-5 flex flex-col sm:flex-row gap-7 justify-center items-center">
-        <Button variant="primary" size="lg" href={ctaHref} text={ctaText} icon="tabler:calendar-event" />
+      <div
+        class="mt-[18px] md:mt-[22px] flex flex-col md:flex-row gap-[18px] md:gap-7 md:justify-center items-start md:items-center"
+      >
+        <Button variant="primary" size="lg" href={ctaHref} text={ctaText} class="!text-lg md:!text-xl" />
         {
           showEmailLink && (
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              class="font-heading font-extrabold text-lg"
+              class="font-heading font-extrabold text-base md:text-lg"
               style="color: var(--text-link);"
             >
               Lieber per E-Mail: {CONTACT_EMAIL}
@@ -67,11 +90,19 @@ const {
     </SpeechBubble>
     {
       !HAS_BOOKING_URL && (
-        <Note label="⟦PLATZHALTER⟧" class="mx-auto mt-6 max-w-[460px] text-left">
+        <Note label="⟦PLATZHALTER⟧" class="md:mx-auto mt-6 md:mt-7 max-w-[460px] text-left">
           Buchungslink fürs 30-Minuten-Erstgespräch (Tool noch offen).
         </Note>
       )
     }
   </div>
-  <Flames class="mt-8" />
+  <Flames />
 </section>
+
+<style>
+  @media (max-width: 767px) {
+    .pop-cta :global(.pop-cta__bubble) {
+      box-shadow: 7px 7px 0 0 var(--pop-aqua) !important;
+    }
+  }
+</style>
