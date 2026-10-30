@@ -1,0 +1,8 @@
+# Keep the private renderer independent of the parent static-site workspace.
+packages:
+  - '.'
+
+# pnpm >=10.26 also requires explicit build-script approvals.
+allowBuilds:
+  esbuild: true
+  sharp: true

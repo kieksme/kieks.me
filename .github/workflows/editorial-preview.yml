@@ -41,6 +41,11 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Install isolated preview dependencies
         run: pnpm --dir preview install --frozen-lockfile
+      - name: Verify isolated preview dependencies
+        working-directory: preview
+        run: |
+          test -d node_modules
+          node --input-type=module -e "import fs from 'node:fs'; const pkg = JSON.parse(fs.readFileSync('./node_modules/astro/package.json')); if (pkg.version !== '5.18.2') process.exit(1); console.log('Isolated Astro', pkg.version);"
       - name: Check website
         run: pnpm check
       - name: Run component and security tests

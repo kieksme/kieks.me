@@ -4,7 +4,7 @@
 
 ## Separate static and preview builds
 
-The existing `astro.config.ts`, root package dependencies and public static routing remain unchanged. The private SSR application lives entirely under `preview/`, with its own pinned Astro 5.18.2 / Node adapter 9.5.5 dependencies and lockfile. Install the root dependencies (shared source/fonts/Tailwind configuration), then:
+The existing `astro.config.ts`, root package dependencies and public static routing remain unchanged. The private SSR application lives entirely under `preview/`, with its own pinned Astro 5.18.2 / Node adapter 9.5.5 dependencies and lockfile. Its own `pnpm-workspace.yaml` is required: without that boundary, pnpm 9 selects the parent static-site workspace and silently skips the nested renderer installation. The Docker build copies this file before installing, and CI asserts the isolated Astro version. Install the root dependencies (shared source/fonts/Tailwind configuration), then:
 
 ```sh
 pnpm --dir preview install --frozen-lockfile

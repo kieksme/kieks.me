@@ -4,7 +4,7 @@ ENV ASTRO_TELEMETRY_DISABLED=1 SHARP_IGNORE_GLOBAL_LIBVIPS=1
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 make g++ && rm -rf /var/lib/apt/lists/* && npm install --global pnpm@9.15.4
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
-COPY preview/package.json preview/pnpm-lock.yaml ./preview/
+COPY preview/package.json preview/pnpm-lock.yaml preview/pnpm-workspace.yaml ./preview/
 RUN pnpm --dir preview install --frozen-lockfile
 COPY . .
 RUN pnpm --dir preview build
