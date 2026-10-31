@@ -24,7 +24,7 @@ async function directory() {
   folders.push(folder);
   return folder;
 }
-const empty = (): CmsBuildContent => ({ enabled: true, pages: [], posts: [], authors: [], media: {} });
+const empty = (): CmsBuildContent => ({ enabled: true, pages: [], posts: [], authors: [], media: {}, site: {} });
 function server(
   overrides: Record<string, unknown[]> = {},
   transform?: (body: Record<string, unknown>, url: URL) => void

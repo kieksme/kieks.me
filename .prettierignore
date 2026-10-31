@@ -8,3 +8,5 @@ node_modules
 **/.pnpm-store/**
 .runtime/
 public/_cms-media/
+preview/dist
+preview/site-dist

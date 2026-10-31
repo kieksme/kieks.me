@@ -11,8 +11,10 @@ export interface CmsBuildContent {
   pages: CmsDocument[];
   authors: CmsDocument[];
   media: Record<string, { url: string; alt: string; width?: number; height?: number }>;
+  /** Optional editable site sections (services, team, faqs, mcp-projects, navigation). Empty unless enabled. */
+  site: Record<string, CmsDocument[]>;
 }
-const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {} });
+const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
   pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'seo'],
   posts: [
@@ -33,7 +35,29 @@ const fields = {
   ],
   authors: ['id', '_status', 'name', 'slug', 'bioRichText', 'avatar', 'seo', 'contactEnabled'],
   media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
+  // Editable website sections; shape documented in src/content-model/site-content.ts.
+  services: ['id', '_status', 'order', 'title', 'summary', 'href', 'linkText', 'accent'],
+  team: ['id', '_status', 'order', 'slug', 'name', 'label', 'role', 'imageAlt'],
+  faqs: ['id', '_status', 'order', 'question', 'answer', 'accent'],
+  'mcp-projects': [
+    'id',
+    '_status',
+    'order',
+    'kind',
+    'name',
+    'summary',
+    'url',
+    'npm',
+    'license',
+    'docsUrl',
+    'page',
+    'featured',
+    'chipLabel',
+    'accent',
+  ],
+  navigation: ['id', '_status', 'order', 'placement', 'label', 'href', 'group'],
 } as const;
+export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
 type Collection = keyof typeof fields;
 const imageTypes: Record<string, string> = {
   'image/png': 'png',
@@ -57,7 +81,14 @@ const pick = (value: CmsDocument, keys: readonly string[]) =>
   Object.fromEntries(keys.filter((key) => key in value).map((key) => [key, value[key]]));
 
 export async function fetchCmsBuildContent(
-  options: { url?: string; apiKey?: string; fetcher?: typeof fetch; mediaDirectory?: string } = {}
+  options: {
+    url?: string;
+    apiKey?: string;
+    fetcher?: typeof fetch;
+    mediaDirectory?: string;
+    /** Opt in to editable site sections. Off by default so builds never request unknown collections. */
+    siteContent?: boolean;
+  } = {}
 ): Promise<CmsBuildContent> {
   if (!options.url && !options.apiKey) return empty();
   if (!options.url || !options.apiKey) throw new Error('Both PAYLOAD_URL and PAYLOAD_BUILD_API_KEY are required');
@@ -158,7 +189,14 @@ export async function fetchCmsBuildContent(
     collection('authors'),
     collection('media'),
   ]);
-  const result: CmsBuildContent = { enabled: true, posts, pages, authors, media: {} };
+  const site: Record<string, CmsDocument[]> = {};
+  if (options.siteContent) {
+    const loaded = await Promise.all(SITE_COLLECTIONS.map((slug) => collection(slug)));
+    SITE_COLLECTIONS.forEach((slug, index) => {
+      site[slug] = loaded[index];
+    });
+  }
+  const result: CmsBuildContent = { enabled: true, posts, pages, authors, media: {}, site };
   const directory = options.mediaDirectory ?? path.resolve('public/_cms-media');
   await mkdir(directory, { recursive: true });
   for (const media of mediaRecords) {
@@ -283,6 +321,7 @@ const snapshot = path.resolve('.runtime/payload-build.json');
 const configuration = () => ({
   url: process.env.PAYLOAD_URL ?? import.meta.env?.PAYLOAD_URL,
   apiKey: process.env.PAYLOAD_BUILD_API_KEY ?? import.meta.env?.PAYLOAD_BUILD_API_KEY,
+  siteContent: (process.env.PAYLOAD_SITE_CONTENT ?? import.meta.env?.PAYLOAD_SITE_CONTENT) === 'true',
 });
 export async function prepareCmsBuild() {
   await rm(path.resolve('public/_cms-media'), { recursive: true, force: true });

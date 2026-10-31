@@ -62,6 +62,7 @@ export default [
       '.astro',
       'figma/**',
       'preview/dist/**',
+      'preview/site-dist/**',
       'preview/node_modules/**',
       'preview/.astro/**',
     ],

@@ -3,6 +3,7 @@ import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/ui/organisms/Header.astro';
 import Footer from '~/components/ui/organisms/Footer.astro';
 import { headerData, footerData } from '~/navigation';
+import { getSiteContent } from '~/utils/site-content';
 import type { MetaData } from '~/types';
 
 export interface Props {
@@ -10,16 +11,19 @@ export interface Props {
 }
 
 const { metadata } = Astro.props;
+const site = await getSiteContent();
+const header = { ...headerData, links: site.header };
+const footer = { ...footerData, links: site.footerColumns, secondaryLinks: site.legalLinks };
 ---
 
 <Layout metadata={metadata}>
   <slot name="header">
-    <Header {...headerData} isSticky showToggleTheme />
+    <Header {...header} isSticky showToggleTheme />
   </slot>
   <main>
     <slot />
   </main>
   <slot name="footer">
-    <Footer {...footerData} />
+    <Footer {...footer} />
   </slot>
 </Layout>
