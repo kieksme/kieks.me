@@ -99,6 +99,7 @@ export function renderRichText(value: unknown): string {
     return '';
   }
   if (!value || typeof value !== 'object') return '';
-  return node((value as Record<string, unknown>).root);
+  const html = node((value as Record<string, unknown>).root);
+  return /<(?:img|hr)\b/.test(html) || html.replace(/<[^>]*>/g, '').trim() ? html : '';
 }
 export const plainText = (value: unknown): string => (typeof value === 'string' ? value.slice(0, 100000) : '');

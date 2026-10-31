@@ -1,7 +1,16 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 export const PREVIEW_PATH = '/internal/preview';
 export const MAX_BODY = 256 * 1024;
-export const COLLECTIONS = ['pages', 'services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
+export const COLLECTIONS = [
+  'pages',
+  'services',
+  'team',
+  'faqs',
+  'mcp-projects',
+  'navigation',
+  'posts',
+  'authors',
+] as const;
 export type PreviewCollection = (typeof COLLECTIONS)[number];
 export interface PreviewEnvelope {
   collection: PreviewCollection;

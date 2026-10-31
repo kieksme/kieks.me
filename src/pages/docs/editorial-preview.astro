@@ -57,4 +57,34 @@ const richText = {
       answer: 'Erst nach Freigabe und einem neuen Build der öffentlichen Website.',
     }}
   />
+  <EditorialContent
+    collection="posts"
+    document={{
+      title: 'Ein erfundener Blogartikel',
+      excerpt: 'So sieht ein Artikel in der geschützten Redaktion aus.',
+      publishedAt: '2026-10-31T00:00:00.000Z',
+      author: { id: 1, name: 'Demo-Autorin' },
+      category: 'Engineering',
+      tags: [{ tag: 'Astro' }, { tag: 'CMS' }],
+      contentRichText: richText,
+    }}
+  />
+  <EditorialContent
+    collection="authors"
+    document={{
+      name: 'Demo-Autorin',
+      bioRichText: richText,
+      contactEnabled: true,
+      posts: [{ id: 2, title: 'Ein erfundener Blogartikel', excerpt: 'Synthetische Artikelzuordnung.' }],
+    }}
+  />
+  <EditorialContent
+    collection="pages"
+    document={{
+      title: 'Rechtstext – Beispiel',
+      pageKind: 'legal',
+      contentMarkdown:
+        '## Beispielabschnitt\n\n<address>\nErfundene Firma<br>\nDemo-Straße 1<br>\n</address>\n\nNur eine Komponentendemo, kein veröffentlichter Rechtstext.',
+    }}
+  />
 </Layout>

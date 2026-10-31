@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import EditorialContent from '../../../src/components/editorial/EditorialContent.astro';
+import { renderMarkdown } from '../../../src/components/editorial/safe-markdown';
 import { renderRichText, safeMedia, safeHref } from '../../../src/components/editorial/rich-text';
 import { verifyRequest, signature, PREVIEW_PATH, MAX_BODY } from '../../../preview/src/lib/security';
 import { GET as healthProbe } from '../../../preview/src/pages/health';
@@ -184,5 +185,97 @@ describe('safe editorial rendering', () => {
     expect(html).toContain('Body');
     expect(html).not.toContain('alt="" onerror=');
     expect(html).toContain('/api/media/file/demo.png');
+  });
+});
+
+describe('blog, legal and author previews', () => {
+  it('keeps legacy legal address and autolinks while refusing executable HTML', () => {
+    const html = renderMarkdown(
+      '# Legal\n\n<address>\nExample company<br>\nDemo Street 1<br>\n</address>\n\nMail: <demo@example.invalid><br>\n\n[Unsafe](javascript:alert%281%29)\n\n<script>alert(1)</script>'
+    );
+    expect(html).toContain('<address>Example company<br>');
+    expect(html).toContain('Demo Street 1');
+    expect(html).toContain('href="mailto:demo@example.invalid"');
+    expect(html).not.toContain('href="javascript:');
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;script&gt;');
+    expect(renderMarkdown('```html\n<address>literal<br></address>\n```')).toContain(
+      '&lt;address&gt;literal&lt;br&gt;&lt;/address&gt;'
+    );
+  });
+  it('renders complete long Markdown and fails explicitly above its limit', () => {
+    expect(renderMarkdown('a'.repeat(100010) + 'END_MARKER')).toContain('END_MARKER');
+    expect(() => renderMarkdown('a'.repeat(256 * 1024 + 1))).toThrow(RangeError);
+  });
+  it('uses Markdown when an untouched rich-text editor has only an empty paragraph', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(EditorialContent, {
+      props: {
+        collection: 'pages',
+        document: {
+          title: 'Legal',
+          pageKind: 'legal',
+          contentRichText: lexical(''),
+          contentMarkdown: '## Retained legal heading\n\nRetained legal words.',
+        },
+      },
+    });
+    expect(html).toContain('Retained legal heading');
+    expect(html).toContain('Retained legal words.');
+  });
+  it('renders an article with author relation, stable date, excerpt and escaped tags', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(EditorialContent, {
+      props: {
+        collection: 'posts',
+        document: {
+          title: 'Synthetic article',
+          excerpt: 'Article excerpt',
+          publishedAt: '2026-10-31T00:00:00.000Z',
+          authorName: 'Legacy author',
+          author: { id: 11, name: 'Demo author', email: 'PRIVATE_NOT_RENDERED' },
+          category: 'Engineering',
+          tags: [{ tag: 'Astro' }, { tag: '<script>bad</script>' }],
+          contentRichText: lexical('Article body'),
+        },
+      },
+    });
+    expect(html).toContain('31. Oktober 2026');
+    expect(html).toContain('datetime="2026-10-31T00:00:00.000Z"');
+    expect(html).toContain('/preview/authors/11');
+    expect(html).toContain('Demo author');
+    expect(html).not.toContain('Legacy author');
+    expect(html).toContain('Article excerpt');
+    expect(html).toContain('Article body');
+    expect(html).toContain('Astro');
+    expect(html).not.toContain('<script>bad</script>');
+    expect(html).not.toContain('PRIVATE_NOT_RENDERED');
+  });
+  it('shows published article briefs supplied by the author DTO and an inert contact form', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(EditorialContent, {
+      props: {
+        collection: 'authors',
+        document: {
+          name: 'Demo author',
+          bioRichText: lexical('Author bio'),
+          contactEnabled: true,
+          posts: [{ id: 21, title: 'Published article', excerpt: 'Published excerpt' }],
+          email: 'PRIVATE_NOT_RENDERED',
+        },
+      },
+    });
+    expect(html).toContain('Author bio');
+    expect(html).toContain('Published article');
+    expect(html).toContain('/preview/posts/21');
+    expect(html).toContain('<fieldset disabled');
+    expect(html).toContain('type="button" disabled');
+    expect(html).not.toContain('action=');
+    expect(html).toContain('Nachrichten können hier nicht gesendet werden');
+    expect(html).not.toContain('PRIVATE_NOT_RENDERED');
+    const withoutContact = await container.renderToString(EditorialContent, {
+      props: { collection: 'authors', document: { name: 'Demo author', contactEnabled: false } },
+    });
+    expect(withoutContact).not.toContain('<form');
   });
 });

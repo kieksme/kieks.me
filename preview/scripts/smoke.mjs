@@ -33,8 +33,8 @@ try {
   assert.deepEqual(await health.json(), { status: 'ok' });
   assert.match(health.headers.get('cache-control'), /no-store/);
   assert.equal((await fetch(base + '/internal/preview')).status, 404);
-  const post = async (document, offset = 0, tamper = false) => {
-    const body = JSON.stringify({ collection: 'pages', id: 1, document }),
+  const post = async (document, offset = 0, tamper = false, collection = 'pages') => {
+    const body = JSON.stringify({ collection, id: 1, document }),
       timestamp = String(Math.floor(Date.now() / 1000) + offset);
     const sig = createHmac('sha256', secret)
       .update(`${timestamp}\nPOST\n/internal/preview\n${createHash('sha256').update(body).digest('hex')}`)
@@ -84,11 +84,38 @@ try {
       assert.ok(css.includes('Hanken Grotesk'), 'original heading font must remain');
     }
   }
+  const legal = await post({
+    title: 'SYNTHETIC_LEGAL',
+    contentMarkdown: '<address>\nSynthetic company<br>\nDemo Street 1<br>\n</address>\n\n<script>must-not-run</script>',
+  });
+  assert.equal(legal.status, 200);
+  const legalHtml = await legal.text();
+  assert.ok(legalHtml.includes('<address>Synthetic company<br>'));
+  assert.ok(legalHtml.includes('Demo Street 1'));
+  assert.ok(!legalHtml.includes('<script>must-not-run</script>'));
+  for (const collection of ['posts', 'authors']) {
+    const response = await post(
+      {
+        title: 'SYNTHETIC_EXTENDED_PREVIEW',
+        name: 'SYNTHETIC_EXTENDED_PREVIEW',
+        author: { id: 2, name: 'Demo author' },
+        contactEnabled: true,
+      },
+      0,
+      false,
+      collection
+    );
+    assert.equal(response.status, 200);
+    assert.ok((await response.text()).includes('SYNTHETIC_EXTENDED_PREVIEW'));
+  }
   console.log(
     JSON.stringify({
       status: 'passed',
       checks: [
         'health-configured',
+        'legal-markdown-preserved-and-escaped',
+        'posts-preview',
+        'authors-preview',
         'anonymous-denied',
         'expired-denied',
         'tamper-denied',

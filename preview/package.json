@@ -11,6 +11,7 @@
     "astro": "5.18.2",
     "@astrojs/node": "9.5.5",
     "@astrojs/tailwind": "5.1.5",
-    "tailwindcss": "3.4.17"
+    "tailwindcss": "3.4.17",
+    "mdast-util-from-markdown": "2.1.0"
   }
 }

@@ -1,6 +1,6 @@
 # Private editorial preview
 
-`EditorialContent` renders the website collections `pages`, `services`, `team`, `faqs`, `mcp-projects`, plus navigation. Props are `collection: string` and `document: Record<string, unknown>`. The component reuses the existing Pop-Art Heading, Lead and FAQ components, the same fonts and tokens, and the unchanged original circular logo. It does not fetch CMS data. The synthetic live component demo lives at `/docs/editorial-preview` and contains no drafts or customer information.
+`EditorialContent` renders the website collections `pages`, `services`, `team`, `faqs`, `mcp-projects`, plus navigation, `posts` and `authors`. Props are `collection: string` and `document: Record<string, unknown>`. The component reuses the existing Pop-Art Heading, Lead and FAQ components, the same fonts and tokens, and the unchanged original circular logo. It does not fetch CMS data. The synthetic live component demo lives at `/docs/editorial-preview` and contains no drafts or customer information.
 
 ## Separate static and preview builds
 
@@ -57,3 +57,15 @@ node preview/scripts/smoke.mjs
 ```
 
 Unit tests cover HMAC/TTL/body/path/size constraints, origin/source/collection checking, safe rich text/media, the five content shapes and internal-field omission. The native compiled-renderer smoke test starts a loopback-only child process, sends synthetic signed/expired/tampered requests, checks cache/index headers, escaping and private asset resolution, then stops its own process. Parent-level checks must additionally prove the deployed Next session/CSRF/ACL and proxy behavior, real unsaved changes in the admin iframe, and the unchanged public static build.
+
+## Blog articles, authors and legal documents
+
+`posts` renders an article title, excerpt, German publication date (fixed UTC date semantics), category, escaped tags, hero image and rich text. A populated `author` relationship takes precedence over the legacy `authorName` fallback. Author links point to the protected `/preview/authors/<id>` route rather than leaving the authenticated iframe. Invalid dates are omitted.
+
+`authors` renders the profile name, permitted avatar, rich-text biography, and the server-supplied published article briefs. Article links likewise use the protected preview route. The Next bridge owns the fixed query for published posts belonging to this author; the renderer never fetches arbitrary related data. `contactEnabled` displays an explicitly inactive contact-form mockup: disabled controls, no submission endpoint, no message creation or email delivery from the editorial preview. The public author route and its intentional contact submission are a separate website feature.
+
+Legal `pages` may retain the exact legacy source in `contentMarkdown`. The closed CommonMark AST renderer is the fallback when no meaningful rich text is present (an untouched empty Lexical paragraph does not hide legacy legal content). It supports paragraphs, headings, emphasis, lists, code, blockquotes, safe links and native autolinks. Legacy no-attribute `<address>` blocks preserve every visible address segment with escaped content and safe `<br>` separators; standalone `<br>` is allowed. Other raw HTML is shown as escaped text, never executed. Markdown images do not trigger remote/private file requests. Code fences are parsed unchanged rather than preprocessed with HTML regular expressions.
+
+The Markdown parser was already a transitive dependency: the preview explicitly pins its existing `mdast-util-from-markdown` 2.1.0 version; the shared helper also runs with the static site's existing 2.0.2 version. Public dependency versions remain owned by the website build integration. No truncation is applied to accepted legal Markdown: content above 256 KiB or the bounded AST complexity fails explicitly instead of silently dropping legal words. The stored Markdown itself is never transformed by this renderer.
+
+SEO/OpenGraph metadata remains a sanitized DTO concern. The private preview always stays `noindex`, regardless of an editor's publishing metadata, and emits no publication JSON-LD. The public static build owns canonical metadata, social cards and JSON-LD derived only from explicitly published website data.

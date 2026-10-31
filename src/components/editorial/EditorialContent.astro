@@ -2,6 +2,7 @@
 import Heading from '~/components/ui/atoms/Heading.astro';
 import Lead from '~/components/ui/atoms/Lead.astro';
 import FaqItem from '~/components/ui/molecules/FaqItem.astro';
+import { renderMarkdown } from './safe-markdown';
 import { plainText, renderRichText, safeMedia, safeHref } from './rich-text';
 export interface Props {
   collection: string;
@@ -9,10 +10,43 @@ export interface Props {
 }
 const { collection, document: data } = Astro.props;
 const title = plainText(data.title ?? data.name ?? data.question) || 'Noch ohne Überschrift';
-const image = safeMedia(data.heroImage ?? data.image ?? data.photo);
-const body = renderRichText(
+const image = safeMedia(data.heroImage ?? data.image ?? data.photo ?? data.avatar);
+const richBody = renderRichText(
   data.contentRichText ?? data.descriptionRichText ?? data.bioRichText ?? data.answerRichText
 );
+const body = richBody || (collection === 'pages' ? renderMarkdown(data.contentMarkdown) : '');
+const excerpt = plainText(collection === 'posts' ? data.excerpt : data.summary);
+const publishedDate =
+  collection === 'posts' && typeof data.publishedAt === 'string' && Number.isFinite(Date.parse(data.publishedAt))
+    ? new Date(data.publishedAt)
+    : null;
+const authorRecord =
+  collection === 'posts' && data.author && typeof data.author === 'object' && !Array.isArray(data.author)
+    ? (data.author as Record<string, unknown>)
+    : null;
+const author = collection === 'posts' ? plainText(authorRecord?.name) || plainText(data.authorName) : '';
+const previewHref = (collectionName: string, id: unknown) =>
+  ['string', 'number'].includes(typeof id) && /^[a-zA-Z0-9_-]{1,100}$/.test(String(id))
+    ? `/preview/${collectionName}/${encodeURIComponent(String(id))}`
+    : null;
+const authorHref = authorRecord ? previewHref('authors', authorRecord.id) : null;
+const authorPosts =
+  collection === 'authors' && Array.isArray(data.posts)
+    ? (data.posts
+        .filter((item) => item && typeof item === 'object' && typeof item.title === 'string')
+        .slice(0, 100) as Record<string, unknown>[])
+    : [];
+const tags =
+  collection === 'posts' && Array.isArray(data.tags)
+    ? [
+        ...new Set(
+          data.tags
+            .filter((item) => item && typeof item === 'object' && typeof item.tag === 'string')
+            .map((item) => String(item.tag).trim())
+            .filter(Boolean)
+        ),
+      ].slice(0, 30)
+    : [];
 const fallback = plainText(data.description ?? data.bio ?? data.answer);
 const sections =
   collection === 'pages' && Array.isArray(data.sections)
@@ -35,13 +69,34 @@ const links =
     {
       collection === 'team'
         ? plainText(data.position)
-        : collection === 'faqs'
+        : collection === 'faqs' || collection === 'posts'
           ? plainText(data.category)
           : plainText(data.kind)
     }
   </div>
   <Heading level={1} size="xl">{title}</Heading>
-  {plainText(data.summary) && <Lead class="mt-8 max-w-3xl">{plainText(data.summary)}</Lead>}
+  {
+    collection === 'posts' && (
+      <div class="editorial-content__meta">
+        {publishedDate && (
+          <time datetime={publishedDate.toISOString()}>
+            {new Intl.DateTimeFormat('de-DE', { dateStyle: 'long', timeZone: 'UTC' }).format(publishedDate)}
+          </time>
+        )}
+        {author && <span>Von {authorHref ? <a href={authorHref}>{author}</a> : author}</span>}
+      </div>
+    )
+  }
+  {excerpt && <Lead class="mt-8 max-w-3xl">{excerpt}</Lead>}
+  {
+    tags.length > 0 && (
+      <ul class="editorial-content__tags" aria-label="Schlagwörter">
+        {tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    )
+  }
   {
     image && (
       <figure class="editorial-content__hero">
@@ -58,6 +113,63 @@ const links =
       </div>
     ) : (
       <div class="editorial-prose mt-10">{body ? <Fragment set:html={body} /> : fallback && <p>{fallback}</p>}</div>
+    )
+  }
+  {
+    collection === 'authors' && (
+      <section class="editorial-content__section" aria-label="Artikel dieser Person">
+        <Heading level={2} size="l">
+          Artikel
+        </Heading>
+        {authorPosts.length > 0 ? (
+          <ul class="editorial-content__articles">
+            {authorPosts.map((post) => (
+              <li>
+                <h3>
+                  {previewHref('posts', post.id) ? (
+                    <a href={previewHref('posts', post.id)!}>{plainText(post.title)}</a>
+                  ) : (
+                    plainText(post.title)
+                  )}
+                </h3>
+                {plainText(post.excerpt) && <p>{plainText(post.excerpt)}</p>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="editorial-prose mt-6">Noch keine veröffentlichten Artikel zugeordnet.</p>
+        )}
+      </section>
+    )
+  }
+  {
+    collection === 'authors' && data.contactEnabled === true && (
+      <section class="editorial-content__section" aria-label="Kontaktformular-Vorschau">
+        <Heading level={2} size="l">
+          Kontakt aufnehmen
+        </Heading>
+        <p class="editorial-prose mt-6">Vorschau – Nachrichten können hier nicht gesendet werden.</p>
+        <form class="editorial-content__contact" aria-label="Inaktive Kontaktformular-Vorschau">
+          <fieldset disabled>
+            <legend>Kontakt an {title}</legend>
+            <label>
+              Name
+              <input name="name" type="text" autocomplete="off" />
+            </label>
+            <label>
+              E-Mail
+              <input name="email" type="email" autocomplete="off" />
+            </label>
+            <label>
+              Nachricht
+              <textarea name="message" rows={5} />
+            </label>
+            <button type="button" disabled>
+              Vorschau – kein Versand
+            </button>
+          </fieldset>
+        </form>
+      </section>
     )
   }
   {
@@ -192,6 +304,101 @@ const links =
     background: var(--pop-aqua);
     color: var(--pop-ink);
     padding: 0.1em 0.25em;
+  }
+  .editorial-content__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin-top: 28px;
+    color: var(--text-secondary);
+    font-size: 18px;
+  }
+  .editorial-content__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+    list-style: none;
+    padding: 0;
+  }
+  .editorial-content__tags li {
+    border: 2px solid var(--pop-ink);
+    background: var(--pop-aqua);
+    color: var(--pop-ink);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 10px;
+  }
+  .editorial-prose pre {
+    overflow: auto;
+    white-space: pre-wrap;
+    border: 2px solid var(--pop-ink);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .editorial-content[data-editorial-collection='authors'] .editorial-content__hero {
+    max-width: 360px;
+  }
+  .editorial-content__articles {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .editorial-content__articles li {
+    border: 3px solid var(--pop-ink);
+    box-shadow: 6px 6px 0 var(--pop-aqua);
+    padding: 24px;
+    max-width: 780px;
+  }
+  .editorial-content__articles h3 {
+    font: 800 28px/1.2 var(--aw-font-heading);
+  }
+  .editorial-content__articles p {
+    margin-top: 12px;
+    font-size: 18px;
+    line-height: 28px;
+  }
+  .editorial-content__articles a,
+  .editorial-content__meta a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .editorial-content__contact {
+    max-width: 780px;
+    margin-top: 32px;
+  }
+  .editorial-content__contact fieldset {
+    border: 3px solid var(--pop-ink);
+    padding: 24px;
+  }
+  .editorial-content__contact legend {
+    font-weight: 800;
+    padding-inline: 8px;
+  }
+  .editorial-content__contact label {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .editorial-content__contact input,
+  .editorial-content__contact textarea {
+    width: 100%;
+    border: 2px solid var(--pop-ink);
+    background: var(--surface);
+    padding: 12px;
+    font: inherit;
+    color: var(--text-primary);
+  }
+  .editorial-content__contact button {
+    border: 2px solid var(--pop-ink);
+    background: var(--pop-yellow);
+    color: var(--pop-ink);
+    padding: 12px;
+    font-weight: 800;
+    cursor: not-allowed;
   }
   .editorial-content__links {
     display: flex;
