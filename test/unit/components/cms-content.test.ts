@@ -112,6 +112,20 @@ describe('server-only static CMS build', () => {
       })
     ).rejects.toThrow('Duplicate');
   });
+  it('accepts the native SQL empty-result pagination shape with zero total pages', async () => {
+    const result = await fetchCmsBuildContent({
+      url: origin,
+      apiKey: secret,
+      mediaDirectory: await directory(),
+      fetcher: server({}, (body) => {
+        body.totalPages = 0;
+        body.totalDocs = 0;
+        body.hasNextPage = false;
+      }),
+    });
+    expect(result.posts).toEqual([]);
+    expect(result.authors).toEqual([]);
+  });
   it('exports only explicitly website-published same-origin image files by content hash', async () => {
     const folder = await directory();
     const fetcher = server({

@@ -111,6 +111,17 @@ export async function fetchCmsBuildContent(
       } catch {
         throw new Error(`CMS ${slug} returned an invalid or unavailable JSON response`);
       }
+      // Payload's SQL distinct-query path reports zero pages for an empty result.
+      if (
+        page === 1 &&
+        body.totalPages === 0 &&
+        body.totalDocs === 0 &&
+        Array.isArray(body.docs) &&
+        body.docs.length === 0 &&
+        body.hasNextPage !== true &&
+        (body.page === undefined || body.page === 1)
+      )
+        return [];
       if (
         !Array.isArray(body.docs) ||
         !Number.isInteger(body.totalPages) ||
