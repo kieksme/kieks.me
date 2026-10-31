@@ -9,7 +9,7 @@ import {
   fallbackTeam,
 } from '../content-model/fallback';
 import { POP_ACCENTS } from '../content-model/site-content';
-import type { PopAccent, SiteContent, SiteNavGroup, SiteNavLink, SiteServiceView } from '../content-model/site-content';
+import type { PopAccent, SiteContent, SiteNavLink, SiteServiceView } from '../content-model/site-content';
 import { footerData, headerData } from '../navigation';
 import { loadCmsBuildContent } from './payload-build';
 
@@ -46,6 +46,18 @@ export function safeHref(value: unknown, allowFragment = true): string {
   }
   throw new Error('CMS site content: unsafe link');
 }
+const NPM_NAME = /^(@[a-z0-9~-][a-z0-9._~-]*\/)?[a-z0-9~-][a-z0-9._~-]*$/;
+function npmPackages(value: unknown): string {
+  if (value === undefined) return '';
+  if (!Array.isArray(value) || value.length > 10) throw new Error('CMS site content: invalid npm package list');
+  return value
+    .map((item) => {
+      const name = str(item && typeof item === 'object' ? (item as Doc).name : undefined, 214, true);
+      if (!NPM_NAME.test(name)) throw new Error('CMS site content: invalid npm package name');
+      return name;
+    })
+    .join(', ');
+}
 const accent = (value: unknown, fallback: PopAccent): PopAccent =>
   POP_ACCENTS.includes(value as PopAccent) ? (value as PopAccent) : fallback;
 const list = (value: unknown): Doc[] => {
@@ -62,7 +74,7 @@ const list = (value: unknown): Doc[] => {
     return doc;
   });
   return docs.sort(
-    (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0) || String(a.id).localeCompare(String(b.id))
+    (a, b) => (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0) || String(a.id).localeCompare(String(b.id))
   );
 };
 const SERVICE_STYLE: Record<PopAccent, Pick<SiteServiceView, 'shadow' | 'numShadow' | 'numColor'>> = {
@@ -104,7 +116,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
       };
     });
   }
-  const faqs = list(site.faqs);
+  const faqs = list(site.faqs).filter((doc) => doc.placement === 'home');
   if (faqs.length) {
     fromCms.push('faqs');
     const views = faqs.map((doc, index) => ({
@@ -126,84 +138,77 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
       return {
         slug,
         name,
-        label: str(doc.label, 60) || name.split(' ')[0],
-        role: str(doc.role, 400) || undefined,
-        imageAlt: str(doc.imageAlt, 200) || `${name}, Gesellschafter der kieks.me GbR`,
+        label: name.split(' ')[0].toLowerCase(),
+        role: str(doc.position, 400) || undefined,
+        imageAlt: `${name}, Gesellschafter der kieks.me GbR`,
       };
     });
   }
   const projects = list(site['mcp-projects']);
   if (projects.length) {
     fromCms.push('mcp-projects');
-    const servers = projects.filter((doc) => doc.kind === 'server');
-    const others = projects.filter((doc) => doc.kind === 'project');
-    if (servers.length + others.length !== projects.length) throw new Error('CMS site content: invalid project kind');
+    const kinds = ['mcp-server', 'skill', 'tool', 'product'];
+    if (projects.some((doc) => doc.kind !== undefined && !kinds.includes(String(doc.kind))))
+      throw new Error('CMS site content: invalid project kind');
+    const servers = projects.filter((doc) => doc.kind === 'mcp-server');
+    const others = projects.filter((doc) => doc.kind !== 'mcp-server');
     if (servers.length) {
       result.mcpServers = servers.map((doc) => ({
         name: str(doc.name, 120, true),
         description: str(doc.summary, 800, true),
-        npm: str(doc.npm, 300),
+        npm: npmPackages(doc.npmPackages),
         license: str(doc.license, 120) || '–',
-        url: safeHref(doc.url, false),
+        url: safeHref(doc.repositoryUrl, false),
       }));
-      const featured = servers.filter((doc) => doc.featured === true).slice(0, 8);
-      if (featured.length)
-        result.homeProjects = featured.map((doc, index) => ({
-          name:
-            str(doc.chipLabel, 80) ||
-            `mcp-server · ${str(doc.name, 120, true)
-              .replace(/\s*MCP$/i, '')
-              .toLowerCase()}`,
-          href: safeHref(doc.url, false),
-          color: accent(doc.accent, POP_ACCENTS[index % POP_ACCENTS.length]),
-        }));
+      result.homeProjects = servers.slice(0, 4).map((doc, index) => ({
+        name: `mcp-server · ${str(doc.name, 120, true)
+          .replace(/\s*MCP$/i, '')
+          .toLowerCase()}`,
+        href: safeHref(doc.repositoryUrl, false),
+        color: accent(doc.accent, POP_ACCENTS[index % POP_ACCENTS.length]),
+      }));
     }
     if (others.length)
       result.otherProjects = others.map((doc) => ({
         name: str(doc.name, 120, true),
         description: str(doc.summary, 800, true),
-        url: safeHref(doc.url, false),
-        extra: doc.docsUrl ? safeHref(doc.docsUrl, false) : undefined,
-        page: doc.page ? safeHref(doc.page, false) : undefined,
+        url: safeHref(doc.repositoryUrl, false),
+        extra: doc.documentationUrl ? safeHref(doc.documentationUrl, false) : undefined,
+        page: undefined,
       }));
   }
   const navigation = list(site.navigation);
   if (navigation.length) {
     fromCms.push('navigation');
+    const keys = navigation.map((doc) => String(doc.key));
+    if (keys.some((key) => !['header', 'footer'].includes(key)) || new Set(keys).size !== keys.length)
+      throw new Error('CMS site content: invalid navigation key');
+    const entries = (value: unknown): Doc[] => {
+      if (value === undefined) return [];
+      if (!Array.isArray(value) || value.length > MAX_ITEMS)
+        throw new Error('CMS site content: invalid navigation list');
+      return value.map((raw) => {
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw))
+          throw new Error('CMS site content: invalid navigation entry');
+        return raw as Doc;
+      });
+    };
     const link = (doc: Doc): SiteNavLink => ({ text: str(doc.label, 80, true), href: safeHref(doc.href) });
-    const placement = (name: string) => navigation.filter((doc) => doc.placement === name);
-    if (navigation.some((doc) => !['header', 'footer', 'legal'].includes(String(doc.placement))))
-      throw new Error('CMS site content: invalid navigation placement');
-    const header = placement('header');
-    if (header.length) {
-      const items: (SiteNavLink | SiteNavGroup)[] = [];
-      const groups = new Map<string, SiteNavGroup>();
-      for (const doc of header) {
-        const group = str(doc.group, 80);
-        if (!group) items.push(link(doc));
-        else {
-          let entry = groups.get(group);
-          if (!entry) {
-            entry = { text: group, links: [] };
-            groups.set(group, entry);
-            items.push(entry);
-          }
-          entry.links.push(link(doc));
-        }
-      }
-      result.header = items;
-    }
-    const footer = placement('footer');
-    if (footer.length) {
-      const columns = new Map<string, { title: string; links: SiteNavLink[] }>();
-      for (const doc of footer) {
-        const title = str(doc.group, 80) || 'Links';
-        if (!columns.has(title)) columns.set(title, { title, links: [] });
-        columns.get(title)!.links.push(link(doc));
-      }
-      result.footerColumns = [...columns.values()];
-    }
-    const legal = placement('legal');
+    const header = navigation.find((doc) => doc.key === 'header');
+    const headerLinks = entries(header?.links);
+    if (headerLinks.length)
+      result.header = headerLinks.map((doc) => {
+        const children = entries(doc.children);
+        return children.length ? { text: str(doc.label, 80, true), links: children.map(link) } : link(doc);
+      });
+    const footer = navigation.find((doc) => doc.key === 'footer');
+    const columns = entries(footer?.links).filter((doc) => entries(doc.children).length);
+    if (columns.length)
+      result.footerColumns = columns.map((doc) => ({
+        title: str(doc.label, 80, true),
+        links: entries(doc.children).map(link),
+      }));
+    const legal = entries(footer?.secondaryLinks);
     if (legal.length) result.legalLinks = legal.map(link);
   }
   return result;

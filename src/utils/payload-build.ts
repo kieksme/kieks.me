@@ -35,27 +35,26 @@ const fields = {
   ],
   authors: ['id', '_status', 'name', 'slug', 'bioRichText', 'avatar', 'seo', 'contactEnabled'],
   media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
-  // Editable website sections; shape documented in src/content-model/site-content.ts.
-  services: ['id', '_status', 'order', 'title', 'summary', 'href', 'linkText', 'accent'],
-  team: ['id', '_status', 'order', 'slug', 'name', 'label', 'role', 'imageAlt'],
-  faqs: ['id', '_status', 'order', 'question', 'answer', 'accent'],
+  // Editable website sections; shape documented in src/content-model/site-content.ts and
+  // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
+  services: ['id', '_status', 'sortOrder', 'title', 'summary', 'href', 'linkText', 'accent'],
+  team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'accent'],
+  faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'placement', 'accent'],
   'mcp-projects': [
     'id',
     '_status',
-    'order',
+    'sortOrder',
+    'slug',
     'kind',
     'name',
     'summary',
-    'url',
-    'npm',
+    'repositoryUrl',
+    'documentationUrl',
     'license',
-    'docsUrl',
-    'page',
-    'featured',
-    'chipLabel',
+    'npmPackages',
     'accent',
   ],
-  navigation: ['id', '_status', 'order', 'placement', 'label', 'href', 'group'],
+  navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'footNote'],
 } as const;
 export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
 type Collection = keyof typeof fields;

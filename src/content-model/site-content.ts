@@ -1,6 +1,6 @@
 /**
  * Expected Payload structure for the editable website sections (schema owner: kieksme/kieks.me.datahub,
- * branch feat/markdown-editor-mcp-drafts). Only these fields are requested, validated and rendered.
+ * branch feat/markdown-editor-mcp-drafts, docs/editorial/website-schema.md). Only these fields are requested, validated and rendered.
  * Every collection is optional: without CMS access, or without published documents, the static fallback
  * in `fallback.ts` renders unchanged. Collection slugs: services, team, faqs, mcp-projects, navigation.
  */
@@ -12,7 +12,7 @@ interface CmsBase {
   id: string | number;
   _status: 'published';
   /** Ascending display order (integer, default 0). */
-  order?: number;
+  sortOrder?: number;
 }
 /** `services` — home page cards and navigation targets. */
 export interface CmsService extends CmsBase {
@@ -23,51 +23,50 @@ export interface CmsService extends CmsBase {
   linkText: string;
   accent?: PopAccent;
 }
-/** `team` — public team members. `slug` matches a bundled portrait (andre, thomas) until media is wired. */
+/** `team` — public team members. `slug` (`andre`, `thomas`) selects a bundled portrait until media is wired. */
 export interface CmsTeamMember extends CmsBase {
   slug: string;
   name: string;
-  /** Lower-case display label under the portrait. */
-  label?: string;
-  role?: string;
-  imageAlt?: string;
+  /** Shown as role under the portrait. */
+  position?: string;
+  accent?: PopAccent;
 }
-/** `faqs` — plain-text question/answer pairs, displayed in two columns in order. */
+/** `faqs` — plain-text question/answer pairs. Only `placement: home` is shown on the home page. */
 export interface CmsFaq extends CmsBase {
   question: string;
   answer: string;
+  placement?: 'home' | 'general';
   accent?: PopAccent;
 }
-/** `mcp-projects` — MCP servers (`kind: server`) and other open-source projects (`kind: project`). */
+/** `mcp-projects` — `mcp-server` documents are MCP servers; `skill`, `tool` and `product` are other projects. */
 export interface CmsMcpProject extends CmsBase {
-  kind: 'server' | 'project';
+  kind?: 'mcp-server' | 'skill' | 'tool' | 'product';
   name: string;
   summary: string;
-  url: string;
-  npm?: string;
+  repositoryUrl: string;
+  documentationUrl?: string;
   license?: string;
-  docsUrl?: string;
-  /** Internal page for `kind: project`, e.g. `/csp`. */
-  page?: string;
-  /** Show as chip on the home page (servers only). */
-  featured?: boolean;
-  /** Home chip label, defaults to `mcp-server · <name>`. */
-  chipLabel?: string;
+  npmPackages?: { name: string }[];
   accent?: PopAccent;
 }
-/** `navigation` — one document per link. `group` makes a link part of a header dropdown / footer column. */
-export interface CmsNavigationLink extends CmsBase {
-  placement: 'header' | 'footer' | 'legal';
+interface CmsLink {
   label: string;
-  href: string;
-  group?: string;
+  href?: string;
+}
+/** `navigation` — one document per placement: `key` is `header` or `footer`. */
+export interface CmsNavigation extends CmsBase {
+  key: 'header' | 'footer';
+  /** Header: a link, or a group when `children` is set. Footer: one column per entry (`label` + `children`). */
+  links?: (CmsLink & { children?: (CmsLink & { href: string })[] })[];
+  /** Footer legal links. */
+  secondaryLinks?: (CmsLink & { href: string })[];
 }
 export interface CmsSiteDocuments {
   services?: CmsService[];
   team?: CmsTeamMember[];
   faqs?: CmsFaq[];
   'mcp-projects'?: CmsMcpProject[];
-  navigation?: CmsNavigationLink[];
+  navigation?: CmsNavigation[];
 }
 
 /** View models consumed by the Astro pages (identical shape for CMS and fallback). */

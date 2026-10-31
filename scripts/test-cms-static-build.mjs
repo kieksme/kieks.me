@@ -20,11 +20,11 @@ const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
   pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}}],
-  services:[{id:11,_status:'published',order:1,title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
-  faqs:[{id:12,_status:'published',order:1,question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
-  team:[{id:13,_status:'published',order:1,slug:'andre',name:'Synthetic Teammate',label:'synthetic',role:'Synthetic role'}],
-  'mcp-projects':[{id:14,_status:'published',order:1,kind:'server',name:'Synthetic MCP',summary:'Synthetic MCP summary',url:'https://github.com/example-synthetic/mcp',npm:'@example/synthetic',license:'MIT',featured:true}],
-  navigation:[{id:15,_status:'published',order:1,placement:'header',label:'Synthetic Nav',href:'/blog'},{id:16,_status:'published',order:2,placement:'legal',label:'Synthetic Legal Link',href:'/impressum'}],
+  services:[{id:11,_status:'published',sortOrder:1,title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
+  faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
+  team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role'}],
+  'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],license:'MIT'}],
+  navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}]}],
   media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
 globalThis.fetch = async (input,init) => {
