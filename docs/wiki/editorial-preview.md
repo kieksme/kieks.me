@@ -69,3 +69,19 @@ Legal `pages` may retain the exact legacy source in `contentMarkdown`. The close
 The Markdown parser was already a transitive dependency. It is explicitly declared as `mdast-util-from-markdown` 2.1.0 in both the root and preview packages: the shared component lives under root `src/`, so it must resolve its own direct root dependency even when Docker installs without `.npmrc` or transitive hoisting. CI checks that declaration and imports the parser from the root project. Other dependency versions are preserved. No truncation is applied to accepted legal Markdown: content above 256 KiB or the bounded AST complexity fails explicitly instead of silently dropping legal words. The stored Markdown itself is never transformed by this renderer.
 
 SEO/OpenGraph metadata remains a sanitized DTO concern. The private preview always stays `noindex`, regardless of an editor's publishing metadata, and emits no publication JSON-LD. The public static build owns canonical metadata, social cards and JSON-LD derived only from explicitly published website data.
+
+## Protected whole-site preview (`/site/*`)
+
+The renderer also serves the complete Pop-Art draft (home, Leistungen incl. KI & MCP, Agent-Hub, CSP, MCP-Server/Team/FAQ sections on the home page, Kontakt, Blog, Impressum/Datenschutz/AGB) so editors can click through it. `node preview/scripts/build-site.mjs` builds the root site **without CMS, preview or Coolify credentials** into the git-ignored `preview/site-dist/` (also run by `preview/Dockerfile`). The public marketing site stays a separate static build that reads published CMS content only at build time.
+
+**URL pattern (public, behind the Datahub session):** `https://<datahub-host>/preview/site/<path>`, e.g. `/preview/site/`, `/preview/site/leistungen/ki-mcp`, `/preview/site/blog`. The bridge strips `/preview/site`, signs the request and forwards `GET /site/<path>` to the private renderer. Assets (`/preview/site/_astro/...`, fonts, images) use the same route; the renderer rewrites all root-relative URLs (HTML attributes, `srcset`, inline/CSS `url()`, `/_astro/` strings in JS) to the prefix, so internal navigation never leaves the authenticated area. `PREVIEW_SITE_BASE_PATH` (default `/preview/site`) must match the bridge mount.
+
+Signed GET contract (per request, bridge-side): headers `x-preview-timestamp` (±60 s), `x-preview-nonce` (16–64 hex chars, **one-time**, replays are rejected for 120 s), `x-preview-signature` = hex HMAC-SHA256 (`DATAHUB_PREVIEW_SECRET`) of
+
+```text
+<timestamp>\nGET\n/site/<path>\n<sha256-of-empty-body-hex>\n<nonce>
+```
+
+Rejected: unsigned/expired/tampered/replayed requests (401), signature reused for another path (401), query strings, `%`-encoding, `..`, `//`, dotfiles, `_headers`, source maps and unknown extensions (404), non-GET methods. Responses carry `private, no-store`, `noindex`, `nosniff`, `no-referrer` and a strict CSP (`default-src 'none'`, script hashes only, `form-action 'none'` so the contact forms cannot submit, `frame-ancestors 'self'`). Canonical links and analytics (Swetrix script/beacon) are removed; a robots `noindex,nofollow,noarchive` meta is injected and an "Interne Vorschau · nicht veröffentlicht" badge is shown.
+
+This whole-site view shows the _built_ state (static fallback plus whatever the build had published). Unsaved single documents keep using `POST /internal/preview` (Payload Live Preview); the Payload Live Preview stays enabled.

@@ -56,9 +56,13 @@ jobs:
         run: pnpm exec vitest --run
       - name: Build public static website without CMS credentials
         run: pnpm build
+      - name: Audit SEO of the public static website
+        run: node scripts/test-seo-static.mjs
       - name: Verify synthetic CMS static website
         run: node scripts/test-cms-static-build.mjs
       - name: Build private preview
         run: pnpm --dir preview build
+      - name: Build protected whole-site preview (no CMS credentials)
+        run: node preview/scripts/build-site.mjs
       - name: Test compiled private preview
         run: node preview/scripts/smoke.mjs

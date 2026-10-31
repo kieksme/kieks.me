@@ -91,6 +91,10 @@ const prefixed = (value: string, base: string) => (/^\/(?!\/)/.test(value) ? bas
 export function rewriteHtml(html: string, base: string): { html: string; scriptHashes: string[] } {
   const scriptHashes: string[] = [];
   let out = html
+    // No analytics, beacons or third-party scripts in a private preview.
+    .replace(/<script\b[^>]*\bsrc=["']https?:\/\/[^"']*["'][^>]*><\/script>/gi, '')
+    .replace(/<script\b(?![^>]*\bsrc=)[^>]*>(?:(?!<\/script>)[\s\S])*swetrix(?:(?!<\/script>)[\s\S])*<\/script>/gi, '')
+    .replace(/<noscript>(?:(?!<\/noscript>)[\s\S])*swetrix(?:(?!<\/noscript>)[\s\S])*<\/noscript>/gi, '')
     .replace(/<link\b[^>]*\brel=["'](?:canonical|sitemap)["'][^>]*>/gi, '')
     .replace(/<meta\b[^>]*\bname=["']robots["'][^>]*>/gi, '')
     .replace(
@@ -122,7 +126,7 @@ export function contentSecurityPolicy(scriptHashes: string[]): string {
     `script-src 'self' ${scriptHashes.join(' ')}`.trim(),
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data:",
-    "font-src 'self'",
+    "font-src 'self' data:",
     "connect-src 'self'",
     "manifest-src 'self'",
     "frame-ancestors 'self'",

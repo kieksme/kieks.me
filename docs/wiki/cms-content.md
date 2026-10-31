@@ -25,3 +25,21 @@ SEO maps title, description, canonical, robots, full Open Graph and Twitter fiel
 ## Verification
 
 Run `pnpm check`, `pnpm exec vitest --run`, and `pnpm build`. `cms-content.test.ts` covers endpoint scope, pagination, draft rejection, public image checks, SEO mapping, author visibility, JSON-LD escaping and non-submitting form demos. The private SSR preview remains a separate application; enabling this public build integration does not deploy either website or CMS.
+
+## Editable site sections (services, team, faqs, mcp-projects, navigation)
+
+Expected Payload structure lives in `src/content-model/site-content.ts` (TypeScript types `CmsService`, `CmsTeamMember`, `CmsFaq`, `CmsMcpProject`, `CmsNavigationLink`); the schema itself is owned by `kieksme/kieks.me.datahub` (branch `feat/markdown-editor-mcp-drafts`) and must match these fields. All documents need `_status: published`, an optional integer `order`, and only the listed fields are requested (`select[...]`), validated and rendered as **plain text** (no HTML). Links must be internal paths, `#fragments` (navigation only), `mailto:` or HTTPS URLs; `/api/...`, `//host`, `javascript:` and the Datahub origin fail the build.
+
+| Collection     | Fields (besides `id`, `_status`, `order`)                                                                                 | Rendered on                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `services`     | `title`, `summary`, `href`, `linkText`, `accent` (aqua/fuchsia/yellow/purple)                                             | Home service cards                  |
+| `faqs`         | `question`, `answer`, `accent`                                                                                            | Home FAQ (split into two columns)   |
+| `team`         | `slug`, `name`, `label`, `role`, `imageAlt` (`slug` `andre`/`thomas` selects the bundled portrait)                        | Home team                           |
+| `mcp-projects` | `kind` (server/project), `name`, `summary`, `url`, `npm`, `license`, `docsUrl`, `page`, `featured`, `chipLabel`, `accent` | MCP-Server page, home project chips |
+| `navigation`   | `placement` (header/footer/legal), `label`, `href`, `group`                                                               | Header, footer columns, legal links |
+
+Enable with `PAYLOAD_SITE_CONTENT=true` in the build runner (together with `PAYLOAD_URL`/`PAYLOAD_BUILD_API_KEY`). It is **off by default**, so builds never request collections the CMS does not have yet. Fallback is per section: a missing/empty collection keeps the verbatim static content from `src/content-model/fallback.ts`; without CMS access the output is byte-identical to the previous static build. Known limitation: team members without a bundled portrait are skipped with a build warning until portrait media is wired. Legal pages (`pages`, slugs `impressum`/`datenschutz`/`agb`) work as before; the original Markdown remains the per-document fallback.
+
+## SEO and verification
+
+`scripts/lib/seo-audit.mjs` (run via `node scripts/test-seo-static.mjs` after `pnpm build`, and inside `scripts/test-cms-static-build.mjs`) checks every page for title, description, a single clean canonical, robots (indexable pages `index,follow`; 404, `kontakt-erfolgreich` and `/docs/*` are `noindex` and absent from the sitemap), complete Open Graph and Twitter Card tags (Twitter falls back to the OG values), escaped JSON-LD with Organization + WebSite everywhere, BreadcrumbList on legal pages/articles/authors, BlogPosting on articles and Person on author pages. The fixture build additionally proves that synthetic CMS data never survives a build without CMS access.
