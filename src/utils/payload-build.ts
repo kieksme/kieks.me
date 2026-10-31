@@ -16,7 +16,7 @@ export interface CmsBuildContent {
 }
 const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
-  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'seo'],
+  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'hero', 'seo'],
   posts: [
     'id',
     '_status',
@@ -37,7 +37,7 @@ const fields = {
   media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
   // Editable website sections; shape documented in src/content-model/site-content.ts and
   // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
-  services: ['id', '_status', 'sortOrder', 'title', 'summary', 'href', 'linkText', 'accent'],
+  services: ['id', '_status', 'sortOrder', 'slug', 'title', 'summary', 'href', 'linkText', 'accent', 'highlights'],
   team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'accent'],
   faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'placement', 'accent'],
   'mcp-projects': [
@@ -132,7 +132,11 @@ export async function fetchCmsBuildContent(
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
       else {
         url.searchParams.set('where[_status][equals]', 'published');
-        if (slug === 'pages') url.searchParams.set('where[pageKind][equals]', 'legal');
+        if (slug === 'pages') {
+          // The home page is only requested when editable site sections are enabled.
+          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home');
+          else url.searchParams.set('where[pageKind][equals]', 'legal');
+        }
       }
       const response = await request(url);
       let body: CmsDocument;
@@ -170,7 +174,8 @@ export async function fetchCmsBuildContent(
         seen.add(id);
         if (slug === 'media' ? doc.websitePublished !== true : doc._status !== 'published')
           throw new Error(`Unpublished CMS ${slug} rejected`);
-        if (slug === 'pages' && doc.pageKind !== 'legal') throw new Error('Non-legal CMS page rejected');
+        if (slug === 'pages' && doc.pageKind !== 'legal' && !(options.siteContent && doc.pageKind === 'home'))
+          throw new Error('Unexpected CMS page kind rejected');
         docs.push(pick(doc, fields[slug]));
       }
       if (page === body.totalPages) {

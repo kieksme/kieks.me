@@ -14,8 +14,23 @@ interface CmsBase {
   /** Ascending display order (integer, default 0). */
   sortOrder?: number;
 }
+/** `pages` with `pageKind: home` (slug `startseite`) — home hero (see CmsHomePage). */
+export interface CmsHomePage extends CmsBase {
+  slug: string;
+  pageKind: 'home';
+  hero?: {
+    eyebrow?: string;
+    headline?: string;
+    lead?: string;
+    primaryCta?: { label?: string; href?: string };
+    secondaryCta?: { label?: string; href?: string };
+  };
+}
 /** `services` — home page cards and navigation targets. */
 export interface CmsService extends CmsBase {
+  /** Matches the service page, e.g. `agent-hub`, `cloud-devops`. */
+  slug?: string;
+  highlights?: { title: string; description?: string }[];
   title: string;
   summary: string;
   /** Internal path (`/leistungen/...`) or https URL. */
@@ -115,6 +130,18 @@ export interface SiteNavGroup {
   text: string;
   links: SiteNavLink[];
 }
+export interface SiteHighlight {
+  title: string;
+  description: string;
+}
+export interface SiteHeroView {
+  eyebrow: string;
+  /** Headline split at line breaks. */
+  headlineLines: string[];
+  lead: string;
+  primaryCta?: SiteNavLink;
+  secondaryCta?: SiteNavLink;
+}
 export interface SiteContent {
   services: SiteServiceView[];
   faqsLeft: SiteFaqView[];
@@ -126,6 +153,10 @@ export interface SiteContent {
   header: (SiteNavLink | SiteNavGroup)[];
   footerColumns: { title: string; links: SiteNavLink[] }[];
   legalLinks: SiteNavLink[];
+  /** Home hero from the CMS page `startseite`; undefined = static hero. */
+  hero?: SiteHeroView;
+  /** Service highlights by service slug (e.g. `cloud-devops`); empty = static lists. */
+  serviceHighlights: Record<string, SiteHighlight[]>;
   /** Which sections came from the CMS (empty = static fallback everywhere). */
   fromCms: string[];
 }

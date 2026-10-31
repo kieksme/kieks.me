@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fetchCmsBuildContent } from '../../../src/utils/payload-build';
-import { resolveSiteContent, safeHref } from '../../../src/utils/site-content';
+import { resolveSiteContent, safeHref, withHighlights } from '../../../src/utils/site-content';
 import { fallbackFaqsLeft, fallbackMcpServers, fallbackServices } from '../../../src/content-model/fallback';
 import { footerData, headerData } from '../../../src/navigation';
 
@@ -162,6 +162,78 @@ describe('editable site sections with static fallback', () => {
     ]);
   });
 
+  it('maps the home hero and service highlights, keeping decoration by position', () => {
+    const content = resolveSiteContent({
+      home: [
+        {
+          ...published,
+          id: 1,
+          slug: 'startseite',
+          hero: {
+            eyebrow: 'E',
+            headline: 'eins\nzwei\n',
+            lead: 'L',
+            primaryCta: { label: 'Los', href: '/kontakt' },
+            secondaryCta: { label: 'Weiter', href: '#leistungen' },
+          },
+        },
+        { ...published, id: 2, slug: 'andere', hero: { headline: 'ignoriert' } },
+      ],
+      services: [
+        {
+          ...published,
+          id: 1,
+          slug: 'cloud-devops',
+          title: 'A',
+          summary: 'a',
+          href: '/a',
+          linkText: 'x',
+          highlights: [{ title: 'H1', description: 'D1' }, { title: 'H2' }],
+        },
+      ],
+    });
+    expect(content.hero).toEqual({
+      eyebrow: 'E',
+      headlineLines: ['eins', 'zwei'],
+      lead: 'L',
+      primaryCta: { text: 'Los', href: '/kontakt' },
+      secondaryCta: { text: 'Weiter', href: '#leistungen' },
+    });
+    expect(content.fromCms).toContain('home');
+    expect(content.serviceHighlights['cloud-devops']).toEqual([
+      { title: 'H1', description: 'D1' },
+      { title: 'H2', description: '' },
+    ]);
+    const base = [
+      { title: 'a', description: 'b', icon: 'i1' },
+      { title: 'c', description: 'd', icon: 'i2' },
+    ];
+    expect(withHighlights(undefined, base)).toBe(base);
+    expect(withHighlights([], base)).toBe(base);
+    expect(withHighlights(content.serviceHighlights['cloud-devops'], base)).toEqual([
+      { title: 'H1', description: 'D1', icon: 'i1' },
+      { title: 'H2', description: '', icon: 'i2' },
+    ]);
+    expect(resolveSiteContent().hero).toBeUndefined();
+    expect(resolveSiteContent().serviceHighlights).toEqual({});
+  });
+
+  it('rejects unsafe hero links and malformed highlights', () => {
+    const home = (hero: unknown) => ({ home: [{ ...published, id: 1, slug: 'startseite', hero }] });
+    expect(() =>
+      resolveSiteContent(home({ headline: 'x', primaryCta: { label: 'x', href: 'javascript:alert(1)' } }))
+    ).toThrow('unsafe');
+    expect(() => resolveSiteContent(home({ headline: 'a\u0000b' }))).toThrow('control');
+    const service = { ...published, id: 1, slug: 'x', title: 'A', summary: 'a', href: '/a', linkText: 'x' };
+    expect(() =>
+      resolveSiteContent({ services: [{ ...service, highlights: [{ description: 'no title' }] }] })
+    ).toThrow();
+    expect(() => resolveSiteContent({ services: [{ ...service, slug: '../x', highlights: [] }] })).toThrow('slug');
+    expect(() =>
+      resolveSiteContent({ services: [{ ...service, highlights: Array.from({ length: 13 }, () => ({ title: 't' })) }] })
+    ).toThrow('highlights');
+  });
+
   it('rejects drafts, duplicates, unsafe links, control characters and oversized input', () => {
     const service = { ...published, id: 1, title: 'A', summary: 'a', href: '/a', linkText: 'x' };
     expect(() => resolveSiteContent({ services: [{ ...service, _status: 'draft' }] })).toThrow('unpublished');
@@ -243,5 +315,28 @@ describe('editable site sections with static fallback', () => {
     expect(requested).toEqual(expect.arrayContaining(['services', 'team', 'faqs', 'mcp-projects', 'navigation']));
     expect(withSite.site.faqs).toEqual([{ id: 1, _status: 'published', question: 'Q', answer: 'A' }]);
     expect(withSite.site.navigation).toEqual([]);
+  });
+  it('requests the home page only with site content enabled and never accepts other page kinds', async () => {
+    const origin = 'https://cms.example.invalid';
+    const kinds: (string | null)[] = [];
+    const make = (pageKind: string) =>
+      (async (input: string | URL | Request) => {
+        const url = new URL(String(input));
+        const slug = url.pathname.split('/').pop()!;
+        if (slug !== 'pages') return Response.json({ docs: [], totalPages: 0, totalDocs: 0, page: 1 });
+        kinds.push(url.searchParams.get('where[pageKind][equals]') ?? url.searchParams.get('where[pageKind][in]'));
+        expect(url.searchParams.get('select[hero]')).toBe('true');
+        const docs = [{ ...published, id: 1, slug: 'startseite', pageKind, title: 'Start' }];
+        return Response.json({ docs, totalPages: 1, totalDocs: 1, page: 1 });
+      }) as unknown as typeof fetch;
+    const base = { url: origin, apiKey: 'k'.repeat(40), mediaDirectory: '/tmp/none-site-test' };
+    await expect(fetchCmsBuildContent({ ...base, fetcher: make('home') })).rejects.toThrow();
+    expect(kinds).toEqual(['legal']);
+    const withSite = await fetchCmsBuildContent({ ...base, siteContent: true, fetcher: make('home') });
+    expect(kinds[1]).toBe('legal,home');
+    expect(withSite.pages).toHaveLength(1);
+    await expect(fetchCmsBuildContent({ ...base, siteContent: true, fetcher: make('standard') })).rejects.toThrow(
+      'page kind'
+    );
   });
 });

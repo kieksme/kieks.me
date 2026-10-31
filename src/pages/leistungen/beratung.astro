@@ -1,9 +1,29 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
+import { getSiteContent, withHighlights } from '~/utils/site-content';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
+
+const { serviceHighlights } = await getSiteContent();
+const highlights = withHighlights(serviceHighlights['beratung'], [
+  {
+    title: 'Bestandsaufnahme',
+    description: 'Welche Systeme, Abläufe und Daten gibt es, und wo hakt es?',
+    icon: 'tabler:search',
+  },
+  {
+    title: 'Einordnung',
+    description: 'Was lohnt sich, was ist Hype, was ist ein guter nächster Schritt?',
+    icon: 'tabler:compass',
+  },
+  {
+    title: 'Entscheidungsvorlage',
+    description: 'Optionen mit Aufwand, Risiken und Abhängigkeiten, ehrlich gegenübergestellt.',
+    icon: 'tabler:file-analytics',
+  },
+]);
 
 const metadata = {
   title: 'IT-Beratung und Workshops zu KI, Cloud und Software',
@@ -20,26 +40,7 @@ const metadata = {
     badge="Leistung: Beratung & Workshops"
   />
 
-  <Features
-    title="Beratung"
-    items={[
-      {
-        title: 'Bestandsaufnahme',
-        description: 'Welche Systeme, Abläufe und Daten gibt es, und wo hakt es?',
-        icon: 'tabler:search',
-      },
-      {
-        title: 'Einordnung',
-        description: 'Was lohnt sich, was ist Hype, was ist ein guter nächster Schritt?',
-        icon: 'tabler:compass',
-      },
-      {
-        title: 'Entscheidungsvorlage',
-        description: 'Optionen mit Aufwand, Risiken und Abhängigkeiten, ehrlich gegenübergestellt.',
-        icon: 'tabler:file-analytics',
-      },
-    ]}
-  />
+  <Features title="Beratung" items={highlights} />
 
   <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">

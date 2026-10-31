@@ -18,6 +18,7 @@ import StepCard from '~/components/ui/molecules/StepCard.astro';
 import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import AgentHubFlow from '~/components/ui/AgentHubFlow.astro';
 import { BOOKING_URL } from '~/config/site';
+import { getSiteContent, withHighlights } from '~/utils/site-content';
 
 const metadata = {
   title: 'Agent-Hub für Unternehmen – Skills, MCP-Server und Agents sicher verteilen',
@@ -25,7 +26,7 @@ const metadata = {
     'kieks.me baut Ihren internen Agent-Hub: geprüfte Skills, MCP-Server und Agents an einem Ort, mit Review-Gate, Versionierung und Richtlinien für Claude Code, Codex & Co.',
 };
 
-const offers = [
+const offersBase = [
   {
     title: 'Hub-Design',
     description:
@@ -59,6 +60,8 @@ const offers = [
     edge: 'fuchsia' as const,
   },
 ];
+const { serviceHighlights } = await getSiteContent();
+const offers = withHighlights(serviceHighlights['agent-hub'], offersBase);
 
 const benefits = [
   'Eine Stelle, an der ein fehlerhafter Skill einmal repariert wird – für alle.',

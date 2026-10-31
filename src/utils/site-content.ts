@@ -9,7 +9,13 @@ import {
   fallbackTeam,
 } from '../content-model/fallback';
 import { POP_ACCENTS } from '../content-model/site-content';
-import type { PopAccent, SiteContent, SiteNavLink, SiteServiceView } from '../content-model/site-content';
+import type {
+  PopAccent,
+  SiteContent,
+  SiteHighlight,
+  SiteNavLink,
+  SiteServiceView,
+} from '../content-model/site-content';
 import { footerData, headerData } from '../navigation';
 import { loadCmsBuildContent } from './payload-build';
 
@@ -97,6 +103,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
     header: headerData.links as SiteContent['header'],
     footerColumns: footerData.links as SiteContent['footerColumns'],
     legalLinks: footerData.secondaryLinks,
+    serviceHighlights: {},
     fromCms,
   };
   if (!site) return result;
@@ -115,6 +122,18 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
         ...SERVICE_STYLE[color],
       };
     });
+  }
+  const highlighted = services.filter((doc) => doc.highlights !== undefined);
+  for (const doc of highlighted) {
+    const slug = str(doc.slug, 80, true);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid service slug');
+    const items = doc.highlights;
+    if (!Array.isArray(items) || items.length > 12) throw new Error('CMS site content: invalid highlights');
+    const views: SiteHighlight[] = items.map((item) => {
+      const entry = item && typeof item === 'object' ? (item as Doc) : {};
+      return { title: str(entry.title, 160, true), description: str(entry.description, 800) };
+    });
+    if (views.length) result.serviceHighlights[slug] = views;
   }
   const faqs = list(site.faqs).filter((doc) => doc.placement === 'home');
   if (faqs.length) {
@@ -211,11 +230,48 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
     const legal = entries(footer?.secondaryLinks);
     if (legal.length) result.legalLinks = legal.map(link);
   }
+  const homes = list(site.home).filter((doc) => doc.slug === 'startseite');
+  if (homes.length > 1) throw new Error('CMS site content: duplicate home page');
+  const heroDoc = homes[0]?.hero;
+  if (heroDoc && typeof heroDoc === 'object' && !Array.isArray(heroDoc)) {
+    const hero = heroDoc as Doc;
+    const headline = str(hero.headline, 400);
+    if (headline) {
+      const cta = (value: unknown): SiteNavLink | undefined => {
+        const entry = value && typeof value === 'object' ? (value as Doc) : {};
+        return str(entry.label, 80) && entry.href
+          ? { text: str(entry.label, 80), href: safeHref(entry.href) }
+          : undefined;
+      };
+      fromCms.push('home');
+      result.hero = {
+        eyebrow: str(hero.eyebrow, 120),
+        headlineLines: headline
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .slice(0, 6),
+        lead: str(hero.lead, 800),
+        primaryCta: cta(hero.primaryCta),
+        secondaryCta: cta(hero.secondaryCta),
+      };
+    }
+  }
   return result;
+}
+
+/** Replaces title/description of a static list with CMS highlights, keeping each item's decoration by position. */
+export function withHighlights<T extends { title: string; description: string }>(
+  cms: SiteHighlight[] | undefined,
+  base: T[]
+): T[] {
+  if (!cms?.length) return base;
+  return cms.map((item, index) => ({ ...base[index % base.length], title: item.title, description: item.description }));
 }
 
 /** Build-time entry point for pages: published CMS sections (if enabled) over the static fallback. */
 export async function getSiteContent(): Promise<SiteContent> {
   const content = await loadCmsBuildContent();
-  return resolveSiteContent(content.enabled && Object.keys(content.site ?? {}).length ? content.site : undefined);
+  const site = content.enabled && Object.keys(content.site ?? {}).length ? content.site : undefined;
+  return resolveSiteContent(site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') });
 }

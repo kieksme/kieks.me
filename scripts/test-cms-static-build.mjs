@@ -19,8 +19,8 @@ const rich = { root: { type:'root', children:[{type:'paragraph',children:[{type:
 const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
-  pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}}],
-  services:[{id:11,_status:'published',sortOrder:1,title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
+  pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
+  services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
   faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role'}],
   'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],license:'MIT'}],
@@ -107,6 +107,20 @@ globalThis.fetch = async (input,init) => {
   assert.match(author, /maxlength=/);
   assert.match(author, /method="post"/i);
   assert.ok(!/action="[^"]*\?/.test(author), 'author form must not put data into a query string');
+  const homeHtml = await readFile('dist/index.html', 'utf8');
+  for (const expected of [
+    'Synthetic Eyebrow',
+    'Synthetic headline one',
+    'Synthetic headline two',
+    'Synthetic hero lead',
+    'Synthetic CTA',
+  ])
+    assert.ok(homeHtml.includes(expected), `Home hero must render ${expected}`);
+  const cloud = await readFile('dist/leistungen/cloud-devops/index.html', 'utf8');
+  assert.ok(
+    cloud.includes('Synthetic Highlight') && cloud.includes('Synthetic highlight text'),
+    'Service highlights must render'
+  );
   const files = await readdir('dist/_cms-media');
   assert.equal(files.length, 1);
   assert.match(files[0], /^[a-f0-9]{64}\.png$/);
@@ -154,7 +168,9 @@ globalThis.fetch = async (input,init) => {
       else if (/\.(html|js|json|xml|txt)$/.test(entry.name)) {
         const body = await readFile(filename, 'utf8');
         assert.ok(
-          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal)|PRIVATE_/.test(body),
+          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA)|PRIVATE_/.test(
+            body
+          ),
           `${filename}: test data published`
         );
       }
