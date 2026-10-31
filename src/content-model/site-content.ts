@@ -50,6 +50,8 @@ export interface CmsTeamMember extends CmsBase {
 export interface CmsFaq extends CmsBase {
   question: string;
   answer: string;
+  /** Lexical JSON; rendered through the closed rich-text renderer. */
+  answerRichText?: unknown;
   placement?: 'home' | 'general';
   accent?: PopAccent;
 }
@@ -60,6 +62,7 @@ export interface CmsMcpProject extends CmsBase {
   summary: string;
   repositoryUrl: string;
   documentationUrl?: string;
+  descriptionRichText?: unknown;
   license?: string;
   npmPackages?: { name: string }[];
   accent?: PopAccent;
@@ -99,6 +102,8 @@ export interface SiteServiceView {
 export interface SiteFaqView {
   title: string;
   body: string;
+  /** Sanitized HTML from the rich-text answer; the plain `body` stays the fallback. */
+  bodyHtml?: string;
   color: PopAccent;
 }
 export interface SiteTeamView {
@@ -114,10 +119,13 @@ export interface SiteMcpServerView {
   npm: string;
   license: string;
   url: string;
+  /** Sanitized HTML from the rich-text description (plain `description` is the fallback). */
+  descriptionHtml?: string;
 }
 export interface SiteOtherProjectView {
   name: string;
   description: string;
+  descriptionHtml?: string;
   url: string;
   extra?: string;
   page?: string;

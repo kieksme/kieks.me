@@ -240,7 +240,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           {
             faqsLeft.map((f) => (
               <FaqItem title={f.title} color={f.color} open={true}>
-                {f.body}
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
               </FaqItem>
             ))
           }
@@ -249,7 +249,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           {
             faqsRight.map((f) => (
               <FaqItem title={f.title} color={f.color} open={true}>
-                {f.body}
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
               </FaqItem>
             ))
           }

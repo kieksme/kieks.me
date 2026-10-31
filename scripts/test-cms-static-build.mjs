@@ -21,9 +21,9 @@ const records = {
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
   pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
   services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
-  faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
+  faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ rich fallback',answerRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich answer',format:1},{type:'link',fields:{url:'https://example.invalid/rich'},children:[{type:'text',text:'rich link'}]}]},{type:'html',html:'<script>synthetic()</script>'}]}},accent:'aqua'},{id:22,_status:'published',sortOrder:2,placement:'home',question:'Synthetic FAQ plain question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'fuchsia'}],
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role'}],
-  'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],license:'MIT'}],
+  'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],descriptionRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich description',format:1}]}]}},license:'MIT'}],
   navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}],actions:[{label:'Synthetic Action',href:'/kontakt',variant:'primary'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}],socialLinks:[{label:'Synthetic Social',href:'https://example.invalid/synthetic',icon:'tabler:brand-github'}],footNote:'Synthetic Foot <b>note</b>'}],
   media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
@@ -78,7 +78,7 @@ globalThis.fetch = async (input,init) => {
   assert.match(home, /Synthetic Teammate/);
   assert.match(home, /Synthetic Nav/);
   assert.match(home, /Synthetic Legal Link/);
-  assert.match(await readFile('dist/projekte/mcp-server/index.html', 'utf8'), /Synthetic MCP summary/);
+  assert.match(await readFile('dist/projekte/mcp-server/index.html', 'utf8'), /Synthetic rich description/);
   assert.ok(!home.includes('PRIVATE_NOTE_MUST_NOT_RENDER'), 'non-allowlisted CMS field leaked');
   // SEO of the whole CMS-driven output, including Article / Person / BreadcrumbList.
   await auditSeo('dist', {
@@ -124,6 +124,14 @@ globalThis.fetch = async (input,init) => {
   ])
     assert.ok(homeHtml.includes(expected), `Navigation extras must render ${expected}`);
   assert.ok(!homeHtml.includes('Synthetic Foot <b>'), 'CMS foot note must be escaped');
+  assert.ok(homeHtml.includes('<strong>Synthetic rich answer</strong>'), 'FAQ rich text must render');
+  assert.ok(
+    homeHtml.includes('href=https://example.invalid/rich') || homeHtml.includes('href="https://example.invalid/rich"'),
+    'Rich link must render'
+  );
+  assert.ok(!homeHtml.includes('synthetic()'), 'Embedded script must be dropped');
+  const mcpHtml = await readFile('dist/projekte/mcp-server/index.html', 'utf8');
+  assert.ok(mcpHtml.includes('<strong>Synthetic rich description</strong>'), 'MCP rich description must render');
   const cloud = await readFile('dist/leistungen/cloud-devops/index.html', 'utf8');
   assert.ok(
     cloud.includes('Synthetic Highlight') && cloud.includes('Synthetic highlight text'),
@@ -176,7 +184,7 @@ globalThis.fetch = async (input,init) => {
       else if (/\.(html|js|json|xml|txt)$/.test(entry.name)) {
         const body = await readFile(filename, 'utf8');
         assert.ok(
-          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA|Action|Social|Foot)|PRIVATE_/.test(
+          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA|Action|Social|Foot|rich)|PRIVATE_/.test(
             body
           ),
           `${filename}: test data published`

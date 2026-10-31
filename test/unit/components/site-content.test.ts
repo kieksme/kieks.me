@@ -299,6 +299,70 @@ describe('editable site sections with static fallback', () => {
     ).toThrow('actions');
   });
 
+  it('renders rich-text answers and descriptions to sanitized HTML and keeps plain text as fallback', () => {
+    const rich = (text: string, extra: unknown[] = []) => ({
+      root: {
+        type: 'root',
+        children: [
+          {
+            type: 'paragraph',
+            children: [{ type: 'text', text, format: 1 }, ...extra],
+          },
+          { type: 'html', html: '<script>alert(1)</script>' },
+        ],
+      },
+    });
+    const link = (url: string) => ({ type: 'link', fields: { url }, children: [{ type: 'text', text: 'Link' }] });
+    const content = resolveSiteContent({
+      faqs: [
+        {
+          ...published,
+          id: 1,
+          placement: 'home',
+          question: 'Q1',
+          answer: 'Plain 1',
+          answerRichText: rich('Fett <b>x</b>', [link('https://example.invalid/a'), link('javascript:alert(1)')]),
+        },
+        { ...published, id: 2, placement: 'home', question: 'Q2', answer: 'Plain 2' },
+      ],
+      'mcp-projects': [
+        {
+          ...published,
+          id: 1,
+          kind: 'mcp-server',
+          name: 'S MCP',
+          summary: 'plain s',
+          repositoryUrl: 'https://github.com/kieksme/s',
+          descriptionRichText: rich('Server rich'),
+        },
+        {
+          ...published,
+          id: 2,
+          kind: 'tool',
+          name: 'T',
+          summary: 'plain t',
+          repositoryUrl: 'https://github.com/kieksme/t',
+          descriptionRichText: { root: { type: 'root', children: [] } },
+        },
+      ],
+    });
+    const [first, second] = [...content.faqsLeft, ...content.faqsRight];
+    expect(first.bodyHtml).toContain('<strong>Fett &lt;b&gt;x&lt;/b&gt;</strong>');
+    expect(first.bodyHtml).toContain('href="https://example.invalid/a"');
+    expect(first.bodyHtml).not.toContain('javascript:');
+    expect(first.bodyHtml).not.toContain('<script');
+    expect(first.body).toBe('Plain 1');
+    expect(second.bodyHtml).toBeUndefined();
+    expect(content.mcpServers[0].descriptionHtml).toBe('<p><strong>Server rich</strong></p>');
+    expect(content.otherProjects[0].descriptionHtml).toBeUndefined();
+    expect(content.otherProjects[0].description).toBe('plain t');
+    const custom = resolveSiteContent(
+      { faqs: [{ ...published, id: 1, placement: 'home', question: 'Q', answer: 'A', answerRichText: { x: 1 } }] },
+      (value) => `custom:${JSON.stringify(value)}`
+    );
+    expect(custom.faqsLeft[0].bodyHtml).toBe('custom:{"x":1}');
+  });
+
   it('rejects drafts, duplicates, unsafe links, control characters and oversized input', () => {
     const service = { ...published, id: 1, title: 'A', summary: 'a', href: '/a', linkText: 'x' };
     expect(() => resolveSiteContent({ services: [{ ...service, _status: 'draft' }] })).toThrow('unpublished');

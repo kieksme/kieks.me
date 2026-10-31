@@ -39,7 +39,7 @@ const fields = {
   // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
   services: ['id', '_status', 'sortOrder', 'slug', 'title', 'summary', 'href', 'linkText', 'accent', 'highlights'],
   team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'accent'],
-  faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'placement', 'accent'],
+  faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'answerRichText', 'placement', 'accent'],
   'mcp-projects': [
     'id',
     '_status',
@@ -52,6 +52,7 @@ const fields = {
     'documentationUrl',
     'license',
     'npmPackages',
+    'descriptionRichText',
     'accent',
   ],
   navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],

@@ -19,7 +19,8 @@ import type {
   SiteSocialLink,
 } from '../content-model/site-content';
 import { footerData, headerData } from '../navigation';
-import { escapeHtml } from '../components/editorial/rich-text';
+import { escapeHtml, renderRichText } from '../components/editorial/rich-text';
+import { renderPublicRichText } from './cms-content';
 import { loadCmsBuildContent } from './payload-build';
 
 type Doc = Record<string, unknown>;
@@ -103,7 +104,13 @@ const SERVICE_STYLE: Record<PopAccent, Pick<SiteServiceView, 'shadow' | 'numShad
   yellow: { shadow: 'fuchsia', numShadow: 'fuchsia' },
 };
 
-export function resolveSiteContent(site?: Record<string, unknown>): SiteContent {
+/** Renders Lexical JSON to sanitized HTML; the build passes a renderer that also resolves published media. */
+export type RichRenderer = (value: unknown) => string;
+
+export function resolveSiteContent(
+  site?: Record<string, unknown>,
+  renderRich: RichRenderer = renderRichText
+): SiteContent {
   const fromCms: string[] = [];
   const result: SiteContent = {
     services: fallbackServices,
@@ -156,6 +163,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
       title: str(doc.question, 240, true),
       body: str(doc.answer, 2000, true),
       color: accent(doc.accent, POP_ACCENTS[index % POP_ACCENTS.length]),
+      bodyHtml: renderRich(doc.answerRichText) || undefined,
     }));
     const half = Math.ceil(views.length / 2);
     result.faqsLeft = views.slice(0, half);
@@ -192,6 +200,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
         npm: npmPackages(doc.npmPackages),
         license: str(doc.license, 120) || '–',
         url: safeHref(doc.repositoryUrl, false),
+        descriptionHtml: renderRich(doc.descriptionRichText) || undefined,
       }));
       result.homeProjects = servers.slice(0, 4).map((doc, index) => ({
         name: `mcp-server · ${str(doc.name, 120, true)
@@ -208,6 +217,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
         url: safeHref(doc.repositoryUrl, false),
         extra: doc.documentationUrl ? safeHref(doc.documentationUrl, false) : undefined,
         page: undefined,
+        descriptionHtml: renderRich(doc.descriptionRichText) || undefined,
       }));
   }
   const navigation = list(site.navigation);
@@ -308,5 +318,8 @@ export function withHighlights<T extends { title: string; description: string }>
 export async function getSiteContent(): Promise<SiteContent> {
   const content = await loadCmsBuildContent();
   const site = content.enabled && Object.keys(content.site ?? {}).length ? content.site : undefined;
-  return resolveSiteContent(site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') });
+  return resolveSiteContent(
+    site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') },
+    (value) => renderPublicRichText(value, content)
+  );
 }
