@@ -28,3 +28,5 @@ public/_cms-media/
 !.env.example
 
 **/.pnpm-store/
+
+preview/site-dist/

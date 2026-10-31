@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "astro build",
+    "build:site": "node scripts/build-site.mjs",
     "dev": "astro dev --host 127.0.0.1",
     "start": "node dist/server/entry.mjs"
   },

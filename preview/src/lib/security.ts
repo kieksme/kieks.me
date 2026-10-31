@@ -22,9 +22,15 @@ export class PreviewError extends Error {
     super('Preview unavailable');
   }
 }
-export function signature(timestamp: string, rawBody: string | Uint8Array, secret: string) {
+export function signature(
+  timestamp: string,
+  rawBody: string | Uint8Array,
+  secret: string,
+  method = 'POST',
+  path = PREVIEW_PATH
+) {
   return createHmac('sha256', secret)
-    .update(`${timestamp}\nPOST\n${PREVIEW_PATH}\n${createHash('sha256').update(rawBody).digest('hex')}`)
+    .update(`${timestamp}\n${method}\n${path}\n${createHash('sha256').update(rawBody).digest('hex')}`)
     .digest('hex');
 }
 export async function verifyRequest(
