@@ -2,6 +2,8 @@ import type { PaginateFunction } from 'astro';
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
+import { loadCmsBuildContent } from './payload-build';
+import { cmsPosts } from './cms-content';
 import { APP_BLOG } from 'astrowind:config';
 import { cleanSlug, trimSlash, BLOG_BASE, POST_PERMALINK_PATTERN, CATEGORY_BASE, TAG_BASE } from './permalinks';
 
@@ -104,8 +106,11 @@ const load = async function (): Promise<Array<Post>> {
   const posts = await getCollection('post');
   const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post));
 
-  const results = (await Promise.all(normalizedPosts))
-    .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
+  const cms = cmsPosts(await loadCmsBuildContent());
+  const local = await Promise.all(normalizedPosts);
+  const slugs = new Set(cms.map((post) => post.slug));
+  const results = [...cms, ...local.filter((post) => !slugs.has(post.slug))]
+    .sort((a, b) => (b.publishDate?.valueOf() ?? 0) - (a.publishDate?.valueOf() ?? 0))
     .filter((post) => !post.draft);
 
   return results;
@@ -176,7 +181,15 @@ export const findLatestPosts = async ({ count }: { count?: number }): Promise<Ar
 /** */
 export const getStaticPathsBlogList = async ({ paginate }: { paginate: PaginateFunction }) => {
   if (!isBlogEnabled || !isBlogListRouteEnabled) return [];
-  return paginate(await fetchPosts(), {
+  const posts = await fetchPosts();
+  if (!posts.length)
+    return [
+      {
+        params: { blog: BLOG_BASE || undefined, page: undefined },
+        props: { page: { data: [], currentPage: 1, url: { prev: undefined, next: undefined } } },
+      },
+    ];
+  return paginate(posts, {
     params: { blog: BLOG_BASE || undefined },
     pageSize: blogPostsPerPage,
   });

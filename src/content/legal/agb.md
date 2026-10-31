@@ -1,6 +1,5 @@
 ---
 title: AGB
-layout: ~/layouts/MarkdownLayout.astro
 metadata:
   description: Allgemeine Geschäftsbedingungen (AGB) der kieks.me GbR
 ---

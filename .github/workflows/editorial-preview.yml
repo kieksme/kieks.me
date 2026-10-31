@@ -4,12 +4,13 @@ on:
   pull_request:
     paths:
       - 'preview/**'
-      - 'src/components/editorial/**'
-      - 'test/unit/components/editorial-preview.test.ts'
-      - 'src/pages/docs/editorial-preview.astro'
-      - 'docs/wiki/editorial-preview.md'
+      - 'src/**'
+      - 'test/**'
+      - 'scripts/test-cms-static-build.mjs'
+      - 'docs/wiki/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'astro.config.ts'
       - 'tailwind.config.js'
       - 'vitest.config.ts'
       - '.github/workflows/editorial-preview.yml'
@@ -39,6 +40,9 @@ jobs:
         run: npm install --global pnpm@9.15.4
       - name: Install website dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify declared shared Markdown dependency
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; import { fromMarkdown } from 'mdast-util-from-markdown'; const pkg = JSON.parse(fs.readFileSync('package.json')); if (pkg.dependencies?.['mdast-util-from-markdown'] !== '2.1.0') process.exit(1); if (fromMarkdown('Synthetic Markdown').type !== 'root') process.exit(1);"
       - name: Install isolated preview dependencies
         run: pnpm --dir preview install --frozen-lockfile
       - name: Verify isolated preview dependencies
@@ -50,6 +54,10 @@ jobs:
         run: pnpm check
       - name: Run component and security tests
         run: pnpm exec vitest --run
+      - name: Build public static website without CMS credentials
+        run: pnpm build
+      - name: Verify synthetic CMS static website
+        run: node scripts/test-cms-static-build.mjs
       - name: Build private preview
         run: pnpm --dir preview build
       - name: Test compiled private preview

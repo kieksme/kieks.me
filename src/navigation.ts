@@ -15,6 +15,7 @@ export const headerData = {
     },
     { text: 'MCP-Server', href: getPermalink('/projekte/mcp-server') },
     { text: 'CSP', href: getPermalink('/csp') },
+    { text: 'Blog', href: getPermalink('/blog') },
     { text: 'Kontakt', href: getPermalink('/kontakt') },
   ],
   actions: [{ variant: 'primary' as const, text: 'Erstgespräch buchen', href: BOOKING_URL }],

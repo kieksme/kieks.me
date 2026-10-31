@@ -4,3 +4,7 @@ figma/
 .github
 node_modules
 .obsidian
+
+**/.pnpm-store/**
+.runtime/
+public/_cms-media/
