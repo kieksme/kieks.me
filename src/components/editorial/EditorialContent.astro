@@ -55,26 +55,85 @@ const sections =
         unknown
       >[])
     : [];
-const links =
-  collection === 'navigation' && Array.isArray(data.links)
-    ? (data.links.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, 100) as Record<
+const records = (value: unknown, max = 100): Record<string, unknown>[] =>
+  Array.isArray(value)
+    ? (value.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, max) as Record<
         string,
         unknown
       >[])
     : [];
+const link = (item: Record<string, unknown>) => ({ label: plainText(item.label), href: safeHref(item.href) });
+const isNavigation = collection === 'navigation';
+const navLinks = isNavigation
+  ? records(data.links).map((item) => ({ ...link(item), children: records(item.children).map(link) }))
+  : [];
+const navActions = isNavigation ? records(data.actions).map(link) : [];
+const navLegal = isNavigation ? records(data.secondaryLinks).map(link) : [];
+const navSocial = isNavigation ? records(data.socialLinks).map(link) : [];
+const footNote = isNavigation ? plainText(data.footNote) : '';
+const hero =
+  collection === 'pages' && data.pageKind === 'home' && data.hero && typeof data.hero === 'object'
+    ? (data.hero as Record<string, unknown>)
+    : null;
+const heroLines = hero ? plainText(hero.headline).split('\n').filter(Boolean).slice(0, 6) : [];
+const heroCtas = hero
+  ? [hero.primaryCta, hero.secondaryCta]
+      .map((cta) => (cta && typeof cta === 'object' ? link(cta as Record<string, unknown>) : null))
+      .filter((cta) => cta && cta.label && cta.href)
+  : [];
+const highlights = collection === 'services' ? records(data.highlights, 20) : [];
+const accent = ['aqua', 'fuchsia', 'yellow', 'purple'].includes(String(data.accent)) ? String(data.accent) : '';
+const serviceLink = collection === 'services' ? link({ label: data.linkText, href: data.href }) : null;
+const profileHref = collection === 'team' ? safeHref(data.profileUrl) : null;
+const npmPackages =
+  collection === 'mcp-projects'
+    ? records(data.npmPackages, 10)
+        .map((item) => plainText(item.name))
+        .filter(Boolean)
+    : [];
+const eyebrow = isNavigation
+  ? ({ header: 'Kopfbereich', footer: 'Fußbereich' } as Record<string, string>)[String(data.key)] || ''
+  : hero
+    ? plainText(hero.eyebrow)
+    : collection === 'team'
+      ? plainText(data.position)
+      : collection === 'faqs'
+        ? [data.placement === 'home' ? 'Startseite' : '', plainText(data.category)].filter(Boolean).join(' · ')
+        : collection === 'services'
+          ? [plainText(data.number), accent].filter(Boolean).join(' · ')
+          : collection === 'posts'
+            ? plainText(data.category)
+            : plainText(data.kind);
 ---
 
 <article class="editorial-content" data-editorial-collection={collection}>
-  <div class="editorial-content__eyebrow">
-    {
-      collection === 'team'
-        ? plainText(data.position)
-        : collection === 'faqs' || collection === 'posts'
-          ? plainText(data.category)
-          : plainText(data.kind)
-    }
-  </div>
-  <Heading level={1} size="xl">{title}</Heading>
+  <div class="editorial-content__eyebrow">{eyebrow}</div>
+  {
+    hero && heroLines.length > 0 ? (
+      <Heading level={1} size="xl">
+        {heroLines.map((line, index) => (
+          <Fragment>
+            {index > 0 && <br />}
+            {line}
+          </Fragment>
+        ))}
+      </Heading>
+    ) : (
+      <Heading level={1} size="xl">
+        {title}
+      </Heading>
+    )
+  }
+  {hero && plainText(hero.lead) && <Lead class="mt-8 max-w-3xl">{plainText(hero.lead)}</Lead>}
+  {
+    heroCtas.length > 0 && (
+      <nav aria-label="Aktionen" class="editorial-content__links">
+        {heroCtas.map((cta) => (
+          <a href={cta!.href!}>{cta!.label}</a>
+        ))}
+      </nav>
+    )
+  }
   {
     collection === 'posts' && (
       <div class="editorial-content__meta">
@@ -202,6 +261,48 @@ const links =
     })
   }
   {
+    highlights.length > 0 && (
+      <section class="editorial-content__section" aria-label="Schwerpunkte">
+        <Heading level={2} size="l">
+          Schwerpunkte
+        </Heading>
+        <ul class="editorial-content__articles">
+          {highlights.map((item) => (
+            <li>
+              <h3>{plainText(item.title)}</h3>
+              {plainText(item.description) && <p>{plainText(item.description)}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+  {
+    serviceLink && serviceLink.href && (
+      <nav aria-label="Kachel-Link" class="editorial-content__links">
+        <a href={serviceLink.href}>{serviceLink.label || serviceLink.href}</a>
+      </nav>
+    )
+  }
+  {
+    profileHref && (
+      <nav aria-label="Profil" class="editorial-content__links">
+        <a href={profileHref} rel="noopener noreferrer">
+          Profil ↗
+        </a>
+      </nav>
+    )
+  }
+  {
+    npmPackages.length > 0 && (
+      <ul class="editorial-content__tags" aria-label="npm-Pakete">
+        {npmPackages.map((name) => (
+          <li>{name}</li>
+        ))}
+      </ul>
+    )
+  }
+  {
     collection === 'mcp-projects' && (
       <nav aria-label="Projektlinks" class="editorial-content__links">
         {[
@@ -220,12 +321,40 @@ const links =
     )
   }
   {
-    links.length > 0 && (
-      <nav aria-label={title} class="editorial-content__links">
-        {links.map((link) => safeHref(link.href) && <a href={safeHref(link.href)!}>{plainText(link.label)}</a>)}
-      </nav>
+    navLinks.length > 0 && (
+      <ul class="editorial-content__tree" aria-label={title}>
+        {navLinks.map((item) => (
+          <li>
+            {item.href ? <a href={item.href}>{item.label}</a> : <strong>{item.label}</strong>}
+            {item.children.length > 0 && (
+              <ul>
+                {item.children.map((child) => (
+                  <li>{child.href ? <a href={child.href}>{child.label}</a> : child.label}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
     )
   }
+  {
+    [
+      ['Aktionen', navActions],
+      ['Rechtliche Links', navLegal],
+      ['Social-Links', navSocial],
+    ].map(
+      ([label, items]) =>
+        (items as { label: string; href: string | null }[]).length > 0 && (
+          <nav aria-label={label as string} class="editorial-content__links">
+            {(items as { label: string; href: string | null }[]).map(
+              (item) => item.href && <a href={item.href}>{item.label}</a>
+            )}
+          </nav>
+        )
+    )
+  }
+  {footNote && <p class="editorial-content__meta">{footNote}</p>}
 </article>
 <style is:global>
   .editorial-content {
@@ -399,6 +528,22 @@ const links =
     padding: 12px;
     font-weight: 800;
     cursor: not-allowed;
+  }
+  .editorial-content__tree {
+    margin-top: 40px;
+    padding-left: 1.2em;
+    list-style: disc;
+    font-weight: 700;
+  }
+  .editorial-content__tree ul {
+    margin: 8px 0 16px;
+    padding-left: 1.4em;
+    list-style: circle;
+    font-weight: 400;
+  }
+  .editorial-content__tree a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
   .editorial-content__links {
     display: flex;
