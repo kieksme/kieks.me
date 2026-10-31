@@ -363,6 +363,75 @@ describe('editable site sections with static fallback', () => {
     expect(custom.faqsLeft[0].bodyHtml).toBe('custom:{"x":1}');
   });
 
+  it('maps team biographies and service detail text to sanitized HTML with plain fallbacks', () => {
+    const rich = (text: string) => ({
+      root: {
+        type: 'root',
+        children: [
+          { type: 'paragraph', children: [{ type: 'text', text, format: 1 }] },
+          { type: 'html', html: '<script>alert(1)</script>' },
+        ],
+      },
+    });
+    const content = resolveSiteContent({
+      team: [
+        {
+          ...published,
+          id: 1,
+          sortOrder: 1,
+          slug: 'andre',
+          name: 'André Lademann',
+          bioRichText: rich('Bio <b>rich</b>'),
+          bio: 'Plain 1',
+        },
+        { ...published, id: 2, sortOrder: 2, slug: 'thomas', name: 'Thomas Schöne', bio: 'Plain 2' },
+        { ...published, id: 3, sortOrder: 3, slug: 'dritte', name: 'Dritte Person' },
+      ],
+      services: [
+        {
+          ...published,
+          id: 1,
+          slug: 'cloud-devops',
+          title: 'A',
+          summary: 'a',
+          href: '/a',
+          linkText: 'x',
+          descriptionRichText: rich('Detail'),
+        },
+        { ...published, id: 2, slug: 'entwicklung', title: 'B', summary: 'b', href: '/b', linkText: 'x' },
+        {
+          ...published,
+          id: 3,
+          slug: 'beratung',
+          title: 'C',
+          summary: 'c',
+          href: '/c',
+          linkText: 'x',
+          descriptionRichText: { root: { type: 'root', children: [] } },
+        },
+      ],
+    });
+    expect(content.team[0].bioHtml).toBe('<p><strong>Bio &lt;b&gt;rich&lt;/b&gt;</strong></p>');
+    expect(content.team[0].bio).toBe('Plain 1');
+    expect(content.team[1].bioHtml).toBeUndefined();
+    expect(content.team[1].bio).toBe('Plain 2');
+    expect(content.team[2].bio).toBeUndefined();
+    expect(content.serviceDetails).toEqual({ 'cloud-devops': '<p><strong>Detail</strong></p>' });
+    expect(JSON.stringify(content)).not.toContain('<script');
+    expect(resolveSiteContent().serviceDetails).toEqual({});
+    const withoutSlug = {
+      ...published,
+      id: 1,
+      title: 'A',
+      summary: 'a',
+      href: '/a',
+      linkText: 'x',
+      descriptionRichText: rich('D'),
+    };
+    expect(() => resolveSiteContent({ services: [withoutSlug] })).toThrow();
+    expect(() => resolveSiteContent({ services: [{ ...withoutSlug, slug: '../x' }] })).toThrow('slug');
+  });
+
   it('rejects drafts, duplicates, unsafe links, control characters and oversized input', () => {
     const service = { ...published, id: 1, title: 'A', summary: 'a', href: '/a', linkText: 'x' };
     expect(() => resolveSiteContent({ services: [{ ...service, _status: 'draft' }] })).toThrow('unpublished');

@@ -1,12 +1,13 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent();
 const highlights = withHighlights(serviceHighlights['beratung'], [
   {
     title: 'Bestandsaufnahme',
@@ -69,5 +70,6 @@ const metadata = {
     </div>
   </section>
 
+  <ServiceDetail html={serviceDetails['beratung']} />
   <SectionCTA title="Welche Frage beschäftigt Sie gerade?" />
 </Layout>

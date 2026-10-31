@@ -31,6 +31,8 @@ export interface CmsService extends CmsBase {
   /** Matches the service page, e.g. `agent-hub`, `cloud-devops`. */
   slug?: string;
   highlights?: { title: string; description?: string }[];
+  /** Lexical JSON for the detail section on the service page. */
+  descriptionRichText?: unknown;
   title: string;
   summary: string;
   /** Internal path (`/leistungen/...`) or https URL. */
@@ -44,6 +46,8 @@ export interface CmsTeamMember extends CmsBase {
   name: string;
   /** Shown as role under the portrait. */
   position?: string;
+  bio?: string;
+  bioRichText?: unknown;
   accent?: PopAccent;
 }
 /** `faqs` — plain-text question/answer pairs. Only `placement: home` is shown on the home page. */
@@ -112,6 +116,10 @@ export interface SiteTeamView {
   label: string;
   role?: string;
   imageAlt: string;
+  /** Plain-text biography (fallback). */
+  bio?: string;
+  /** Sanitized HTML from the rich-text biography. */
+  bioHtml?: string;
 }
 export interface SiteMcpServerView {
   name: string;
@@ -176,6 +184,8 @@ export interface SiteContent {
   footNote?: string;
   /** Home hero from the CMS page `startseite`; undefined = static hero. */
   hero?: SiteHeroView;
+  /** Sanitized rich-text detail section by service slug (e.g. `cloud-devops`); empty = none. */
+  serviceDetails: Record<string, string>;
   /** Service highlights by service slug (e.g. `cloud-devops`); empty = static lists. */
   serviceHighlights: Record<string, SiteHighlight[]>;
   /** Which sections came from the CMS (empty = static fallback everywhere). */

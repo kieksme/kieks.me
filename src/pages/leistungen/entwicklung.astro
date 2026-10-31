@@ -1,6 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
@@ -8,7 +9,7 @@ import Steps from '~/components/widgets/Steps.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent();
 const highlights = withHighlights(serviceHighlights['entwicklung'], [
   {
     title: 'Websites',
@@ -116,5 +117,6 @@ const metadata = {
     ]}
   />
 
+  <ServiceDetail html={serviceDetails['entwicklung']} />
   <SectionCTA title="Was soll Ihre Software können?" />
 </Layout>

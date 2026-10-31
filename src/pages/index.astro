@@ -222,6 +222,8 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
               image={portraits[member.slug as keyof typeof portraits]}
               imageAlt={member.imageAlt}
               role={member.role}
+              bio={member.bio}
+              bioHtml={member.bioHtml}
             />
           ))
         }

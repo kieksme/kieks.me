@@ -13,10 +13,13 @@ export interface Props {
   imageAlt: string;
   /** Shown as preview-only Note when starting with ⟦ */
   role?: string;
+  /** Plain biography; `bioHtml` (sanitized CMS rich text) takes precedence. */
+  bio?: string;
+  bioHtml?: string;
   class?: string;
 }
 
-const { name, label, image, imageAlt, role, class: className = '' } = Astro.props;
+const { name, label, image, imageAlt, role, bio, bioHtml, class: className = '' } = Astro.props;
 const display = label.toLocaleLowerCase('de-DE');
 const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PLATZHALTER')));
 ---
@@ -82,6 +85,17 @@ const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PL
           {role}
         </p>
       ))
+  }
+  {
+    bioHtml ? (
+      <div class="cms-rich text-sm max-w-[22rem]" style="color: var(--text-secondary);" set:html={bioHtml} />
+    ) : (
+      bio && (
+        <p class="text-center text-sm max-w-[22rem]" style="color: var(--text-secondary);">
+          {bio}
+        </p>
+      )
+    )
   }
   <span class="sr-only">{name}</span>
 </figure>

@@ -15,6 +15,7 @@ import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import burstMcp from '~/assets/pop/659-963_ki-hero-art-mcp__imgBurst.svg?url';
 import { BOOKING_URL } from '~/config/site';
 import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 
 const metadata = {
   title: 'KI & MCP-Integration für Unternehmen',
@@ -51,7 +52,7 @@ const offersBase = [
     shadow: 'purple' as const,
   },
 ];
-const { serviceHighlights } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent();
 const offers = withHighlights(serviceHighlights['ki-mcp'], offersBase);
 
 const steps = [
@@ -232,6 +233,7 @@ const steps = [
   <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />
 
   <!-- 4.6 CTA -->
+  <ServiceDetail html={serviceDetails['ki-mcp']} />
   <CtaSection
     title="haben sie ein system, mit dem ihre ki sprechen soll?"
     text="Erzählen Sie uns davon. In 30 Minuten klären wir, ob und wie ein MCP-Server dafür sinnvoll ist."

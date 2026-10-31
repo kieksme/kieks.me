@@ -124,6 +124,7 @@ export function resolveSiteContent(
     footerColumns: footerData.links as SiteContent['footerColumns'],
     legalLinks: footerData.secondaryLinks,
     serviceHighlights: {},
+    serviceDetails: {},
     socialLinks: [],
     fromCms,
   };
@@ -156,6 +157,13 @@ export function resolveSiteContent(
     });
     if (views.length) result.serviceHighlights[slug] = views;
   }
+  for (const doc of services) {
+    const html = renderRich(doc.descriptionRichText);
+    if (!html) continue;
+    const slug = str(doc.slug, 80, true);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid service slug');
+    result.serviceDetails[slug] = html;
+  }
   const faqs = list(site.faqs).filter((doc) => doc.placement === 'home');
   if (faqs.length) {
     fromCms.push('faqs');
@@ -182,6 +190,8 @@ export function resolveSiteContent(
         label: name.split(' ')[0].toLowerCase(),
         role: str(doc.position, 400) || undefined,
         imageAlt: `${name}, Gesellschafter der kieks.me GbR`,
+        bio: str(doc.bio, 1500) || undefined,
+        bioHtml: renderRich(doc.bioRichText) || undefined,
       };
     });
   }

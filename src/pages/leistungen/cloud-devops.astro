@@ -1,13 +1,14 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent();
 const highlights = withHighlights(serviceHighlights['cloud-devops'], [
   {
     title: 'Infrastruktur als Code',
@@ -83,6 +84,7 @@ const metadata = {
     ]}
   />
 
+  <ServiceDetail html={serviceDetails['cloud-devops']} />
   <SectionCTA
     title="Wo hakt es in Ihrem Betrieb?"
     text="Ob ein einzelnes Deployment oder die ganze Plattform: Wir schauen es uns gemeinsam an."

@@ -19,6 +19,7 @@ import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import AgentHubFlow from '~/components/ui/AgentHubFlow.astro';
 import { BOOKING_URL } from '~/config/site';
 import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 
 const metadata = {
   title: 'Agent-Hub für Unternehmen – Skills, MCP-Server und Agents sicher verteilen',
@@ -60,7 +61,7 @@ const offersBase = [
     edge: 'fuchsia' as const,
   },
 ];
-const { serviceHighlights } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent();
 const offers = withHighlights(serviceHighlights['agent-hub'], offersBase);
 
 const benefits = [
@@ -296,6 +297,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
   <ZigzagDivider top="var(--page-bg)" bottom="var(--pop-fuchsia)" />
 
   <!-- TODO ⟦PLATZHALTER: Buchungslink⟧ -->
+  <ServiceDetail html={serviceDetails['agent-hub']} />
   <CtaSection
     title="wie heißt diese schicht bei ihnen?"
     text="Skill-Repository, Agent-Hub, Registry oder noch gar nichts? Lassen Sie uns darüber sprechen, wie Ihr Unternehmen Skills, MCP-Server und Agents sicher und gemeinsam nutzt."

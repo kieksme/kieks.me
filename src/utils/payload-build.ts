@@ -37,8 +37,20 @@ const fields = {
   media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
   // Editable website sections; shape documented in src/content-model/site-content.ts and
   // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
-  services: ['id', '_status', 'sortOrder', 'slug', 'title', 'summary', 'href', 'linkText', 'accent', 'highlights'],
-  team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'accent'],
+  services: [
+    'id',
+    '_status',
+    'sortOrder',
+    'slug',
+    'title',
+    'summary',
+    'href',
+    'linkText',
+    'accent',
+    'highlights',
+    'descriptionRichText',
+  ],
+  team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'bio', 'bioRichText', 'accent'],
   faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'answerRichText', 'placement', 'accent'],
   'mcp-projects': [
     'id',

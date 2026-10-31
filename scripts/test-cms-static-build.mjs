@@ -20,9 +20,9 @@ const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
   pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
-  services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
+  services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',descriptionRichText:{root:{type:'root',children:[{type:'heading',tag:'h2',children:[{type:'text',text:'Synthetic Detail Heading'}]},{type:'paragraph',children:[{type:'text',text:'Synthetic detail text',format:1}]}]}},highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
   faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ rich fallback',answerRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich answer',format:1},{type:'link',fields:{url:'https://example.invalid/rich'},children:[{type:'text',text:'rich link'}]}]},{type:'html',html:'<script>synthetic()</script>'}]}},accent:'aqua'},{id:22,_status:'published',sortOrder:2,placement:'home',question:'Synthetic FAQ plain question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'fuchsia'}],
-  team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role'}],
+  team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role',bio:'Synthetic plain bio',bioRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich bio',format:1}]},{type:'html',html:'<script>bio()</script>'}]}}}],
   'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],descriptionRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich description',format:1}]}]}},license:'MIT'}],
   navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}],actions:[{label:'Synthetic Action',href:'/kontakt',variant:'primary'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}],socialLinks:[{label:'Synthetic Social',href:'https://example.invalid/synthetic',icon:'tabler:brand-github'}],footNote:'Synthetic Foot <b>note</b>'}],
   media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
@@ -132,7 +132,13 @@ globalThis.fetch = async (input,init) => {
   assert.ok(!homeHtml.includes('synthetic()'), 'Embedded script must be dropped');
   const mcpHtml = await readFile('dist/projekte/mcp-server/index.html', 'utf8');
   assert.ok(mcpHtml.includes('<strong>Synthetic rich description</strong>'), 'MCP rich description must render');
+  assert.ok(homeHtml.includes('<strong>Synthetic rich bio</strong>'), 'Team rich biography must render');
+  assert.ok(!homeHtml.includes('bio()'), 'Embedded script must be dropped');
   const cloud = await readFile('dist/leistungen/cloud-devops/index.html', 'utf8');
+  assert.ok(
+    cloud.includes('<h2>Synthetic Detail Heading</h2>') && cloud.includes('<strong>Synthetic detail text</strong>'),
+    'Service detail text must render'
+  );
   assert.ok(
     cloud.includes('Synthetic Highlight') && cloud.includes('Synthetic highlight text'),
     'Service highlights must render'
@@ -184,7 +190,7 @@ globalThis.fetch = async (input,init) => {
       else if (/\.(html|js|json|xml|txt)$/.test(entry.name)) {
         const body = await readFile(filename, 'utf8');
         assert.ok(
-          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA|Action|Social|Foot|rich)|PRIVATE_/.test(
+          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA|Action|Social|Foot|rich|Detail|detail)|PRIVATE_/.test(
             body
           ),
           `${filename}: test data published`
