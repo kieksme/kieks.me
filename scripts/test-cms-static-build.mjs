@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
+import { auditSeo, parseHead } from './lib/seo-audit.mjs';
 const temporary = await mkdtemp(path.join(tmpdir(), 'cms-static-fixture-'));
 const secret = 'synthetic-static-build-key-never-public-49271';
 const hook = path.join(temporary, 'fixture.mjs');
@@ -19,6 +20,11 @@ const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
   pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}}],
+  services:[{id:11,_status:'published',order:1,title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
+  faqs:[{id:12,_status:'published',order:1,question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
+  team:[{id:13,_status:'published',order:1,slug:'andre',name:'Synthetic Teammate',label:'synthetic',role:'Synthetic role'}],
+  'mcp-projects':[{id:14,_status:'published',order:1,kind:'server',name:'Synthetic MCP',summary:'Synthetic MCP summary',url:'https://github.com/example-synthetic/mcp',npm:'@example/synthetic',license:'MIT',featured:true}],
+  navigation:[{id:15,_status:'published',order:1,placement:'header',label:'Synthetic Nav',href:'/blog'},{id:16,_status:'published',order:2,placement:'legal',label:'Synthetic Legal Link',href:'/impressum'}],
   media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
 globalThis.fetch = async (input,init) => {
@@ -39,6 +45,7 @@ globalThis.fetch = async (input,init) => {
       ...process.env,
       PAYLOAD_URL: 'https://cms-fixture.invalid',
       PAYLOAD_BUILD_API_KEY: secret,
+      PAYLOAD_SITE_CONTENT: 'true',
       NODE_OPTIONS: `${process.env.NODE_OPTIONS || ''} --import=${pathToFileURL(hook).href}`,
       ASTRO_TELEMETRY_DISABLED: '1',
     },
@@ -63,6 +70,43 @@ globalThis.fetch = async (input,init) => {
   assert.match(author, /"@type":"Person"/);
   assert.match(legal, /Synthetic legal text/);
   assert.match(legal, /Example address/);
+  // Editable site sections come from the (synthetic) CMS and replace the static fallback per section.
+  const home = await readFile('dist/index.html', 'utf8');
+  assert.match(home, /Synthetic Service/);
+  assert.match(home, /Synthetic FAQ question\?/);
+  assert.match(home, /Synthetic FAQ answer &lt;b&gt;plain&lt;\/b&gt;/, 'CMS text is escaped, never HTML');
+  assert.match(home, /Synthetic Teammate/);
+  assert.match(home, /Synthetic Nav/);
+  assert.match(home, /Synthetic Legal Link/);
+  assert.match(await readFile('dist/projekte/mcp-server/index.html', 'utf8'), /Synthetic MCP summary/);
+  assert.ok(!home.includes('PRIVATE_NOTE_MUST_NOT_RENDER'), 'non-allowlisted CMS field leaked');
+  // SEO of the whole CMS-driven output, including Article / Person / BreadcrumbList.
+  await auditSeo('dist', {
+    expectTypes: {
+      '^blog/synthetic-cms-article/': ['BlogPosting', 'BreadcrumbList'],
+      '^blog/autoren/synthetic-author/': ['Person', 'BreadcrumbList'],
+      '^(impressum|datenschutz|agb)/': ['BreadcrumbList'],
+    },
+  });
+  const articleSeo = parseHead(article);
+  assert.equal(articleSeo.canonicals[0], 'https://kieks.me/blog/synthetic-cms-article');
+  assert.equal(articleSeo.og('og:type')[0], 'article');
+  assert.equal(articleSeo.twitter('twitter:title')[0], 'Synthetic Twitter title');
+  assert.equal(articleSeo.twitter('twitter:card')[0], 'summary_large_image');
+  const blogIndex = await readFile('dist/blog/index.html', 'utf8');
+  assert.match(blogIndex, /Synthetic CMS Article/);
+  assert.match(blogIndex, /\/blog\/synthetic-cms-article/);
+  const personNode = parseHead(author).nodes.find((n) => n['@type'] === 'Person');
+  assert.equal(personNode.name, 'Synthetic Author');
+  assert.ok(!JSON.stringify(personNode).includes('PRIVATE_RECIPIENT'));
+  const articleNode = articleSeo.nodes.find((n) => n['@type'] === 'BlogPosting');
+  assert.equal(articleNode.author.name, 'Synthetic Author');
+  assert.equal(articleNode.datePublished, '2026-10-30T12:00:00.000Z');
+  // Author contact form: native POST, honeypot, bounded fields, no private recipient.
+  assert.match(author, /name="website"/);
+  assert.match(author, /maxlength=/);
+  assert.match(author, /method="post"/i);
+  assert.ok(!/action="[^"]*\?/.test(author), 'author form must not put data into a query string');
   const files = await readdir('dist/_cms-media');
   assert.equal(files.length, 1);
   assert.match(files[0], /^[a-f0-9]{64}\.png$/);
@@ -102,6 +146,22 @@ globalThis.fetch = async (input,init) => {
     assert.equal((html.match(/<html\b/g) || []).length, 1, 'Legal fallback nested a second page layout');
     assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Legal fallback duplicated the page heading');
   }
+  // Synthetic test data must not survive into a build without CMS access.
+  async function scan(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const filename = path.join(directory, entry.name);
+      if (entry.isDirectory()) await scan(filename);
+      else if (/\.(html|js|json|xml|txt)$/.test(entry.name)) {
+        const body = await readFile(filename, 'utf8');
+        assert.ok(
+          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal)|PRIVATE_/.test(body),
+          `${filename}: test data published`
+        );
+      }
+    }
+  }
+  await scan('dist');
+  await auditSeo('dist');
   for (const directory of ['public/_cms-media', 'dist/_cms-media']) {
     const remaining = await readdir(directory).catch((error) => {
       if (error.code === 'ENOENT') return [];
@@ -110,7 +170,7 @@ globalThis.fetch = async (input,init) => {
     assert.equal(remaining.length, 0, 'Previously exported CMS images survived a build without publication access');
   }
   console.log(
-    'Synthetic CMS static build passed: article, author, legal, social metadata, JSON-LD, static media and credential isolation'
+    'Synthetic CMS static build passed: article, author, legal, site sections, SEO audit (Article/Person/Breadcrumb), static media, no leaked test data and credential isolation'
   );
 } finally {
   await rm(temporary, { recursive: true, force: true });

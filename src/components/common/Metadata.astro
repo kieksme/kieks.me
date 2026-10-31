@@ -63,10 +63,17 @@ const seoProps: AstroSeoProps = merge(
     twitter: twitter,
   }
 );
+
+const openGraphResolved = await adaptOpenGraphImages(seoProps?.openGraph, Astro.site);
+// Twitter cards default to the Open Graph values so every shared page has a complete card.
+const twitterTitle = twitter.title || openGraphResolved?.title || seoProps.title;
+const twitterDescription = twitter.description || openGraphResolved?.description || seoProps.description;
+const firstImage = openGraphResolved?.images?.[0]?.url;
+const twitterImage = twitter.image || (typeof firstImage === 'string' ? firstImage : undefined);
 ---
 
-<AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />
+<AstroSeo {...{ ...seoProps, openGraph: openGraphResolved }} />
 
-{twitter.title && <meta name="twitter:title" content={twitter.title} />}
-{twitter.description && <meta name="twitter:description" content={twitter.description} />}
-{twitter.image && <meta name="twitter:image" content={String(new URL(twitter.image, Astro.site))} />}
+{twitterTitle && <meta name="twitter:title" content={twitterTitle} />}
+{twitterDescription && <meta name="twitter:description" content={twitterDescription} />}
+{twitterImage && <meta name="twitter:image" content={String(new URL(twitterImage, Astro.site))} />}

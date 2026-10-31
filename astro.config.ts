@@ -49,6 +49,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !page.includes('/kontakt-erfolgreich') &&
+        !page.includes('/docs/') &&
         !page.includes('/homes/') &&
         !page.includes('/landing/') &&
         !page.includes('/services') &&

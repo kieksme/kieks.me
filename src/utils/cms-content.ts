@@ -70,7 +70,7 @@ export function cmsPosts(content: CmsBuildContent): Post[] {
       publishDate,
       updateDate: post.updatedAt ? new Date(text(post.updatedAt)) : undefined,
       title: text(post.title),
-      excerpt: text(post.excerpt),
+      excerpt: text(post.excerpt) || undefined,
       image: resolvePublicMedia(content, post.heroImage)?.url,
       author: authorProfile?.name || text(post.authorName),
       authorProfile,
