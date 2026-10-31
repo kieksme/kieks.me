@@ -24,7 +24,7 @@ const records = {
   faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'aqua'}],
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role'}],
   'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],license:'MIT'}],
-  navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}]}],
+  navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}],actions:[{label:'Synthetic Action',href:'/kontakt',variant:'primary'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}],socialLinks:[{label:'Synthetic Social',href:'https://example.invalid/synthetic',icon:'tabler:brand-github'}],footNote:'Synthetic Foot <b>note</b>'}],
   media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
 globalThis.fetch = async (input,init) => {
@@ -116,6 +116,14 @@ globalThis.fetch = async (input,init) => {
     'Synthetic CTA',
   ])
     assert.ok(homeHtml.includes(expected), `Home hero must render ${expected}`);
+  for (const expected of [
+    'Synthetic Action',
+    'aria-label="Synthetic Social"',
+    'https://example.invalid/synthetic',
+    'Synthetic Foot &lt;b&gt;note&lt;/b&gt;',
+  ])
+    assert.ok(homeHtml.includes(expected), `Navigation extras must render ${expected}`);
+  assert.ok(!homeHtml.includes('Synthetic Foot <b>'), 'CMS foot note must be escaped');
   const cloud = await readFile('dist/leistungen/cloud-devops/index.html', 'utf8');
   assert.ok(
     cloud.includes('Synthetic Highlight') && cloud.includes('Synthetic highlight text'),
@@ -168,7 +176,7 @@ globalThis.fetch = async (input,init) => {
       else if (/\.(html|js|json|xml|txt)$/.test(entry.name)) {
         const body = await readFile(filename, 'utf8');
         assert.ok(
-          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA)|PRIVATE_/.test(
+          !/Synthetic (?:CMS|Author|Service|Teammate|MCP|Nav|FAQ|Legal|Highlight|highlight|headline|hero|Eyebrow|CTA|Action|Social|Foot)|PRIVATE_/.test(
             body
           ),
           `${filename}: test data published`

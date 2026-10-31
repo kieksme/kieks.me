@@ -234,6 +234,71 @@ describe('editable site sections with static fallback', () => {
     ).toThrow('highlights');
   });
 
+  it('maps header actions, social links and the foot note, escaping footer text', () => {
+    const content = resolveSiteContent({
+      navigation: [
+        {
+          ...published,
+          id: 1,
+          key: 'header',
+          links: [{ label: 'Kontakt', href: '/kontakt' }],
+          actions: [
+            { label: 'Buchen', href: '/kontakt', variant: 'secondary' },
+            { label: 'Los', href: 'https://example.invalid/x' },
+          ],
+        },
+        {
+          ...published,
+          id: 2,
+          key: 'footer',
+          links: [{ label: 'Projekte', children: [{ label: 'A & <b>B</b>', href: '/projekte/mcp-server' }] }],
+          secondaryLinks: [{ label: 'AGB <i>x</i>', href: '/agb' }],
+          socialLinks: [{ label: 'GitHub', href: 'https://github.com/kieksme', icon: 'tabler:brand-github' }],
+          footNote: 'kieks.me <script>x</script> & Co',
+        },
+      ],
+    });
+    expect(content.headerActions).toEqual([
+      { text: 'Buchen', href: '/kontakt', variant: 'secondary' },
+      { text: 'Los', href: 'https://example.invalid/x', variant: 'primary' },
+    ]);
+    expect(content.socialLinks).toEqual([
+      { text: 'GitHub', href: 'https://github.com/kieksme', icon: 'tabler:brand-github' },
+    ]);
+    expect(content.footNote).toBe('kieks.me &lt;script&gt;x&lt;/script&gt; &amp; Co');
+    expect(content.footerColumns[0].links[0].text).toBe('A &amp; &lt;b&gt;B&lt;/b&gt;');
+    expect(content.legalLinks[0].text).toBe('AGB &lt;i&gt;x&lt;/i&gt;');
+    expect(content.header).toEqual([{ text: 'Kontakt', href: '/kontakt' }]);
+    const empty = resolveSiteContent();
+    expect(empty.headerActions).toBeUndefined();
+    expect(empty.socialLinks).toEqual([]);
+    expect(empty.footNote).toBeUndefined();
+  });
+
+  it('rejects unsupported icons, unsafe action links, bad variants and oversized lists', () => {
+    const nav = (key: string, extra: Record<string, unknown>) => ({
+      navigation: [{ ...published, id: key, key, ...extra }],
+    });
+    const social = (icon: unknown, href = 'https://github.com/kieksme') => ({ label: 'x', href, icon });
+    expect(() => resolveSiteContent(nav('footer', { socialLinks: [social('tabler:evil')] }))).toThrow('icon');
+    expect(() => resolveSiteContent(nav('footer', { socialLinks: [social(undefined)] }))).toThrow('icon');
+    expect(() => resolveSiteContent(nav('footer', { socialLinks: [social('tabler:mail', 'javascript:1')] }))).toThrow(
+      'unsafe'
+    );
+    expect(() =>
+      resolveSiteContent(nav('footer', { socialLinks: Array.from({ length: 9 }, () => social('tabler:mail')) }))
+    ).toThrow('social');
+    expect(() =>
+      resolveSiteContent(nav('header', { actions: [{ label: 'x', href: '/a', variant: 'tertiary' }] }))
+    ).toThrow('variant');
+    expect(() => resolveSiteContent(nav('header', { actions: [{ label: 'x', href: '//evil.invalid' }] }))).toThrow(
+      'unsafe'
+    );
+    expect(() =>
+      resolveSiteContent(nav('header', { actions: Array.from({ length: 4 }, () => ({ label: 'x', href: '/a' })) }))
+    ).toThrow('actions');
+  });
+
   it('rejects drafts, duplicates, unsafe links, control characters and oversized input', () => {
     const service = { ...published, id: 1, title: 'A', summary: 'a', href: '/a', linkText: 'x' };
     expect(() => resolveSiteContent({ services: [{ ...service, _status: 'draft' }] })).toThrow('unpublished');

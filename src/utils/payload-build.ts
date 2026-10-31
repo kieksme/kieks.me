@@ -54,7 +54,7 @@ const fields = {
     'npmPackages',
     'accent',
   ],
-  navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'footNote'],
+  navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
 export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
 type Collection = keyof typeof fields;

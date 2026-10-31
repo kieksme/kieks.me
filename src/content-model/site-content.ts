@@ -142,6 +142,13 @@ export interface SiteHeroView {
   primaryCta?: SiteNavLink;
   secondaryCta?: SiteNavLink;
 }
+export interface SiteAction extends SiteNavLink {
+  variant: 'primary' | 'secondary';
+}
+export interface SiteSocialLink extends SiteNavLink {
+  /** Tabler icon from the allowlist; the label is the accessible name. */
+  icon: string;
+}
 export interface SiteContent {
   services: SiteServiceView[];
   faqsLeft: SiteFaqView[];
@@ -153,6 +160,12 @@ export interface SiteContent {
   header: (SiteNavLink | SiteNavGroup)[];
   footerColumns: { title: string; links: SiteNavLink[] }[];
   legalLinks: SiteNavLink[];
+  /** Header buttons from the CMS; undefined = static buttons. */
+  headerActions?: SiteAction[];
+  /** Footer social links from the CMS (not rendered without CMS data). */
+  socialLinks: SiteSocialLink[];
+  /** Footer line (already HTML-escaped because the footer renders it as HTML); undefined = static. */
+  footNote?: string;
   /** Home hero from the CMS page `startseite`; undefined = static hero. */
   hero?: SiteHeroView;
   /** Service highlights by service slug (e.g. `cloud-devops`); empty = static lists. */

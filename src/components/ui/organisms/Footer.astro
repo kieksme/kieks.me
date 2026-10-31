@@ -1,11 +1,13 @@
 ---
 import Logo from '~/components/ui/atoms/Logo.astro';
+import { Icon } from 'astro-icon/components';
 import { getHomePermalink } from '~/utils/permalinks';
 
 interface Link {
   text?: string;
   href?: string;
   ariaLabel?: string;
+  icon?: string;
 }
 
 interface Links {
@@ -20,7 +22,7 @@ export interface Props {
   footNote?: string;
 }
 
-const { links = [], secondaryLinks = [], footNote = '' } = Astro.props;
+const { links = [], secondaryLinks = [], socialLinks = [], footNote = '' } = Astro.props;
 ---
 
 <footer class="not-prose" style="background: var(--footer-bg); color: var(--footer-text);">
@@ -51,6 +53,25 @@ const { links = [], secondaryLinks = [], footNote = '' } = Astro.props;
         ))
       }
     </div>
+    {
+      socialLinks.length > 0 && (
+        <ul class="flex flex-wrap gap-3" aria-label="Soziale Netzwerke">
+          {socialLinks.map(({ text, href, icon }) => (
+            <li>
+              <a
+                href={href}
+                aria-label={text}
+                rel="noopener noreferrer"
+                class="inline-flex items-center p-2 hover:opacity-80"
+                style="color: var(--footer-text);"
+              >
+                {icon ? <Icon name={icon} class="w-6 h-6" /> : text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
     <div style="border-top: 3px solid var(--pop-fuchsia);"></div>
     <div class="flex flex-col md:flex-row md:justify-between gap-3 text-base">
       <span set:html={footNote} />

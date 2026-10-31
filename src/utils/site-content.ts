@@ -11,12 +11,15 @@ import {
 import { POP_ACCENTS } from '../content-model/site-content';
 import type {
   PopAccent,
+  SiteAction,
   SiteContent,
   SiteHighlight,
   SiteNavLink,
   SiteServiceView,
+  SiteSocialLink,
 } from '../content-model/site-content';
 import { footerData, headerData } from '../navigation';
+import { escapeHtml } from '../components/editorial/rich-text';
 import { loadCmsBuildContent } from './payload-build';
 
 type Doc = Record<string, unknown>;
@@ -64,6 +67,16 @@ function npmPackages(value: unknown): string {
     })
     .join(', ');
 }
+/** Icons the footer may render; anything else fails the build instead of requesting an unknown icon. */
+export const SOCIAL_ICONS = [
+  'tabler:brand-github',
+  'tabler:brand-linkedin',
+  'tabler:brand-x',
+  'tabler:brand-xing',
+  'tabler:brand-mastodon',
+  'tabler:brand-youtube',
+  'tabler:mail',
+] as const;
 const accent = (value: unknown, fallback: PopAccent): PopAccent =>
   POP_ACCENTS.includes(value as PopAccent) ? (value as PopAccent) : fallback;
 const list = (value: unknown): Doc[] => {
@@ -104,6 +117,7 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
     footerColumns: footerData.links as SiteContent['footerColumns'],
     legalLinks: footerData.secondaryLinks,
     serviceHighlights: {},
+    socialLinks: [],
     fromCms,
   };
   if (!site) return result;
@@ -213,6 +227,8 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
       });
     };
     const link = (doc: Doc): SiteNavLink => ({ text: str(doc.label, 80, true), href: safeHref(doc.href) });
+    // The footer renders link texts as HTML, so CMS text is escaped here (header text is escaped by Astro).
+    const footerLink = (doc: Doc): SiteNavLink => ({ ...link(doc), text: escapeHtml(link(doc).text) });
     const header = navigation.find((doc) => doc.key === 'header');
     const headerLinks = entries(header?.links);
     if (headerLinks.length)
@@ -225,10 +241,29 @@ export function resolveSiteContent(site?: Record<string, unknown>): SiteContent 
     if (columns.length)
       result.footerColumns = columns.map((doc) => ({
         title: str(doc.label, 80, true),
-        links: entries(doc.children).map(link),
+        links: entries(doc.children).map(footerLink),
       }));
     const legal = entries(footer?.secondaryLinks);
-    if (legal.length) result.legalLinks = legal.map(link);
+    if (legal.length) result.legalLinks = legal.map(footerLink);
+    const social = entries(footer?.socialLinks);
+    if (social.length > 8) throw new Error('CMS site content: too many social links');
+    if (social.length)
+      result.socialLinks = social.map((doc): SiteSocialLink => {
+        const icon = String(doc.icon ?? '');
+        if (!(SOCIAL_ICONS as readonly string[]).includes(icon)) throw new Error('CMS site content: unsupported icon');
+        return { ...link(doc), icon };
+      });
+    const footNote = str(footer?.footNote, 200);
+    if (footNote) result.footNote = escapeHtml(footNote);
+    const actions = entries(header?.actions);
+    if (actions.length > 3) throw new Error('CMS site content: too many header actions');
+    if (actions.length)
+      result.headerActions = actions.map((doc): SiteAction => {
+        const variant = doc.variant ?? 'primary';
+        if (variant !== 'primary' && variant !== 'secondary')
+          throw new Error('CMS site content: invalid action variant');
+        return { ...link(doc), variant };
+      });
   }
   const homes = list(site.home).filter((doc) => doc.slug === 'startseite');
   if (homes.length > 1) throw new Error('CMS site content: duplicate home page');
