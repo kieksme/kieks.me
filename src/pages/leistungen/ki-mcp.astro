@@ -14,6 +14,8 @@ import StepCard from '~/components/ui/molecules/StepCard.astro';
 import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import burstMcp from '~/assets/pop/659-963_ki-hero-art-mcp__imgBurst.svg?url';
 import { BOOKING_URL } from '~/config/site';
+import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 
 const metadata = {
   title: 'KI & MCP-Integration für Unternehmen',
@@ -21,7 +23,7 @@ const metadata = {
     'kieks.me verbindet KI-Assistenten über das Model Context Protocol mit Ihren Systemen: eigene MCP-Server, abgesicherter Zugriff, Agent-Skills für Ihr Team.',
 };
 
-const offers = [
+const offersBase = [
   {
     title: 'MCP-Server für Ihre Systeme',
     description: 'Wir entwickeln MCP-Server für Ihre internen Anwendungen oder für Dienste, die Sie nutzen.',
@@ -50,6 +52,8 @@ const offers = [
     shadow: 'purple' as const,
   },
 ];
+const { serviceHighlights, serviceDetails } = await getSiteContent();
+const offers = withHighlights(serviceHighlights['ki-mcp'], offersBase);
 
 const steps = [
   {
@@ -229,6 +233,7 @@ const steps = [
   <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />
 
   <!-- 4.6 CTA -->
+  <ServiceDetail html={serviceDetails['ki-mcp']} />
   <CtaSection
     title="haben sie ein system, mit dem ihre ki sprechen soll?"
     text="Erzählen Sie uns davon. In 30 Minuten klären wir, ob und wie ein MCP-Server dafür sinnvoll ist."

@@ -1,10 +1,41 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
+import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
+
+const { serviceHighlights, serviceDetails } = await getSiteContent();
+const highlights = withHighlights(serviceHighlights['cloud-devops'], [
+  {
+    title: 'Infrastruktur als Code',
+    description: 'DNS, Hosting und Cloud-Ressourcen versioniert und nachvollziehbar, zum Beispiel mit Terraform.',
+    icon: 'tabler:code',
+  },
+  {
+    title: 'CI/CD',
+    description: 'Automatische Prüfungen, Builds und Deployments, etwa mit GitHub Actions.',
+    icon: 'tabler:git-merge',
+  },
+  {
+    title: 'Container und Self-Hosting',
+    description: 'Anwendungen in Containern betreiben, auf Plattformen wie Coolify oder in Kubernetes-Umgebungen.',
+    icon: 'tabler:box',
+  },
+  {
+    title: 'Monitoring und Bereitschaft',
+    description: 'Status und Alarme sichtbar machen, zum Beispiel mit Uptime Kuma, Datadog oder SIGNL4.',
+    icon: 'tabler:heartbeat',
+  },
+  {
+    title: 'Dokumentation und Übergabe',
+    description: 'Ihr Team weiß, was läuft, warum es läuft und wie man es ändert.',
+    icon: 'tabler:notebook',
+  },
+]);
 
 const metadata = {
   title: 'Cloud & DevOps: Infrastruktur als Code und Deployments',
@@ -21,36 +52,7 @@ const metadata = {
     badge="Leistung: Cloud & DevOps"
   />
 
-  <Features
-    title="Was wir für Sie tun"
-    items={[
-      {
-        title: 'Infrastruktur als Code',
-        description: 'DNS, Hosting und Cloud-Ressourcen versioniert und nachvollziehbar, zum Beispiel mit Terraform.',
-        icon: 'tabler:code',
-      },
-      {
-        title: 'CI/CD',
-        description: 'Automatische Prüfungen, Builds und Deployments, etwa mit GitHub Actions.',
-        icon: 'tabler:git-merge',
-      },
-      {
-        title: 'Container und Self-Hosting',
-        description: 'Anwendungen in Containern betreiben, auf Plattformen wie Coolify oder in Kubernetes-Umgebungen.',
-        icon: 'tabler:box',
-      },
-      {
-        title: 'Monitoring und Bereitschaft',
-        description: 'Status und Alarme sichtbar machen, zum Beispiel mit Uptime Kuma, Datadog oder SIGNL4.',
-        icon: 'tabler:heartbeat',
-      },
-      {
-        title: 'Dokumentation und Übergabe',
-        description: 'Ihr Team weiß, was läuft, warum es läuft und wie man es ändert.',
-        icon: 'tabler:notebook',
-      },
-    ]}
-  />
+  <Features title="Was wir für Sie tun" items={highlights} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-8">
     <Placeholder label="⟦BESTÄTIGEN⟧">
@@ -82,6 +84,7 @@ const metadata = {
     ]}
   />
 
+  <ServiceDetail html={serviceDetails['cloud-devops']} />
   <SectionCTA
     title="Wo hakt es in Ihrem Betrieb?"
     text="Ob ein einzelnes Deployment oder die ganze Plattform: Wir schauen es uns gemeinsam an."

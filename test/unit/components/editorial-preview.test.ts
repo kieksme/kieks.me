@@ -164,6 +164,78 @@ describe('safe editorial rendering', () => {
       expect(html).not.toContain('CRM_MUST_NOT_APPEAR');
     }
   });
+  it('renders the structured Datahub fields: home hero, service highlights, FAQ placement, npm packages, navigation tree', async () => {
+    const container = await AstroContainer.create();
+    const render = (collection: string, document: Record<string, unknown>) =>
+      container.renderToString(EditorialContent, { props: { collection, document } });
+    const home = await render('pages', {
+      title: 'Startseite',
+      pageKind: 'home',
+      hero: {
+        eyebrow: 'kieks.me GbR',
+        headline: 'zeile eins\nzeile <b>zwei</b>',
+        lead: 'Einleitung',
+        primaryCta: { label: 'Los', href: '/kontakt' },
+        secondaryCta: { label: 'Bad', href: 'javascript:alert(1)' },
+        secret: 'INTERNAL_MUST_NOT_APPEAR',
+      },
+    });
+    expect(home).toContain('zeile eins');
+    expect(home).toContain('zeile &lt;b&gt;zwei&lt;/b&gt;');
+    expect(home).toContain('href="/kontakt"');
+    expect(home).not.toContain('javascript:');
+    expect(home).not.toContain('INTERNAL_MUST_NOT_APPEAR');
+    expect(home.match(/<h1/g)).toHaveLength(1);
+    const service = await render('services', {
+      title: 'Agent-Hub',
+      number: '01',
+      accent: 'aqua',
+      linkText: 'Mehr',
+      href: '/agent-hub',
+      highlights: [{ title: 'Hub-Design', description: 'Struktur', x: 'INTERNAL_MUST_NOT_APPEAR' }],
+    });
+    expect(service).toContain('01 · aqua');
+    expect(service).toContain('Hub-Design');
+    expect(service).toContain('href="/agent-hub"');
+    expect(service).not.toContain('INTERNAL_MUST_NOT_APPEAR');
+    expect(await render('faqs', { question: 'Q?', answer: 'A', placement: 'home' })).toContain('Startseite');
+    const mcp = await render('mcp-projects', {
+      name: 'Contabo MCP',
+      repositoryUrl: 'https://github.com/kieksme/mcp-contabo',
+      npmPackages: [{ name: '@kieksme/contabo-mcp' }],
+    });
+    expect(mcp).toContain('@kieksme/contabo-mcp');
+    const nav = await render('navigation', {
+      title: 'Hauptnavigation',
+      key: 'header',
+      links: [
+        {
+          label: 'Leistungen',
+          href: '',
+          children: [
+            { label: 'KI', href: '/leistungen/ki-mcp' },
+            { label: 'Bad', href: '//evil.invalid' },
+          ],
+        },
+        { label: 'Kontakt', href: '/kontakt' },
+      ],
+      actions: [{ label: 'Buchen', href: '/kontakt' }],
+      secondaryLinks: [{ label: 'Impressum', href: '/impressum' }],
+      socialLinks: [{ label: 'GitHub', href: 'https://github.com/kieksme' }],
+      footNote: 'kieks.me GbR · Leipzig',
+    });
+    for (const expected of [
+      'Kopfbereich',
+      'Leistungen',
+      'href="/leistungen/ki-mcp"',
+      'Buchen',
+      'Impressum',
+      'GitHub',
+      'Leipzig',
+    ])
+      expect(nav).toContain(expected);
+    expect(nav).not.toContain('evil.invalid');
+  });
   it('renders sections and media alt text through escaped attributes', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(EditorialContent, {

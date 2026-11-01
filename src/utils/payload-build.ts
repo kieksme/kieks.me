@@ -16,7 +16,7 @@ export interface CmsBuildContent {
 }
 const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
-  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'seo'],
+  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'hero', 'seo'],
   posts: [
     'id',
     '_status',
@@ -34,28 +34,41 @@ const fields = {
     'seo',
   ],
   authors: ['id', '_status', 'name', 'slug', 'bioRichText', 'avatar', 'seo', 'contactEnabled'],
-  media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
-  // Editable website sections; shape documented in src/content-model/site-content.ts.
-  services: ['id', '_status', 'order', 'title', 'summary', 'href', 'linkText', 'accent'],
-  team: ['id', '_status', 'order', 'slug', 'name', 'label', 'role', 'imageAlt'],
-  faqs: ['id', '_status', 'order', 'question', 'answer', 'accent'],
+  // `filename` is required: Payload derives `url` from it and returns `url: null` when it is not selected.
+  media: ['id', 'websitePublished', 'filename', 'url', 'mimeType', 'alt', 'width', 'height'],
+  // Editable website sections; shape documented in src/content-model/site-content.ts and
+  // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
+  services: [
+    'id',
+    '_status',
+    'sortOrder',
+    'slug',
+    'title',
+    'summary',
+    'href',
+    'linkText',
+    'accent',
+    'highlights',
+    'descriptionRichText',
+  ],
+  team: ['id', '_status', 'sortOrder', 'slug', 'name', 'position', 'bio', 'bioRichText', 'accent'],
+  faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'answerRichText', 'placement', 'accent'],
   'mcp-projects': [
     'id',
     '_status',
-    'order',
+    'sortOrder',
+    'slug',
     'kind',
     'name',
     'summary',
-    'url',
-    'npm',
+    'repositoryUrl',
+    'documentationUrl',
     'license',
-    'docsUrl',
-    'page',
-    'featured',
-    'chipLabel',
+    'npmPackages',
+    'descriptionRichText',
     'accent',
   ],
-  navigation: ['id', '_status', 'order', 'placement', 'label', 'href', 'group'],
+  navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
 export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
 type Collection = keyof typeof fields;
@@ -133,7 +146,11 @@ export async function fetchCmsBuildContent(
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
       else {
         url.searchParams.set('where[_status][equals]', 'published');
-        if (slug === 'pages') url.searchParams.set('where[pageKind][equals]', 'legal');
+        if (slug === 'pages') {
+          // The home page is only requested when editable site sections are enabled.
+          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home');
+          else url.searchParams.set('where[pageKind][equals]', 'legal');
+        }
       }
       const response = await request(url);
       let body: CmsDocument;
@@ -171,7 +188,8 @@ export async function fetchCmsBuildContent(
         seen.add(id);
         if (slug === 'media' ? doc.websitePublished !== true : doc._status !== 'published')
           throw new Error(`Unpublished CMS ${slug} rejected`);
-        if (slug === 'pages' && doc.pageKind !== 'legal') throw new Error('Non-legal CMS page rejected');
+        if (slug === 'pages' && doc.pageKind !== 'legal' && !(options.siteContent && doc.pageKind === 'home'))
+          throw new Error('Unexpected CMS page kind rejected');
         docs.push(pick(doc, fields[slug]));
       }
       if (page === body.totalPages) {

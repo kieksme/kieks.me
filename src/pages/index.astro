@@ -28,9 +28,13 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 
-const { services, homeProjects: projects, faqsLeft, faqsRight, team } = await getSiteContent();
+const { services, homeProjects: projects, faqsLeft, faqsRight, team, hero } = await getSiteContent();
 const portraits = { andre: avatarAndre, thomas: avatarThomas } as const;
 const teamMembers = team.filter((member) => Object.hasOwn(portraits, member.slug));
+// The open-decision hint stays until at least one member has a real role or biography (not the ⟦…⟧ placeholder).
+const teamTextsMissing = !teamMembers.some(
+  (member) => member.bio || member.bioHtml || (member.role && !member.role.includes('⟦'))
+);
 if (teamMembers.length !== team.length) console.warn('Team members without a bundled portrait are not rendered yet.');
 ---
 
@@ -51,17 +55,46 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
     <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
       <div class="grid lg:grid-cols-[760fr_520fr] gap-10 lg:gap-0 items-start">
         <div class="flex flex-col gap-7 max-w-[760px]">
-          <Sticker color="yellow" shadow="fuchsia" rotate={3}>kieks.me GbR · Leipzig</Sticker>
+          <Sticker color="yellow" shadow="fuchsia" rotate={3}>{hero?.eyebrow || 'kieks.me GbR · Leipzig'}</Sticker>
           <Heading level={1} size="xl" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)">
-            ihre software.<br />ihr code.<br />unsere erfahrung.
+            {
+              hero ? (
+                hero.headlineLines.map((line, index) => (
+                  <>
+                    {index > 0 && <br />}
+                    {line}
+                  </>
+                ))
+              ) : (
+                <>
+                  ihre software.
+                  <br />
+                  ihr code.
+                  <br />
+                  unsere erfahrung.
+                </>
+              )
+            }
           </Heading>
           <Lead size="l" tone="onColor" class="!text-[color:var(--hero-text)]">
-            Wir sind AI Consultants aus Leipzig. Wir entwickeln Skills, MCP-Server und Agents für Ihr Unternehmen und
-            bauen den Agent-Hub, über den Ihre Teams sie sicher nutzen.
+            {
+              hero?.lead ||
+                'Wir sind AI Consultants aus Leipzig. Wir entwickeln Skills, MCP-Server und Agents für Ihr Unternehmen und bauen den Agent-Hub, über den Ihre Teams sie sicher nutzen.'
+            }
           </Lead>
           <div class="flex flex-col sm:flex-row gap-5">
-            <Button variant="primary" shadow="fuchsia" href={BOOKING_URL} text="Erstgespräch buchen" />
-            <Button variant="secondary" shadow="aqua" href="#leistungen" text="Leistungen ansehen" />
+            <Button
+              variant="primary"
+              shadow="fuchsia"
+              href={hero?.primaryCta?.href ?? BOOKING_URL}
+              text={hero?.primaryCta?.text ?? 'Erstgespräch buchen'}
+            />
+            <Button
+              variant="secondary"
+              shadow="aqua"
+              href={hero?.secondaryCta?.href ?? '#leistungen'}
+              text={hero?.secondaryCta?.text ?? 'Leistungen ansehen'}
+            />
           </div>
           <Note label="⟦BESTÄTIGEN⟧" class="max-w-[520px]">
             Claim „Ihre Software. Ihr Code. Unsere Erfahrung.“ als Unternehmens-Claim freigeben (D2).
@@ -180,9 +213,13 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
           Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
         </Lead>
-        <Note label="⟦PLATZHALTER D10⟧">
-          Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
-        </Note>
+        {
+          teamTextsMissing && (
+            <Note label="⟦PLATZHALTER D10⟧">
+              Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
+            </Note>
+          )
+        }
       </div>
       <div class="flex flex-col sm:flex-row gap-10">
         {
@@ -193,6 +230,8 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
               image={portraits[member.slug as keyof typeof portraits]}
               imageAlt={member.imageAlt}
               role={member.role}
+              bio={member.bio}
+              bioHtml={member.bioHtml}
             />
           ))
         }
@@ -211,7 +250,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           {
             faqsLeft.map((f) => (
               <FaqItem title={f.title} color={f.color} open={true}>
-                {f.body}
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
               </FaqItem>
             ))
           }
@@ -220,7 +259,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           {
             faqsRight.map((f) => (
               <FaqItem title={f.title} color={f.color} open={true}>
-                {f.body}
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
               </FaqItem>
             ))
           }

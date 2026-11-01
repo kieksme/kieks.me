@@ -621,3 +621,34 @@ button:focus-visible {
     box-shadow: var(--kanten-offset) var(--kanten-offset) 0 0 var(--pop-fuchsia);
   }
 }
+
+/* Sanitized CMS rich text (headings, lists, links, quotes) inside cards and FAQ items. */
+.cms-rich > * + * {
+  margin-top: 0.75em;
+}
+.cms-rich ul {
+  list-style: disc;
+  padding-left: 1.25em;
+}
+.cms-rich ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+}
+.cms-rich a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cms-rich blockquote {
+  border-left: 4px solid var(--pop-fuchsia);
+  padding-left: 1em;
+}
+.cms-rich h2,
+.cms-rich h3,
+.cms-rich h4 {
+  font-family: var(--aw-font-heading);
+  font-weight: 800;
+}
+.cms-rich img {
+  max-width: 100%;
+  height: auto;
+}
