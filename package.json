@@ -13,7 +13,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check-markers.mjs",
+    "build:raw": "astro build",
+    "check:markers": "node scripts/check-markers.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "pnpm run check:astro && pnpm run check:eslint && pnpm run check:prettier",
