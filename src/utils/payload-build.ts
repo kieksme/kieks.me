@@ -34,7 +34,8 @@ const fields = {
     'seo',
   ],
   authors: ['id', '_status', 'name', 'slug', 'bioRichText', 'avatar', 'seo', 'contactEnabled'],
-  media: ['id', 'websitePublished', 'url', 'mimeType', 'alt', 'width', 'height'],
+  // `filename` is required: Payload derives `url` from it and returns `url: null` when it is not selected.
+  media: ['id', 'websitePublished', 'filename', 'url', 'mimeType', 'alt', 'width', 'height'],
   // Editable website sections; shape documented in src/content-model/site-content.ts and
   // mirrored by kieksme/kieks.me.datahub (docs/editorial/website-schema.md).
   services: [

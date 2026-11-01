@@ -25,7 +25,7 @@ const records = {
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role',bio:'Synthetic plain bio',bioRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich bio',format:1}]},{type:'html',html:'<script>bio()</script>'}]}}}],
   'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],descriptionRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich description',format:1}]}]}},license:'MIT'}],
   navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}],actions:[{label:'Synthetic Action',href:'/kontakt',variant:'primary'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}],socialLinks:[{label:'Synthetic Social',href:'https://example.invalid/synthetic',icon:'tabler:brand-github'}],footNote:'Synthetic Foot <b>note</b>'}],
-  media:[{id:7,websitePublished:true,url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
+  media:[{id:7,websitePublished:true,filename:'synthetic.png',url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
 globalThis.fetch = async (input,init) => {
  const url=new URL(String(input));
@@ -33,7 +33,9 @@ globalThis.fetch = async (input,init) => {
  if(url.pathname==='/api/media/file/synthetic.png')return new Response(png,{headers:{'content-type':'image/png'}});
  const slug=url.pathname.split('/').pop();
  if(!Object.hasOwn(records,slug)||url.searchParams.get('draft')!=='false')throw Error('Unexpected fixture collection');
- return Response.json({docs:records[slug],totalPages:1,page:1});
+ // Like Payload: url is derived from filename, so it is null unless filename is selected.
+ const docs=slug==='media'&&url.searchParams.get('select[filename]')!=='true'?records[slug].map((d)=>({...d,url:null})):records[slug];
+ return Response.json({docs,totalPages:1,page:1});
 };
 `
   );

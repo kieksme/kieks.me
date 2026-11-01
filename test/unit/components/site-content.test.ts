@@ -491,10 +491,12 @@ describe('editable site sections with static fallback', () => {
   it('only requests the five site collections when explicitly enabled, published and field-allowlisted', async () => {
     const origin = 'https://cms.example.invalid';
     const requested: string[] = [];
+    const mediaSelects: (string | null)[] = [];
     const fetcher = vi.fn(async (input: string | URL | Request) => {
       const url = new URL(String(input));
       const slug = url.pathname.split('/').pop()!;
       requested.push(slug);
+      if (slug === 'media') mediaSelects.push(url.searchParams.get('select[filename]'));
       expect(url.searchParams.get('draft')).toBe('false');
       expect(url.searchParams.get('where[_status][equals]') ?? 'media').toMatch(/published|media/);
       const docs = slug === 'faqs' ? [{ ...published, id: 1, question: 'Q', answer: 'A', editorialNotes: 'X' }] : [];
@@ -511,6 +513,7 @@ describe('editable site sections with static fallback', () => {
       mediaDirectory: '/tmp/none-site-test',
     });
     expect(requested).toEqual(expect.arrayContaining(['services', 'team', 'faqs', 'mcp-projects', 'navigation']));
+    expect(mediaSelects).toContain('true');
     expect(withSite.site.faqs).toEqual([{ id: 1, _status: 'published', question: 'Q', answer: 'A' }]);
     expect(withSite.site.navigation).toEqual([]);
   });
