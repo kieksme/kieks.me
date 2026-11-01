@@ -32,8 +32,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 >
   <div class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex items-center justify-between gap-4">
     <a href={getHomePermalink()} class="shrink-0" aria-label="kieks.me Startseite">
-      <Logo size="md" class="max-md:hidden" />
-      <Logo size="sm" class="md:hidden" />
+      <Logo layout="horizontal" size="md" class="max-md:hidden" />
+      <Logo layout="horizontal" size="sm" class="md:hidden" />
     </a>
 
     <nav class="hidden md:flex items-center gap-8" aria-label="Main navigation">
@@ -79,7 +79,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       {
         showToggleTheme && (
           <ToggleTheme
-            class="inline-flex items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] p-2 shadow-[4px_4px_0_0_var(--pop-fuchsia)]"
+            class="inline-flex items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] p-2 text-[var(--pop-navy)] shadow-[4px_4px_0_0_var(--pop-fuchsia)]"
             iconClass="w-5 h-5"
           />
         )

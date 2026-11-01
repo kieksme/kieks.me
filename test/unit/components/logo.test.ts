@@ -5,6 +5,9 @@ import { readFile } from 'node:fs/promises';
 import Logo from '../../../src/components/ui/atoms/Logo.astro';
 import HeroArtFinger from '../../../src/components/ui/organisms/HeroArtFinger.astro';
 import circleLogoUrl from '../../../src/assets/brand/logos/kieks.me-single-circle.svg?url';
+import circleLogoDarkUrl from '../../../src/assets/brand/logos/kieks.me-single-circle-dark.svg?url';
+import horizontalLightUrl from '../../../src/assets/brand/logos/kieks.me-horizontal-fuchsia-light.svg?url';
+import horizontalDarkUrl from '../../../src/assets/brand/logos/kieks.me-horizontal-fuchsia-dark.svg?url';
 
 const approvedBlob = '82c16492f94b6fee93eaf79d04b86ea0b556c349';
 
@@ -17,14 +20,37 @@ describe('approved circular brand logo', () => {
     expect(blob).toBe(approvedBlob);
   });
 
-  it.each(['auto', 'light', 'dark'] as const)('keeps one square original in %s theme', async (variant) => {
+  it('keeps the approved navy disc on light surfaces and an open aqua ring on dark surfaces', async () => {
+    const darkAsset = await readFile(
+      new URL('../../../src/assets/brand/logos/kieks.me-single-circle-dark.svg', import.meta.url),
+      'utf8'
+    );
+    expect(darkAsset).toMatch(/<circle[^>]*fill="none"[^>]*stroke="#00FFDC"[^>]*stroke-width="16"/);
+    expect(darkAsset).not.toContain('#F0F2F9');
+    expect(darkAsset).not.toContain('fill="#1E2A45"');
+    expect(darkAsset).toContain('fill="#FF008F"');
+    expect(darkAsset).toContain('stroke="#00FFDC"');
+
     const container = await AstroContainer.create();
-    const html = await container.renderToString(Logo, { props: { variant } });
-    expect(html.match(/<img\b/g)).toHaveLength(1);
-    expect(html).toContain(`src="${circleLogoUrl}"`);
-    expect(html).toContain('alt="kieks.me"');
-    expect(html).toContain('width="56" height="56"');
-    expect(html).not.toContain('assets/pop');
+    const light = await container.renderToString(Logo, { props: { variant: 'light' } });
+    expect(light.match(/<img\b/g)).toHaveLength(1);
+    expect(light).toContain(`src="${circleLogoUrl}"`);
+    expect(light).not.toContain(circleLogoDarkUrl);
+
+    const dark = await container.renderToString(Logo, { props: { variant: 'dark' } });
+    expect(dark.match(/<img\b/g)).toHaveLength(1);
+    expect(dark).toContain(`src="${circleLogoDarkUrl}"`);
+    expect(dark).toContain('alt="kieks.me"');
+    expect(dark).not.toContain(circleLogoUrl);
+
+    const auto = await container.renderToString(Logo, { props: { variant: 'auto' } });
+    expect(auto.match(/<img\b/g)).toHaveLength(2);
+    expect(auto).toContain(`src="${circleLogoUrl}"`);
+    expect(auto).toContain(`src="${circleLogoDarkUrl}"`);
+    expect(auto).toContain('dark:hidden');
+    expect(auto).toContain('hidden dark:block');
+    expect(auto).toContain('width="56" height="56"');
+    expect(auto).not.toContain('assets/pop');
   });
 
   it('supports compact sizing and an explicit static variant', async () => {
@@ -37,12 +63,26 @@ describe('approved circular brand logo', () => {
     expect(html).toContain('example-logo');
   });
 
+  it('shows the complete horizontal wordmark for light and dark surfaces', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Logo, {
+      props: { layout: 'horizontal', size: 'sm', isAnimated: false },
+    });
+    expect(html).toContain('data-logo-layout="horizontal"');
+    expect(html).toContain(`src="${horizontalLightUrl}"`);
+    expect(html).toContain(`src="${horizontalDarkUrl}"`);
+    expect(html).toContain('h-[34px]');
+    expect(html).not.toContain('aspect-square');
+    expect(html).not.toContain(circleLogoUrl);
+  });
+
   it('uses the same original in the hero without the jagged substitute', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(HeroArtFinger, { props: { showOpenSource: false } });
     expect(html).toContain(`src="${circleLogoUrl}"`);
+    expect(html).toContain(`src="${circleLogoDarkUrl}"`);
     expect(html).toContain('width="520" height="520"');
-    expect(html.match(/<img\b/g)).toHaveLength(1);
+    expect(html.match(/<img\b/g)).toHaveLength(2);
     expect(html).not.toMatch(/imgHeroArt|BurstGelb|FingerMultiStacked|pop-spin|pop-tap/);
   });
 });

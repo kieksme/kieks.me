@@ -40,7 +40,7 @@ export const BRAND_CHOICES = {
   accent: '#FF008F', // Fuchsia — accent / highlights
   highlight: '#00FFDC', // Aqua — surfaces & accents only (not text on white)
   link: '#006B5F', // Aqua Dark — links on white (WCAG AA)
-  logoVariant: 'aqua', // ⟦BESTÄTIGEN: Standard-Logovariante aqua | purple | red⟧
+  logoVariant: 'fuchsia', // horizontal wordmark: fuchsia | aqua
 } as const;
 
 export const ORGANIZATION_JSON_LD = {
