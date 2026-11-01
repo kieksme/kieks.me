@@ -1,6 +1,5 @@
 ---
 title: 'Impressum'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
 
 ## Angaben gemäß § 5 TMG

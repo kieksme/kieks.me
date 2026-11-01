@@ -1,0 +1,13 @@
+---
+import { serializeStructuredData } from '~/utils/structured-data';
+export interface Props {
+  items: Record<string, unknown>[];
+}
+const { items } = Astro.props;
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={serializeStructuredData({ '@context': 'https://schema.org', '@graph': items })}
+/>

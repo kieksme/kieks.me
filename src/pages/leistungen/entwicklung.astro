@@ -1,11 +1,38 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
+import { getSiteContent, withHighlights } from '~/utils/site-content';
+import ServiceDetail from '~/components/ui/organisms/ServiceDetail.astro';
 import ServiceHero from '~/components/widgets/ServiceHero.astro';
 import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
+
+const { serviceHighlights, serviceDetails } = await getSiteContent();
+const highlights = withHighlights(serviceHighlights['entwicklung'], [
+  {
+    title: 'Websites',
+    description: 'Schnell, barrierearm und selbst pflegbar.',
+    icon: 'tabler:world',
+  },
+  {
+    title: 'Webanwendungen',
+    description: 'Von der internen Anwendung bis zur Progressive Web App.',
+    icon: 'tabler:device-desktop',
+  },
+  {
+    title: 'Anbindung von Systemen',
+    description: 'Ihre Systeme sollen miteinander sprechen? Wir verbinden sie über Schnittstellen (APIs).',
+    icon: 'tabler:api',
+  },
+  {
+    title: 'Weiterentwicklung',
+    description:
+      'Sie haben bereits eine Software im Einsatz? Wir verbessern und erweitern sie, statt alles neu zu bauen.',
+    icon: 'tabler:building-bridge',
+  },
+]);
 
 const metadata = {
   title: 'Web- und Softwareentwicklung für den Mittelstand',
@@ -22,32 +49,7 @@ const metadata = {
     badge="Leistung: Web & Software"
   />
 
-  <Features
-    title="Was wir für Sie tun"
-    items={[
-      {
-        title: 'Websites',
-        description: 'Schnell, barrierearm und selbst pflegbar.',
-        icon: 'tabler:world',
-      },
-      {
-        title: 'Webanwendungen',
-        description: 'Von der internen Anwendung bis zur Progressive Web App.',
-        icon: 'tabler:device-desktop',
-      },
-      {
-        title: 'Anbindung von Systemen',
-        description: 'Ihre Systeme sollen miteinander sprechen? Wir verbinden sie über Schnittstellen (APIs).',
-        icon: 'tabler:api',
-      },
-      {
-        title: 'Weiterentwicklung',
-        description:
-          'Sie haben bereits eine Software im Einsatz? Wir verbessern und erweitern sie, statt alles neu zu bauen.',
-        icon: 'tabler:building-bridge',
-      },
-    ]}
-  />
+  <Features title="Was wir für Sie tun" items={highlights} />
 
   <section class="not-prose py-12">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
@@ -114,5 +116,6 @@ const metadata = {
     ]}
   />
 
+  <ServiceDetail html={serviceDetails['entwicklung']} />
   <SectionCTA title="Was soll Ihre Software können?" />
 </Layout>

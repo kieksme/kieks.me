@@ -1,7 +1,19 @@
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { HTMLAttributes, ImageMetadata } from 'astro/types';
 
+export interface PublicAuthor {
+  id: string;
+  name: string;
+  slug: string;
+  url: string;
+  bio: string;
+  contactEnabled: boolean;
+  avatar?: { url: string; alt: string; width?: number; height?: number };
+  metadata?: MetaData;
+}
+
 export interface Post {
+  authorProfile?: PublicAuthor;
   /** A unique ID number that identifies a post. */
   id: string;
 
@@ -12,7 +24,7 @@ export interface Post {
   permalink: string;
 
   /**  */
-  publishDate: Date;
+  publishDate?: Date;
   /**  */
   updateDate?: Date;
 
@@ -50,6 +62,7 @@ export interface Taxonomy {
 }
 
 export interface MetaData {
+  structuredData?: Record<string, unknown>[];
   title?: string;
   ignoreTitleTemplate?: boolean;
 
@@ -69,12 +82,15 @@ export interface MetaDataRobots {
 }
 
 export interface MetaDataImage {
+  alt?: string;
   url: string;
   width?: number;
   height?: number;
 }
 
 export interface MetaDataOpenGraph {
+  title?: string;
+  description?: string;
   url?: string;
   siteName?: string;
   images?: Array<MetaDataImage>;
@@ -83,6 +99,9 @@ export interface MetaDataOpenGraph {
 }
 
 export interface MetaDataTwitter {
+  title?: string;
+  description?: string;
+  image?: string;
   handle?: string;
   site?: string;
   cardType?: string;

@@ -1,0 +1,70 @@
+name: Editorial Preview
+
+on:
+  pull_request:
+    paths:
+      - 'preview/**'
+      - 'src/**'
+      - 'test/**'
+      - 'scripts/test-cms-static-build.mjs'
+      - 'docs/wiki/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'astro.config.ts'
+      - 'tailwind.config.js'
+      - 'vitest.config.ts'
+      - '.github/workflows/editorial-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: editorial-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASTRO_TELEMETRY_DISABLED: '1'
+      SHARP_IGNORE_GLOBAL_LIBVIPS: '1'
+      DATAHUB_PREVIEW_SECRET: synthetic-ci-preview-secret-never-use-in-production-49271
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Install pinned package manager
+        run: npm install --global pnpm@9.15.4
+      - name: Install website dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify declared shared Markdown dependency
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; import { fromMarkdown } from 'mdast-util-from-markdown'; const pkg = JSON.parse(fs.readFileSync('package.json')); if (pkg.dependencies?.['mdast-util-from-markdown'] !== '2.1.0') process.exit(1); if (fromMarkdown('Synthetic Markdown').type !== 'root') process.exit(1);"
+      - name: Install isolated preview dependencies
+        run: pnpm --dir preview install --frozen-lockfile
+      - name: Verify isolated preview dependencies
+        working-directory: preview
+        run: |
+          test -d node_modules
+          node --input-type=module -e "import fs from 'node:fs'; const pkg = JSON.parse(fs.readFileSync('./node_modules/astro/package.json')); if (pkg.version !== '5.18.2') process.exit(1); console.log('Isolated Astro', pkg.version);"
+      - name: Check website
+        run: pnpm check
+      - name: Run component and security tests
+        run: pnpm exec vitest --run
+      - name: Test production marker gate
+        run: node scripts/test-check-markers.mjs
+      - name: Build public static website without CMS credentials (includes marker gate)
+        run: pnpm build
+      - name: Audit SEO of the public static website
+        run: node scripts/test-seo-static.mjs
+      - name: Verify synthetic CMS static website
+        run: node scripts/test-cms-static-build.mjs
+      - name: Build private preview
+        run: pnpm --dir preview build
+      - name: Build protected whole-site preview (no CMS credentials)
+        run: node preview/scripts/build-site.mjs
+      - name: Test compiled private preview
+        run: node preview/scripts/smoke.mjs

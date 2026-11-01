@@ -1,6 +1,5 @@
 ---
 title: 'Datenschutzerklärung'
-layout: '~/layouts/MarkdownLayout.astro'
 ---
 
 ## 1. Verantwortlicher

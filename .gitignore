@@ -21,3 +21,12 @@ pnpm-debug.log*
 
 .astro
 .netlify
+
+.runtime/
+public/_cms-media/
+.env.*
+!.env.example
+
+**/.pnpm-store/
+
+preview/site-dist/

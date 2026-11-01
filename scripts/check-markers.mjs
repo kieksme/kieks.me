@@ -12,6 +12,8 @@ import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
 const MARKER = /⟦[^⟧]*⟧/g;
+// Dummy VAT ID that must never reach production (the real one is an open user decision).
+const DUMMY_VAT = /DE123456789(?!\d)/g;
 const TEXT_EXT = new Set(['.html', '.xml', '.txt', '.json', '.js', '.mjs', '.css', '.svg', '.webmanifest', '.md']);
 const distDir = process.argv[2] ?? 'dist';
 
@@ -36,12 +38,13 @@ function walk(dir) {
 const hits = [];
 for (const file of walk(distDir)) {
   if (!TEXT_EXT.has(extname(file))) continue;
-  const matches = readFileSync(file, 'utf8').match(MARKER);
-  if (matches) hits.push({ file: relative(process.cwd(), file), matches });
+  const body = readFileSync(file, 'utf8');
+  const matches = [...(body.match(MARKER) ?? []), ...(body.match(DUMMY_VAT) ?? [])];
+  if (matches.length) hits.push({ file: relative(process.cwd(), file), matches });
 }
 
 if (hits.length > 0) {
-  console.error('[check-markers] Open-point markers found in build output:\n');
+  console.error('[check-markers] Open-point markers or dummy VAT ID found in build output:\n');
   for (const { file, matches } of hits) {
     console.error(`  ${file}`);
     for (const m of matches) console.error(`    ${m.length > 100 ? m.slice(0, 97) + '…⟧' : m}`);

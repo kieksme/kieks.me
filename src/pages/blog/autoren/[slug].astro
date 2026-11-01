@@ -1,0 +1,54 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import AuthorContact from '~/components/blog/AuthorContact.astro';
+import BlogList from '~/components/blog/List.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsAuthors } from '~/utils/cms-content';
+import { fetchPosts } from '~/utils/blog';
+import { personData, breadcrumbs } from '~/utils/structured-data';
+import type { PublicAuthor } from '~/types';
+export async function getStaticPaths() {
+  return cmsAuthors(await loadCmsBuildContent()).map((author) => ({
+    params: { slug: author.slug },
+    props: { author },
+  }));
+}
+interface Props {
+  author: PublicAuthor;
+}
+const { author } = Astro.props;
+const posts = (await fetchPosts()).filter((post) => post.authorProfile?.id === author.id);
+const metadata = {
+  ...author.metadata,
+  title: author.metadata?.title || author.name,
+  structuredData: [
+    personData(author),
+    breadcrumbs([
+      { name: 'Startseite', url: '/' },
+      { name: 'Blog', url: '/blog' },
+      { name: author.name, url: author.url },
+    ]),
+  ],
+};
+---
+
+<PageLayout metadata={metadata}>
+  <section class="mx-auto max-w-4xl px-6 py-16">
+    <h1 class="text-4xl font-bold font-heading">{author.name}</h1>
+    {
+      author.avatar && (
+        <img
+          class="mt-6 rounded-full w-32 h-32 object-cover"
+          src={author.avatar.url}
+          alt={author.avatar.alt}
+          width="128"
+          height="128"
+        />
+      )
+    }
+    <div class="prose dark:prose-invert my-8" set:html={author.bio} />
+    <h2 class="text-2xl font-bold mb-8">Beiträge von {author.name}</h2>
+    {posts.length ? <BlogList posts={posts} /> : <p>Noch keine veröffentlichten Beiträge.</p>}
+    {author.contactEnabled && <AuthorContact authorSlug={author.slug} authorName={author.name} />}
+  </section>
+</PageLayout>

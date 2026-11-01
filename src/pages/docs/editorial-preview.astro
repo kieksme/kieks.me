@@ -1,0 +1,90 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import EditorialContent from '~/components/editorial/EditorialContent.astro';
+const richText = {
+  root: {
+    type: 'root',
+    children: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'text',
+            text: 'Strukturierte Inhalte, originale Gestaltung: diese Demo enthält ausschließlich erfundene Beispiele.',
+            format: 0,
+          },
+        ],
+      },
+      { type: 'heading', tag: 'h2', children: [{ type: 'text', text: 'Inhalte mit Charakter', format: 0 }] },
+      {
+        type: 'paragraph',
+        children: [
+          { type: 'text', text: 'Fett, ', format: 1 },
+          { type: 'text', text: 'kursiv und gut lesbar.', format: 2 },
+        ],
+      },
+    ],
+  },
+};
+---
+
+<Layout metadata={{ title: 'EditorialContent · Komponentendemo', robots: { index: false, follow: false } }}>
+  <div class="max-w-6xl mx-auto px-5 pt-10">
+    <p>Komponentendemo · synthetische Inhalte</p>
+    <p>
+      <code>EditorialContent</code> nimmt <code>collection</code> und ein Website-Dokument als <code>document</code> entgegen.
+      Der private Live-Renderer ist ein separater Dienst und gehört nicht zu dieser statischen Demo.
+    </p>
+  </div>
+  <EditorialContent
+    collection="pages"
+    document={{
+      title: 'Inhalte, die knallen.',
+      summary: 'Eine sichere Vorschau für eure Redaktion.',
+      contentRichText: richText,
+      sections: [
+        {
+          heading: 'Eine klare Struktur',
+          body: 'Seiten, Leistungen, Team, FAQ und MCP-Projekte werden in derselben Designsprache dargestellt.',
+        },
+      ],
+    }}
+  />
+  <EditorialContent
+    collection="faqs"
+    document={{
+      question: 'Wann wird eine Änderung veröffentlicht?',
+      answer: 'Erst nach Freigabe und einem neuen Build der öffentlichen Website.',
+    }}
+  />
+  <EditorialContent
+    collection="posts"
+    document={{
+      title: 'Ein erfundener Blogartikel',
+      excerpt: 'So sieht ein Artikel in der geschützten Redaktion aus.',
+      publishedAt: '2026-10-31T00:00:00.000Z',
+      author: { id: 1, name: 'Demo-Autorin' },
+      category: 'Engineering',
+      tags: [{ tag: 'Astro' }, { tag: 'CMS' }],
+      contentRichText: richText,
+    }}
+  />
+  <EditorialContent
+    collection="authors"
+    document={{
+      name: 'Demo-Autorin',
+      bioRichText: richText,
+      contactEnabled: true,
+      posts: [{ id: 2, title: 'Ein erfundener Blogartikel', excerpt: 'Synthetische Artikelzuordnung.' }],
+    }}
+  />
+  <EditorialContent
+    collection="pages"
+    document={{
+      title: 'Rechtstext – Beispiel',
+      pageKind: 'legal',
+      contentMarkdown:
+        '## Beispielabschnitt\n\n<address>\nErfundene Firma<br>\nDemo-Straße 1<br>\n</address>\n\nNur eine Komponentendemo, kein veröffentlichter Rechtstext.',
+    }}
+  />
+</Layout>

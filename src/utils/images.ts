@@ -63,6 +63,8 @@ export const adaptOpenGraphImages = async (
 
   const adaptedImages = await Promise.all(
     images.map(async (image) => {
+      if (typeof image?.url === 'string' && image.url.startsWith('/_cms-media/'))
+        return { ...image, url: String(new URL(image.url, astroSite)) };
       if (image?.url) {
         const resolvedImage = (await findImage(image.url)) as ImageMetadata | string | undefined;
         if (!resolvedImage) {
@@ -91,6 +93,7 @@ export const adaptOpenGraphImages = async (
 
         if (typeof _image === 'object') {
           return {
+            ...image,
             url: 'src' in _image && typeof _image.src === 'string' ? String(new URL(_image.src, astroSite)) : '',
             width: 'width' in _image && typeof _image.width === 'number' ? _image.width : undefined,
             height: 'height' in _image && typeof _image.height === 'number' ? _image.height : undefined,
