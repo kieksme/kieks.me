@@ -31,6 +31,10 @@ const metadata = {
 const { services, homeProjects: projects, faqsLeft, faqsRight, team, hero } = await getSiteContent();
 const portraits = { andre: avatarAndre, thomas: avatarThomas } as const;
 const teamMembers = team.filter((member) => Object.hasOwn(portraits, member.slug));
+// The open-decision hint stays until at least one member has a real role or biography (not the ⟦…⟧ placeholder).
+const teamTextsMissing = !teamMembers.some(
+  (member) => member.bio || member.bioHtml || (member.role && !member.role.includes('⟦'))
+);
 if (teamMembers.length !== team.length) console.warn('Team members without a bundled portrait are not rendered yet.');
 ---
 
@@ -209,9 +213,13 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
           Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
         </Lead>
-        <Note label="⟦PLATZHALTER D10⟧">
-          Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
-        </Note>
+        {
+          teamTextsMissing && (
+            <Note label="⟦PLATZHALTER D10⟧">
+              Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
+            </Note>
+          )
+        }
       </div>
       <div class="flex flex-col sm:flex-row gap-10">
         {

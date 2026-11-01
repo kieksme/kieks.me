@@ -46,6 +46,8 @@ globalThis.fetch = async (input,init) => {
       PAYLOAD_URL: 'https://cms-fixture.invalid',
       PAYLOAD_BUILD_API_KEY: secret,
       PAYLOAD_SITE_CONTENT: 'true',
+      // Make preview-only notes visible so their presence/absence can be asserted.
+      PUBLIC_SHOW_NOTES: 'true',
       NODE_OPTIONS: `${process.env.NODE_OPTIONS || ''} --import=${pathToFileURL(hook).href}`,
       ASTRO_TELEMETRY_DISABLED: '1',
     },
@@ -134,6 +136,7 @@ globalThis.fetch = async (input,init) => {
   assert.ok(mcpHtml.includes('<strong>Synthetic rich description</strong>'), 'MCP rich description must render');
   assert.ok(homeHtml.includes('<strong>Synthetic rich bio</strong>'), 'Team rich biography must render');
   assert.ok(!homeHtml.includes('bio()'), 'Embedded script must be dropped');
+  assert.ok(!homeHtml.includes('Rollen und Kurztexte fehlen'), 'Team hint must disappear once CMS texts exist');
   const cloud = await readFile('dist/leistungen/cloud-devops/index.html', 'utf8');
   assert.ok(
     cloud.includes('<h2>Synthetic Detail Heading</h2>') && cloud.includes('<strong>Synthetic detail text</strong>'),
@@ -160,7 +163,7 @@ globalThis.fetch = async (input,init) => {
     }
   }
   await audit('dist');
-  const fallbackEnv = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' };
+  const fallbackEnv = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', PUBLIC_SHOW_NOTES: 'true' };
   delete fallbackEnv.PAYLOAD_URL;
   delete fallbackEnv.PAYLOAD_BUILD_API_KEY;
   const fallback = spawnSync(process.execPath, ['node_modules/astro/astro.js', 'build'], {
@@ -176,6 +179,10 @@ globalThis.fetch = async (input,init) => {
   }
   assert.match(await readFile('dist/blog/index.html', 'utf8'), /Hier erscheinen bald unsere ersten Beiträge/);
   assert.match(await readFile('dist/impressum/index.html', 'utf8'), /Hardenbergstraße 48/);
+  assert.ok(
+    (await readFile('dist/index.html', 'utf8')).includes('Rollen und Kurztexte fehlen'),
+    'Without CMS team texts the open-decision hint must stay visible'
+  );
   assert.ok(!(await readFile('dist/impressum/index.html', 'utf8')).includes('Synthetic Legal'));
   for (const slug of ['impressum', 'datenschutz', 'agb']) {
     const html = await readFile(`dist/${slug}/index.html`, 'utf8');
