@@ -7,7 +7,7 @@ import Button from '~/components/ui/atoms/Button.astro';
 import Halftone from '~/components/ui/atoms/Halftone.astro';
 import Note from '~/components/ui/atoms/Note.astro';
 import TextLink from '~/components/ui/atoms/TextLink.astro';
-import { BOOKING_URL, CONTACT_RESPONSE_DAYS, HAS_BOOKING_URL } from '~/config/site';
+import { BOOKING_URL, HAS_BOOKING_URL } from '~/config/site';
 
 const metadata = {
   title: 'Kontakt',
@@ -37,7 +37,7 @@ const field =
         kontakt
       </Heading>
       <Lead size="l" class="!text-[color:var(--hero-text)]">
-        Schreiben Sie uns, wir melden uns innerhalb von {CONTACT_RESPONSE_DAYS} Werktagen. Oder buchen Sie direkt ein Erstgespräch.
+        Schreiben Sie uns, wir melden uns bei Ihnen. Oder buchen Sie direkt ein Erstgespräch.
       </Lead>
       {
         HAS_BOOKING_URL ? (

@@ -73,7 +73,7 @@ export const fallbackFaqsLeft: SiteFaqView[] = [
   },
   {
     title: 'Für welche Unternehmen arbeiten Sie?',
-    body: 'Vor allem für mittelständische Unternehmen und IT-Dienstleister, die ihre Software, ihre Systemlandschaft oder ihren Support pragmatisch verbessern möchten. ⟦BESTÄTIGEN: Zielgruppe⟧',
+    body: 'Vor allem für mittelständische Unternehmen und IT-Dienstleister, die ihre Software, ihre Systemlandschaft oder ihren Support pragmatisch verbessern möchten.',
     color: 'fuchsia' as const,
   },
   {
@@ -83,7 +83,7 @@ export const fallbackFaqsLeft: SiteFaqView[] = [
   },
   {
     title: 'Wie lange dauert ein Projekt?',
-    body: 'Das hängt vom Umfang ab. Eine Website setzen wir in der Regel in 4 bis 8 Wochen um ⟦BESTÄTIGEN: bisherige Angabe⟧. Für größere Vorhaben nennen wir Ihnen nach dem Erstgespräch einen realistischen Zeitrahmen.',
+    body: 'Das hängt vom Umfang ab. Eine Website setzen wir in der Regel in 4 bis 8 Wochen um. Für größere Vorhaben nennen wir Ihnen nach dem Erstgespräch einen realistischen Zeitrahmen.',
     color: 'purple' as const,
   },
 ];
@@ -91,17 +91,17 @@ export const fallbackFaqsLeft: SiteFaqView[] = [
 export const fallbackFaqsRight: SiteFaqView[] = [
   {
     title: 'Was kostet das?',
-    body: 'Auch das hängt vom Umfang ab. Sie erhalten ein schriftliches Angebot, bevor Kosten entstehen. Eine Website kostet in der Regel zwischen 1.000 und 10.000 Euro ⟦BESTÄTIGEN: bisherige Angabe, noch aktuell?⟧. Alle Preise verstehen sich netto zuzüglich der gesetzlichen Umsatzsteuer.',
+    body: 'Auch das hängt vom Umfang ab. Sie erhalten ein schriftliches Angebot, bevor Kosten entstehen. Eine Website kostet in der Regel zwischen 1.000 und 10.000 Euro. Alle Preise verstehen sich netto zuzüglich der gesetzlichen Umsatzsteuer.',
     color: 'aqua' as const,
   },
   {
     title: 'Wer pflegt die Lösung danach?',
-    body: 'Ganz wie Sie möchten. Sie können selbst weitermachen, wir schulen Ihr Team dafür. Oder wir übernehmen die Pflege im Rahmen eines Wartungsvertrags ⟦BESTÄTIGEN: Wartungsangebot existiert⟧.',
+    body: 'Ganz wie Sie möchten. Sie können selbst weitermachen, wir schulen Ihr Team dafür. Oder wir übernehmen die Pflege im Rahmen eines Wartungsvertrags.',
     color: 'fuchsia' as const,
   },
   {
     title: 'Was passiert, wenn Sie nicht zufrieden sind?',
-    body: 'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab. ⟦BESTÄTIGEN: Einschränkung gegenüber unbegrenztem Nachbesserungsversprechen⟧',
+    body: 'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab.',
     color: 'yellow' as const,
   },
 ];
@@ -128,7 +128,7 @@ export const fallbackMcpServers: SiteMcpServerView[] = [
     description:
       'MCP-Server für die Hashnode-GraphQL-API: Entwürfe anlegen, Beiträge veröffentlichen, den eigenen Blog verwalten. Hinweis laut README: Die Hashnode-API erfordert seit Mai 2026 einen Pro-Plan.',
     npm: '@kieksme/hashnode-mcp',
-    license: '⟦PLATZHALTER: auf GitHub keine Lizenz hinterlegt⟧',
+    license: 'Keine Lizenz hinterlegt',
     url: 'https://github.com/kieksme/mcp-hashnode',
   },
   {

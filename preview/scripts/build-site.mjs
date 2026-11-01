@@ -4,7 +4,8 @@ import { cp, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const env = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1' };
+// The private preview intentionally renders the design notes (open points); the marker gate only guards public builds.
+const env = { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', PUBLIC_SHOW_NOTES: 'true' };
 for (const key of ['PAYLOAD_URL', 'PAYLOAD_BUILD_API_KEY', 'DATAHUB_PREVIEW_SECRET', 'COOLIFY_TOKEN']) delete env[key];
 const result = spawnSync(process.execPath, ['node_modules/astro/astro.js', 'build'], {
   cwd: root,

@@ -54,7 +54,9 @@ jobs:
         run: pnpm check
       - name: Run component and security tests
         run: pnpm exec vitest --run
-      - name: Build public static website without CMS credentials
+      - name: Test production marker gate
+        run: node scripts/test-check-markers.mjs
+      - name: Build public static website without CMS credentials (includes marker gate)
         run: pnpm build
       - name: Audit SEO of the public static website
         run: node scripts/test-seo-static.mjs
