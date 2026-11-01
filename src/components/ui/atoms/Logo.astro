@@ -1,35 +1,96 @@
 ---
 import circleLogo from '~/assets/brand/logos/kieks.me-single-circle.svg?url';
+import circleLogoDark from '~/assets/brand/logos/kieks.me-single-circle-dark.svg?url';
+import horizontalLight from '~/assets/brand/logos/kieks.me-horizontal-fuchsia-light.svg?url';
+import horizontalDark from '~/assets/brand/logos/kieks.me-horizontal-fuchsia-dark.svg?url';
 
 export interface Props {
-  /** The approved full-colour logo stays identical in every theme. */
+  /** `mark` uses the approved navy disc on light surfaces. On dark surfaces the disc stays open so the background pattern shows through, with an aqua ring. Horizontal swaps light and dark wordmarks. */
   variant?: 'auto' | 'light' | 'dark';
   size?: 'sm' | 'md' | 'hero';
+  /** `mark` is the square finger badge. `horizontal` is the complete wordmark. */
+  layout?: 'mark' | 'horizontal';
   isAnimated?: boolean;
   class?: string;
 }
 
-const { variant = 'auto', size = 'md', isAnimated = true, class: className = '' } = Astro.props;
-const sizes = {
+const {
+  variant = 'auto',
+  size = 'md',
+  layout = 'mark',
+  isAnimated = true,
+  class: className = '',
+} = Astro.props;
+const markSizes = {
   sm: { dimension: 44, class: 'h-11 w-11' },
   md: { dimension: 56, class: 'h-14 w-14' },
   hero: { dimension: 520, class: 'h-auto w-full max-w-[520px]' },
 };
-const dimensions = sizes[size];
+const wordmarkSizes = {
+  sm: { width: 113, height: 34, class: 'h-[34px] w-auto max-w-full' },
+  md: { width: 225, height: 44, class: 'h-11 w-auto max-w-full' },
+  hero: { width: 500, height: 150, class: 'h-auto w-full max-w-[520px]' },
+};
+const dimensions = markSizes[size];
+const wordmark = wordmarkSizes[size];
 ---
 
 <span
   class:list={['brand-logo inline-flex shrink-0 items-center', { 'brand-logo--animated': isAnimated }, className]}
   data-logo-variant={variant}
+  data-logo-layout={layout}
 >
-  <img
-    src={circleLogo}
-    alt="kieks.me"
-    width={dimensions.dimension}
-    height={dimensions.dimension}
-    class:list={['aspect-square object-contain', dimensions.class]}
-    decoding="async"
-  />
+  {
+    layout === 'mark' ? (
+      <>
+        {(variant === 'auto' || variant === 'light') && (
+          <img
+            src={circleLogo}
+            alt="kieks.me"
+            width={dimensions.dimension}
+            height={dimensions.dimension}
+            class:list={['aspect-square object-contain', dimensions.class, variant === 'auto' && 'dark:hidden']}
+            decoding="async"
+          />
+        )}
+        {(variant === 'auto' || variant === 'dark') && (
+          <img
+            src={circleLogoDark}
+            alt={variant === 'dark' ? 'kieks.me' : ''}
+            aria-hidden={variant === 'auto' ? 'true' : undefined}
+            width={dimensions.dimension}
+            height={dimensions.dimension}
+            class:list={['aspect-square object-contain', dimensions.class, variant === 'auto' && 'hidden dark:block']}
+            decoding="async"
+          />
+        )}
+      </>
+    ) : (
+      <>
+        {(variant === 'auto' || variant === 'light') && (
+          <img
+            src={horizontalLight}
+            alt="kieks.me"
+            width={wordmark.width}
+            height={wordmark.height}
+            class:list={['object-contain', wordmark.class, variant === 'auto' && 'dark:hidden']}
+            decoding="async"
+          />
+        )}
+        {(variant === 'auto' || variant === 'dark') && (
+          <img
+            src={horizontalDark}
+            alt={variant === 'dark' ? 'kieks.me' : ''}
+            aria-hidden={variant === 'auto' ? 'true' : undefined}
+            width={wordmark.width}
+            height={wordmark.height}
+            class:list={['object-contain', wordmark.class, variant === 'auto' && 'hidden dark:block']}
+            decoding="async"
+          />
+        )}
+      </>
+    )
+  }
 </span>
 
 <style>

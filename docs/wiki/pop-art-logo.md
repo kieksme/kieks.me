@@ -6,9 +6,15 @@ The square image is contained without clipping, masking, rotation or deformation
 The former jagged hero treatment is not used as a brand logo.
 
 `Logo.astro` supports `variant` (auto/light/dark), `size` (sm/md/hero),
-`isAnimated` (default true) and `class`. The full-colour artwork is intentionally
-identical in all themes. The optional entrance animates opacity only and is
-disabled for `prefers-reduced-motion: reduce`.
+`layout` (`mark` or `horizontal`), `isAnimated` (default true) and `class`.
+`mark` keeps the approved navy disc on light surfaces. On dark surfaces
+(`variant="dark"`, or `auto` while the page is in dark mode) the same finger
+uses `kieks.me-single-circle-dark.svg`. That disc has no solid fill, so the
+hero halftone shows through, and an aqua ring (`#00FFDC`, 16px) keeps the
+circle visible on navy. `horizontal`
+shows the complete fuchsia wordmark: the light asset on light surfaces and the
+dark asset when `variant` is `dark` or the page is in dark mode. The optional
+entrance animates opacity only and is disabled for `prefers-reduced-motion: reduce`.
 
 `HeroArtFinger.astro` retains its existing interface for callers and delegates
 the artwork to `Logo` at hero size. Its separate open-source sticker remains

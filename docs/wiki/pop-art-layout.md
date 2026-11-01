@@ -26,7 +26,9 @@ shadow values continue to take precedence.
 
 Mobile service cards use 40 px numbers, 20 px titles, 3 px number shadows and
 6 px card shadows. Desktop cards retain 80 px numbers, 24 px titles and 8 px
-card shadows. Hover shadows preserve the selected accent color.
+card shadows. Card bodies keep the surface background. Hover and keyboard
+focus turn the offset shadow pink (`--pop-fuchsia`) and leave that background
+unchanged.
 
 The mobile attitude band uses three stacked 26/32 px statements. Its one
 semantic paragraph remains available to assistive technology at desktop sizes;

@@ -80,6 +80,10 @@ describe('Pop-Art layout components', () => {
     expect(html).toContain('href="/agent-hub"');
     expect(html).toContain('Mehr zum Agent-Hub');
     expect(html).toContain('--pop-card-shadow-color: var(--pop-fuchsia)');
+    expect(html).toContain('pop-service-card__body');
+    expect(html).toContain('color: var(--text-primary)');
+    expect(html).toContain('color: var(--text-secondary)');
+    expect(html).not.toContain('--service-body-bg');
   });
 
   it('keeps one semantic slogan and hides desktop animation duplicates from assistive technology', async () => {
