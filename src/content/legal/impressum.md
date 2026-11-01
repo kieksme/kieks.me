@@ -19,6 +19,9 @@ André Lademann, Thomas Schöne
 E-Mail: <kontakt@kieks.me><br>
 Telefon: [+49 170 7353 067](tel:+491707353067)
 
+**Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:**<br>
+DE452741849
+
 **Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:**<br>
 André Lademann, Thomas Schöne
 Hardenbergstraße 48, 04275 Leipzig, Deutschland
