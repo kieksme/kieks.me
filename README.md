@@ -1,5 +1,7 @@
 # kieks.me
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bf38a241-46fb-42ad-8911-0a091de02a22/deploy-status)](https://app.netlify.com/projects/kieksme/deploys)
+
 Company website of **kieks.me GbR** (Leipzig): software, AI/MCP, cloud & DevOps, consulting.
 
 Built with [Astro](https://astro.build/) 5, hosted on Netlify.
