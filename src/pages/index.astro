@@ -19,8 +19,6 @@ import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
 import { getSiteContent } from '~/utils/site-content';
 import avatarAndre from '~/assets/pop/654-1674_team__imgAndre1.png';
 import avatarThomas from '~/assets/pop/654-1674_team__imgThomas.png';
-import cspBurst from '~/assets/pop/654-1669_csp-art__imgBurst.svg?url';
-
 const metadata = {
   title: 'kieks.me – AI Consultants für Skills, MCP und Agent-Hubs | Leipzig',
   description:
@@ -100,7 +98,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
             Claim „Ihre Software. Ihr Code. Unsere Erfahrung.“ als Unternehmens-Claim freigeben (D2).
           </Note>
         </div>
-        <HeroArtFinger class="lg:mt-10" />
+        <HeroArtFinger class="lg:mt-10" showOpenSource={false} />
       </div>
     </div>
   </section>
@@ -181,17 +179,31 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
           Ziel-URL: kieks.me/csp oder csp.kieks.me — siehe Entscheidung D4.
         </Note>
       </div>
-      <div class="relative justify-self-center w-full max-w-[400px]">
-        <img
-          src={cspBurst}
-          alt=""
-          class="motion-safe:pop-spin-slow w-full h-auto"
-          width="400"
-          height="400"
-          decoding="async"
-        />
+      <div class="relative justify-self-center w-full max-w-[400px] aspect-square">
+        <div class="motion-safe:pop-spin-slow pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+          <svg
+            class="absolute inset-0 z-0 h-full w-full overflow-visible"
+            viewBox="0 0 400 400"
+            style="transform: translate(3%, 3%);"
+          >
+            <path
+              d="M200 0L237.27 60.9067L300 26.7949L301.823 98.1766L373.205 100L339.093 162.73L400 200L339.093 237.27L373.205 300L301.823 301.823L300 373.205L237.27 339.093L200 400L162.73 339.093L100 373.205L98.1766 301.823L26.7949 300L60.9067 237.27L0 200L60.9067 162.73L26.7949 100L98.1766 98.1766L100 26.7949L162.73 60.9067L200 0Z"
+              fill="#FF008F"
+              stroke="#1E2A45"
+              stroke-width="10"
+            />
+          </svg>
+          <svg class="absolute inset-0 z-10 h-full w-full overflow-visible" viewBox="0 0 400 400">
+            <path
+              d="M200 0L237.27 60.9067L300 26.7949L301.823 98.1766L373.205 100L339.093 162.73L400 200L339.093 237.27L373.205 300L301.823 301.823L300 373.205L237.27 339.093L200 400L162.73 339.093L100 373.205L98.1766 301.823L26.7949 300L60.9067 237.27L0 200L60.9067 162.73L26.7949 100L98.1766 98.1766L100 26.7949L162.73 60.9067L200 0Z"
+              fill="#00FFDC"
+              stroke="#1E2A45"
+              stroke-width="10"
+            />
+          </svg>
+        </div>
         <div
-          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-heading font-black lowercase leading-none"
+          class="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center font-heading font-black lowercase leading-none"
           style="transform: translate(-50%, -50%) rotate(6deg); color: var(--pop-navy);"
         >
           <p class="text-[clamp(1.75rem,4vw,2.75rem)]">open source</p>
