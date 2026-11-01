@@ -1,63 +1,72 @@
 ---
-import '@fontsource-variable/inter';
-
-// 'DM Sans'
-// Nunito
-// Dosis
-// Outfit
-// Roboto
-// Literata
-// 'IBM Plex Sans'
-// Karla
-// Poppins
-// 'Fira Sans'
-// 'Libre Franklin'
-// Inconsolata
-// Raleway
-// Oswald
-// 'Space Grotesk'
-// Urbanist
+import '@fontsource/hanken-grotesk/400.css';
+import '@fontsource/hanken-grotesk/700.css';
+import '@fontsource/hanken-grotesk/800.css';
+import '@fontsource/hanken-grotesk/900.css';
+import '@fontsource/source-sans-3/400.css';
+import '@fontsource/source-sans-3/600.css';
+import '~/assets/styles/brand-colors.css';
+import '~/assets/styles/pop-motion.css';
 ---
 
 <style is:inline>
   :root {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
+    --aw-font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+    --aw-font-serif: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+    --aw-font-heading: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
-
-    --aw-color-text-heading: rgb(0 0 0);
-    --aw-color-text-default: rgb(16 16 16);
-    --aw-color-text-muted: rgb(16 16 16 / 66%);
-    --aw-color-bg-page: rgb(255 255 255);
-
-    --aw-color-bg-page-dark: rgb(3 6 32);
+    --aw-color-primary: #1e2a45;
+    --aw-color-secondary: #2f4169;
+    --aw-color-accent: #ff008f;
+    --aw-color-text-heading: var(--text-primary);
+    --aw-color-text-default: var(--text-primary);
+    --aw-color-text-muted: var(--text-secondary);
+    --aw-color-bg-page: var(--page-bg);
+    --aw-color-bg-page-dark: #12151c;
+    --aw-color-link: var(--text-link);
+    --aw-color-link-hover: #ff008f;
 
     ::selection {
-      background-color: lavender;
+      background-color: rgb(0 255 220 / 40%);
     }
   }
 
   .dark {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
-
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
-
-    --aw-color-text-heading: rgb(247, 248, 248);
-    --aw-color-text-default: rgb(229 236 246);
-    --aw-color-text-muted: rgb(229 236 246 / 66%);
-    --aw-color-bg-page: rgb(3 6 32);
+    --aw-color-primary: #00bfa5;
+    --aw-color-secondary: #00ffdc;
+    --aw-color-accent: #ff008f;
+    --aw-color-text-heading: var(--text-primary);
+    --aw-color-text-default: var(--text-primary);
+    --aw-color-text-muted: var(--text-secondary);
+    --aw-color-bg-page: var(--page-bg);
+    --aw-color-link: var(--text-link);
+    --aw-color-link-hover: #00ffdc;
 
     ::selection {
-      background-color: black;
-      color: snow;
+      background-color: rgb(255 0 143 / 45%);
+      color: #fff;
     }
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+  }
+
+  html {
+    background-color: var(--page-bg);
+  }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    font-family: var(--aw-font-sans);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--pop-fuchsia);
+    outline-offset: 3px;
   }
 </style>

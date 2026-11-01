@@ -1,0 +1,138 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceHero from '~/components/widgets/ServiceHero.astro';
+import SectionCTA from '~/components/widgets/SectionCTA.astro';
+import Placeholder from '~/components/common/Placeholder.astro';
+import { getSiteContent } from '~/utils/site-content';
+
+const metadata = {
+  title: 'Open-Source-MCP-Server von kieks.me',
+  description:
+    'MCP-Server von kieks.me für Contabo, Swetrix, Hashnode, Listmonk, Balena und Enhancv. Open Source auf GitHub, als npm-Pakete für Claude, Cursor und VS Code.',
+};
+
+const { mcpServers: servers, otherProjects } = await getSiteContent();
+---
+
+<Layout metadata={metadata}>
+  <ServiceHero
+    title="Unsere MCP-Server: Open Source und einsatzbereit."
+    subtitle="Mit diesen Servern steuern KI-Assistenten wie Claude, Cursor oder VS Code bekannte Dienste direkt. Der Code liegt öffentlich auf GitHub."
+    badge="Projekte · MCP-Server"
+  />
+
+  <section class="not-prose py-12 md:py-16" style="background: var(--pop-page-bg);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <p class="text-sm mb-8" style="color: var(--pop-text-secondary);">
+        Beschreibungen aus den jeweiligen Repo-READMEs (Stand 21.10.2026), übersetzt. Vor Veröffentlichung kurz
+        gegenprüfen.
+      </p>
+      <div class="grid gap-6 md:grid-cols-2">
+        {
+          servers.map((server) => (
+            <article class="pop-card p-6">
+              <h2 class="font-heading text-xl font-extrabold lowercase" style="color: var(--pop-text-primary);">
+                {server.name}
+              </h2>
+              {server.descriptionHtml ? (
+                <div
+                  class="cms-rich mt-3"
+                  style="color: var(--pop-text-secondary);"
+                  set:html={server.descriptionHtml}
+                />
+              ) : (
+                <p class="mt-3" style="color: var(--pop-text-secondary);">
+                  {server.description}
+                </p>
+              )}
+              <dl class="mt-4 text-sm space-y-1">
+                <div>
+                  <dt class="inline font-semibold" style="color: var(--pop-text-primary);">
+                    npm:
+                  </dt>
+                  <dd class="inline ml-1 font-mono" style="color: var(--pop-text-secondary);">
+                    {server.npm}
+                  </dd>
+                </div>
+                <div>
+                  <dt class="inline font-semibold" style="color: var(--pop-text-primary);">
+                    Lizenz:
+                  </dt>
+                  <dd class="inline ml-1" style="color: var(--pop-text-secondary);">
+                    {server.license}
+                  </dd>
+                </div>
+              </dl>
+              <a
+                href={server.url}
+                class="inline-block mt-4 font-heading font-bold underline-offset-4 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Auf GitHub ansehen →
+              </a>
+            </article>
+          ))
+        }
+      </div>
+      <Placeholder label="⟦PLATZHALTER D14⟧" class="mt-6">
+        Lizenz für mcp-hashnode auf GitHub hinterlegen.
+      </Placeholder>
+    </div>
+  </section>
+
+  <section class="not-prose py-12 md:py-16 bg-navy-50 dark:bg-navy/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy dark:text-white">
+        Weitere Open-Source-Projekte
+      </h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {
+          otherProjects.map((project) => (
+            <article>
+              <h3 class="font-heading text-lg font-bold text-navy dark:text-white">{project.name}</h3>
+              {project.descriptionHtml ? (
+                <div class="cms-rich mt-2 text-muted" set:html={project.descriptionHtml} />
+              ) : (
+                <p class="mt-2 text-muted">{project.description}</p>
+              )}
+              <div class="mt-3 flex flex-col gap-1 text-sm">
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="underline-offset-4 hover:underline"
+                >
+                  GitHub →
+                </a>
+                {project.extra && (
+                  <a
+                    href={project.extra}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline-offset-4 hover:underline"
+                  >
+                    Dokumentation →
+                  </a>
+                )}
+                {project.page && (
+                  <a href={project.page} class="underline-offset-4 hover:underline">
+                    Seite /csp →
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <SectionCTA
+    title="Sie brauchen einen MCP-Server für Ihr System?"
+    text="Wir entwickeln ihn für Sie, nach denselben Standards wie unsere eigenen Server."
+  />
+  <div class="text-center pb-12 -mt-4">
+    <a href="/leistungen/ki-mcp" class="underline-offset-4 hover:underline">Mehr zu KI & MCP →</a>
+  </div>
+</Layout>

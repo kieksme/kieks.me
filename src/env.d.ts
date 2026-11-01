@@ -3,3 +3,12 @@
 /// <reference types="astro/client" />
 /// <reference types="vite/client" />
 /// <reference types="../vendor/integration/types.d.ts" />
+
+interface SwetrixClient {
+  init: (projectId: string) => void;
+  trackViews: () => void;
+}
+
+interface Window {
+  swetrix?: SwetrixClient;
+}

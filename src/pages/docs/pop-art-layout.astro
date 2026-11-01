@@ -1,0 +1,65 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import ServiceCard from '~/components/ui/molecules/ServiceCard.astro';
+import MarqueeBand from '~/components/ui/organisms/MarqueeBand.astro';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
+
+const metadata = { title: 'Pop-Art layout components', robots: { index: false, follow: false } };
+---
+
+<Layout metadata={metadata}>
+  <section class="relative overflow-hidden px-5 md:px-20 py-14 md:py-24" style="background: var(--hero-bg);">
+    <div class="relative z-10 max-w-[760px]">
+      <p class="mb-6 font-heading font-bold">Component documentation · resize to 390 or 1440 pixels</p>
+      <Heading level={1} size="xl" color="var(--hero-heading)"
+        >ihre software.<br />ihr code.<br />unsere erfahrung.</Heading
+      >
+      <Lead class="mt-7" tone="onColor">The large lead uses 18/28 pixels on mobile and 22/32 on desktop.</Lead>
+    </div>
+    <Halftone width={390} height={300} pitch={16} origin="top" d0={9} k={0.03} class="right-0 top-0" />
+  </section>
+  <ZigzagDivider />
+  <MarqueeBand />
+  <section class="px-5 md:px-20 py-14 md:py-24" style="background: var(--page-bg);">
+    <Heading level={2}>responsive service cards</Heading>
+    <Lead class="mt-6"
+      >ServiceCard accepts a number, title, description, destination, link text and accent variants.</Lead
+    >
+    <div class="grid gap-7 md:grid-cols-2 mt-8 max-w-[820px]">
+      <ServiceCard
+        num="01"
+        title="KI & MCP"
+        description="Structured connections to tools and data."
+        href="/leistungen/ki-mcp"
+        linkText="Explore KI & MCP"
+        headColor="aqua"
+      />
+      <ServiceCard
+        num="05"
+        title="Agent-Hub"
+        description="Additional services retain the same responsive layout."
+        href="/agent-hub"
+        linkText="Explore Agent-Hub"
+        headColor="fuchsia"
+        shadow="fuchsia"
+        numShadow="aqua"
+      />
+    </div>
+    <p class="mt-8">
+      Heading supports level, size, color and optional explicit shadow values. Divider height is responsive unless
+      explicitly set. MarqueeBand accepts sticker and text; middle-dot-separated statements stack on mobile.
+    </p>
+  </section>
+  <ZigzagDivider top="var(--page-bg)" bottom="var(--pop-fuchsia)" />
+  <CtaSection
+    title="lernen wir uns kennen"
+    text="Decorative halftone stays behind the content. Original flame exports preserve their desktop and mobile proportions."
+    ctaText="Kontakt"
+    ctaHref="/kontakt"
+    showEmailLink={true}
+  />
+</Layout>

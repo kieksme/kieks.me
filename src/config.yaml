@@ -9,26 +9,24 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: kieks.me 👉
-    template: '%s 👉 kieks.me'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: kieks.me – Software, KI und Cloud für den Mittelstand | Leipzig
+    template: '%s | kieks.me'
+  description: 'kieks.me GbR aus Leipzig: Web- und Softwareentwicklung, KI-Anbindung über MCP, Cloud und DevOps sowie Beratung. Offen, ehrlich und mit sauberer Übergabe.'
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: 👉 kieks.me
+    site_name: kieks.me
     images:
       - url: '~/assets/images/default.png'
         width: 1200
         height: 628
     type: website
   twitter:
-    handle: '@onwidget'
-    site: '@onwidget'
     cardType: summary_large_image
 
 i18n:
-  language: en
+  language: de
   textDirection: ltr
 
 apps:
@@ -38,29 +36,29 @@ apps:
 
     post:
       isEnabled: true
-      permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
+      permalink: '/blog/%slug%'
       robots:
         index: true
 
     list:
       isEnabled: true
-      pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
+      pathname: 'blog'
       robots:
         index: true
 
     category:
       isEnabled: true
-      pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
+      pathname: 'category'
       robots:
         index: true
 
     tag:
       isEnabled: true
-      pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
+      pathname: 'tag'
       robots:
-        index: false
+        index: true
 
-    isRelatedPostsEnabled: true
+    isRelatedPostsEnabled: false
     relatedPostsCount: 4
 
 analytics:

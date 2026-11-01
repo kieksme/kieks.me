@@ -1,0 +1,15 @@
+---
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
+
+export interface Props {
+  title: string;
+  text?: string;
+  ctaText?: string;
+  ctaHref?: string;
+  showEmailLink?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<CtaSection {...props} />

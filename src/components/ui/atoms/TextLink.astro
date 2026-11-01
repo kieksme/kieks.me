@@ -1,0 +1,19 @@
+---
+export interface Props {
+  href: string;
+  arrow?: boolean;
+  class?: string;
+  target?: string;
+}
+
+const { href, arrow = true, class: className = '', target } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['font-heading font-extrabold text-base md:text-lg underline-offset-4 hover:underline', className]}
+  style="color: var(--text-link);"
+  {...target ? { target, rel: 'noopener noreferrer' } : {}}
+>
+  <slot />{arrow ? ' →' : ''}
+</a>

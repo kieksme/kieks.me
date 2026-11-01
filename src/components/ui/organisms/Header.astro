@@ -1,0 +1,155 @@
+---
+import Logo from '~/components/ui/atoms/Logo.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import ToggleTheme from '~/components/common/ToggleTheme.astro';
+import { getHomePermalink } from '~/utils/permalinks';
+import { trimSlash } from '~/utils/permalinks';
+import type { CallToAction } from '~/types';
+import { Icon } from 'astro-icon/components';
+
+interface Link {
+  text?: string;
+  href?: string;
+  links?: Array<Link>;
+}
+
+export interface Props {
+  links?: Array<Link>;
+  actions?: Array<CallToAction>;
+  isSticky?: boolean;
+  showToggleTheme?: boolean;
+}
+
+const { links = [], actions = [], isSticky = false, showToggleTheme = false } = Astro.props;
+const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+---
+
+<header
+  id="header"
+  class:list={[{ sticky: isSticky, relative: !isSticky }, 'top-0 z-40 w-full']}
+  style="background: var(--surface); border-bottom: 4px solid var(--ink);"
+  {...isSticky ? { 'data-aw-sticky-header': true } : {}}
+>
+  <div class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex items-center justify-between gap-4">
+    <a href={getHomePermalink()} class="shrink-0" aria-label="kieks.me Startseite">
+      <Logo size="md" class="max-md:hidden" />
+      <Logo size="sm" class="md:hidden" />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8" aria-label="Main navigation">
+      <ul class="flex items-center gap-8 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
+        {
+          links.map(({ text, href, links: sub }) => (
+            <li class={sub?.length ? 'relative group' : ''}>
+              {sub?.length ? (
+                <>
+                  <button type="button" class="inline-flex items-center gap-1 hover:opacity-80">
+                    {text}
+                    <Icon name="tabler:chevron-down" class="w-3.5 h-3.5" />
+                  </button>
+                  <ul class="absolute left-0 top-full mt-2 hidden group-hover:block group-focus-within:block min-w-[220px] border-[3px] border-[var(--ink)] bg-[var(--surface)] shadow-[6px_6px_0_0_var(--pop-fuchsia)] py-2 z-50">
+                    {sub.map(({ text: t2, href: h2 }) => (
+                      <li>
+                        <a
+                          href={h2}
+                          class:list={[
+                            'block px-4 py-2 hover:bg-[var(--page-bg)]',
+                            { 'font-extrabold': h2 === currentPath },
+                          ]}
+                          style="color: var(--text-primary);"
+                        >
+                          {t2}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <a href={href} class="hover:opacity-80" style="color: var(--text-primary);">
+                  {text}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      {
+        showToggleTheme && (
+          <ToggleTheme
+            class="inline-flex items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] p-2 shadow-[4px_4px_0_0_var(--pop-fuchsia)]"
+            iconClass="w-5 h-5"
+          />
+        )
+      }
+      <div class="hidden md:block">
+        {
+          actions.map((a) => (
+            <Button
+              variant="primary"
+              shadow="fuchsia"
+              size="sm"
+              href={a.href ? String(a.href) : undefined}
+              text={typeof a.text === 'string' ? a.text : undefined}
+            />
+          ))
+        }
+      </div>
+      <details class="md:hidden relative">
+        <summary
+          class="list-none cursor-pointer font-heading font-black text-lg lowercase px-3 py-2 border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] text-[var(--pop-navy)]"
+          style="box-shadow: 4px 4px 0 0 var(--pop-fuchsia);"
+        >
+          menü
+        </summary>
+        <div
+          class="absolute right-0 top-full mt-2 w-[min(90vw,280px)] border-[3px] border-[var(--ink)] bg-[var(--surface)] p-4 z-50"
+          style="box-shadow: 6px 6px 0 0 var(--pop-fuchsia);"
+        >
+          <ul class="flex flex-col gap-3 font-heading font-bold" style="color: var(--text-primary);">
+            {
+              links.map(({ text, href, links: sub }) =>
+                sub?.length ? (
+                  <li>
+                    <p class="opacity-60 text-sm mb-1">{text}</p>
+                    <ul class="flex flex-col gap-2 pl-2">
+                      {sub.map(({ text: t2, href: h2 }) => (
+                        <li>
+                          <a href={h2}>{t2}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ) : (
+                  <li>
+                    <a href={href}>{text}</a>
+                  </li>
+                )
+              )
+            }
+          </ul>
+          <div class="mt-4">
+            {
+              actions.map((a) => (
+                <Button
+                  variant="primary"
+                  href={a.href ? String(a.href) : undefined}
+                  text={typeof a.text === 'string' ? a.text : undefined}
+                  class="w-full"
+                />
+              ))
+            }
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

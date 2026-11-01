@@ -1,0 +1,20 @@
+---
+import MarkdownLayout from '~/layouts/MarkdownLayout.astro';
+import { Content as Fallback, frontmatter } from '../content/legal/impressum.md';
+import { loadCmsBuildContent, mapCmsMetadata, text } from '~/utils/payload-build';
+import { renderMarkdown } from '~/components/editorial/safe-markdown';
+import { breadcrumbs } from '~/utils/structured-data';
+const content = await loadCmsBuildContent();
+const page = content.pages.find((page) => page.slug === 'impressum');
+const metadata = page ? mapCmsMetadata(page.seo, content) : { ...frontmatter.metadata };
+metadata.structuredData = [
+  breadcrumbs([
+    { name: 'Startseite', url: '/' },
+    { name: page ? text(page.title) : frontmatter.title, url: '/impressum' },
+  ]),
+];
+---
+
+<MarkdownLayout frontmatter={{ ...frontmatter, title: page ? text(page.title) : frontmatter.title, metadata }}>
+  {page ? <Fragment set:html={renderMarkdown(page.contentMarkdown)} /> : <Fallback />}
+</MarkdownLayout>

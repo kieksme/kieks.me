@@ -1,167 +1,286 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-
-import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
-import Features from '~/components/widgets/Features.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import Note from '~/components/ui/atoms/Note.astro';
+import ServiceCard from '~/components/ui/molecules/ServiceCard.astro';
+import RepoRow from '~/components/ui/molecules/RepoRow.astro';
+import FaqItem from '~/components/ui/molecules/FaqItem.astro';
+import AvatarCard from '~/components/ui/molecules/AvatarCard.astro';
+import MarqueeBand from '~/components/ui/organisms/MarqueeBand.astro';
+import HeroArtFinger from '~/components/ui/organisms/HeroArtFinger.astro';
+import CtaSection from '~/components/ui/organisms/CtaSection.astro';
+import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
+import { getSiteContent } from '~/utils/site-content';
+import avatarAndre from '~/assets/pop/654-1674_team__imgAndre1.png';
+import avatarThomas from '~/assets/pop/654-1674_team__imgThomas.png';
+import cspBurst from '~/assets/pop/654-1669_csp-art__imgBurst.svg?url';
 
 const metadata = {
-  title: 'kieks.me',
+  title: 'kieks.me – AI Consultants für Skills, MCP und Agent-Hubs | Leipzig',
+  description:
+    'kieks.me GbR aus Leipzig: AI Consultants für Skills, MCP-Server, Agents und Agent-Hubs – plus Cloud, DevOps, Webentwicklung und Beratung.',
   ignoreTitleTemplate: true,
 };
+
+const { services, homeProjects: projects, faqsLeft, faqsRight, team, hero } = await getSiteContent();
+const portraits = { andre: avatarAndre, thomas: avatarThomas } as const;
+const teamMembers = team.filter((member) => Object.hasOwn(portraits, member.slug));
+// The open-decision hint stays until at least one member has a real role or biography (not the ⟦…⟧ placeholder).
+const teamTextsMissing = !teamMembers.some(
+  (member) => member.bio || member.bioHtml || (member.role && !member.role.includes('⟦'))
+);
+if (teamMembers.length !== team.length) console.warn('Team members without a bundled portrait are not rendered yet.');
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero Widget ******************* -->
+  <!-- 3.2 Hero -->
+  <section class="relative overflow-hidden not-prose" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={620}
+      height={560}
+      pitch={20}
+      origin="top-right"
+      d0={14.78}
+      k={0.018}
+      color="var(--hero-dots)"
+      opacity={0.22}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
+      <div class="grid lg:grid-cols-[760fr_520fr] gap-10 lg:gap-0 items-start">
+        <div class="flex flex-col gap-7 max-w-[760px]">
+          <Sticker color="yellow" shadow="fuchsia" rotate={3}>{hero?.eyebrow || 'kieks.me GbR · Leipzig'}</Sticker>
+          <Heading level={1} size="xl" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)">
+            {
+              hero ? (
+                hero.headlineLines.map((line, index) => (
+                  <>
+                    {index > 0 && <br />}
+                    {line}
+                  </>
+                ))
+              ) : (
+                <>
+                  ihre software.
+                  <br />
+                  ihr code.
+                  <br />
+                  unsere erfahrung.
+                </>
+              )
+            }
+          </Heading>
+          <Lead size="l" tone="onColor" class="!text-[color:var(--hero-text)]">
+            {
+              hero?.lead ||
+                'Wir sind AI Consultants aus Leipzig. Wir entwickeln Skills, MCP-Server und Agents für Ihr Unternehmen und bauen den Agent-Hub, über den Ihre Teams sie sicher nutzen.'
+            }
+          </Lead>
+          <div class="flex flex-col sm:flex-row gap-5">
+            <Button
+              variant="primary"
+              shadow="fuchsia"
+              href={hero?.primaryCta?.href ?? BOOKING_URL}
+              text={hero?.primaryCta?.text ?? 'Erstgespräch buchen'}
+            />
+            <Button
+              variant="secondary"
+              shadow="aqua"
+              href={hero?.secondaryCta?.href ?? '#leistungen'}
+              text={hero?.secondaryCta?.text ?? 'Leistungen ansehen'}
+            />
+          </div>
+          <Note label="⟦BESTÄTIGEN⟧" class="max-w-[520px]">
+            Claim „Ihre Software. Ihr Code. Unsere Erfahrung.“ als Unternehmens-Claim freigeben (D2).
+          </Note>
+        </div>
+        <HeroArtFinger class="lg:mt-10" />
+      </div>
+    </div>
+  </section>
 
-  <Hero
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Erstgespräch vereinbaren',
-        href: '/kontakt',
-        icon: 'tabler:calendar-event',
-      },
-      { text: 'Mehr erfahren', href: '#mehr' },
-    ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: 'kieks.me Hero Image' }}
+  <ZigzagDivider top="var(--hero-bg)" bottom="var(--band-bg)" />
+  <MarqueeBand />
+  <ZigzagDivider top="var(--band-bg)" bottom="var(--page-bg)" />
+
+  <!-- 3.5 Leistungen -->
+  <section id="leistungen" class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20">
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Leistungen</Sticker>
+      <Heading level={2} size="l" class="mt-6">was wir für sie tun</Heading>
+      <Lead class="mt-6 max-w-[760px]">
+        Fünf Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht.
+      </Lead>
+      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-7">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+      <Note label="⟦ENTSCHEIDUNG D6⟧" class="mt-6 max-w-[640px]">
+        Social Media und SEO waren bisher eigene Leistungen. Hier bewusst nicht als Kachel. Weglassen oder als Teil von
+        „Web- & Softwareentwicklung“ nennen?
+      </Note>
+    </div>
+  </section>
+
+  <!-- 3.6 Open Source -->
+  <section
+    class="not-prose py-16 md:py-24"
+    style="background: var(--surface); border-top: 4px solid var(--ink); border-bottom: 4px solid var(--ink);"
   >
-    <Fragment slot="title">
-      kieks.me <span class="hidden xl:inline">👉</span><br />
-      <span class="text-accent dark:text-white highlight"> Software für den Mittelstand</span>
-    </Fragment>
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="flex flex-col gap-6">
+        <Sticker color="yellow" shadow="aqua" rotate={-2}>Aus unserer Werkstatt</Sticker>
+        <Heading level={2} size="l">open source, öffentlich nachprüfbar</Heading>
+        <Lead>
+          Wir veröffentlichen eigene MCP-Server, zum Beispiel für Contabo, Swetrix, Listmonk und Balena, sowie
+          Agent-Skills und Werkzeuge auf GitHub. So sehen Sie vor dem ersten Gespräch, wie wir arbeiten.
+        </Lead>
+        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+          <Button variant="aqua" shadow="fuchsia" href="/projekte/mcp-server" text="Unsere MCP-Server ansehen" />
+          <TextLink href={GITHUB_ORG_URL} target="_blank">Alle Projekte auf GitHub</TextLink>
+        </div>
+      </div>
+      <div class="flex flex-col gap-[18px]">
+        {projects.map((p) => <RepoRow {...p} />)}
+      </div>
+    </div>
+  </section>
 
-    <Fragment slot="subtitle">
-      <span class="hidden sm:inline">
-        <span class="font-semibold">Zusammen</span> finden wir für Sie die passende Softwarelösung.
-      </span>
-      Mit jahrelanger Erfahrung in der Softwareentwicklung und dem Umgang mit dem Mittelstand, helfen wir Ihnen, die passende
-      Softwarelösung zu finden.
-    </Fragment>
-  </Hero>
+  <ZigzagDivider top="var(--surface)" bottom="var(--pop-purple-deep)" />
 
-  <!-- Note Widget ******************* -->
+  <!-- 3.7 CSP -->
+  <section class="relative overflow-hidden not-prose py-16 md:py-24" style="background: var(--pop-purple-deep);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={700}
+      height={560}
+      pitch={22}
+      origin="top-right"
+      d0={15.8}
+      k={0.0178}
+      color="#ff008f"
+      opacity={0.55}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
+      <div class="flex flex-col gap-6 max-w-[720px]">
+        <Sticker color="aqua" shadow="fuchsia" rotate={3}>Unser Produkt</Sticker>
+        <Heading level={2} size="l" color="#fff" shadowColor="var(--pop-navy)">
+          csp: ein eigenes<br />serviceportal für<br />it-dienstleister
+        </Heading>
+        <Lead tone="onColor" class="!text-white">
+          Das Customer Service Portal bündelt Status, Bereitschaft, Ansprechpartner und Supportwissen vor Ihrem
+          vorhandenen Ticketsystem. Open Source unter MIT, mit direktem Weg zum Menschen.
+        </Lead>
+        <Button variant="primary" href="/csp" text="CSP kennenlernen" />
+        <Note label="⟦PLATZHALTER / D4⟧" class="max-w-xl">
+          Ziel-URL: kieks.me/csp oder csp.kieks.me — siehe Entscheidung D4.
+        </Note>
+      </div>
+      <div class="relative justify-self-center w-full max-w-[400px]">
+        <img
+          src={cspBurst}
+          alt=""
+          class="motion-safe:pop-spin-slow w-full h-auto"
+          width="400"
+          height="400"
+          decoding="async"
+        />
+        <div
+          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-heading font-black lowercase leading-none"
+          style="transform: translate(-50%, -50%) rotate(6deg); color: var(--pop-navy);"
+        >
+          <p class="text-[clamp(1.75rem,4vw,2.75rem)]">open source</p>
+          <p class="text-[clamp(1.25rem,3vw,1.875rem)] mt-1">MIT-Lizenz</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <Note />
+  <ZigzagDivider top="var(--pop-purple-deep)" bottom="var(--page-bg)" />
 
-  <!-- Features Widget *************** -->
+  <!-- 3.8 Team -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-[1fr_auto] gap-12 items-center">
+      <div class="flex flex-col gap-6 max-w-md">
+        <Sticker color="fuchsia" shadow="aqua" rotate={3}>Team</Sticker>
+        <Heading level={2} size="l">wer<br />dahintersteht</Heading>
+        <Lead>
+          kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
+          Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
+        </Lead>
+        {
+          teamTextsMissing && (
+            <Note label="⟦PLATZHALTER D10⟧">
+              Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
+            </Note>
+          )
+        }
+      </div>
+      <div class="flex flex-col sm:flex-row gap-10">
+        {
+          teamMembers.map((member) => (
+            <AvatarCard
+              name={member.name}
+              label={member.label}
+              image={portraits[member.slug as keyof typeof portraits]}
+              imageAlt={member.imageAlt}
+              role={member.role}
+              bio={member.bio}
+              bioHtml={member.bioHtml}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
-  <Features
-    id="mehr"
-    tagline="Mehr über uns"
-    title="Was wir für sie tun können"
-    subtitle="kieks.me sind Experten für Softwareentwicklung und Beratung. Wir helfen Ihnen, die passende Softwarelösung für Ihr Unternehmen zu finden."
-    items={[
-      {
-        title: 'Moderene Technologien',
-        description:
-          'Wir arbeiten mit den neuesten Technologien und Tools, um sicherzustellen, dass Ihre Softwarelösung auf dem neuesten Stand ist.',
-        icon: 'tabler:brand-tailwind',
-      },
-      {
-        title: 'Weiterentwicklung',
-        description:
-          'Sie haben bereits eine Softwarelösung, die Sie nutzen. Wir helfen Ihnen, diese zu verbessern und zu erweitern.',
-        icon: 'tabler:components',
-      },
-      {
-        title: 'Anbindung von Systemen',
-        description:
-          'Sie haben verschiedene Systeme, die miteinander kommunizieren müssen. Wir helfen Ihnen, diese zu verbinden.',
-        icon: 'tabler:api',
-      },
-      {
-        title: 'Social Media',
-        description: 'Sie möchten Ihre Social Media Kanäle verbessern. Wir helfen Ihnen, dies zu erreichen.',
-        icon: 'tabler:rocket',
-      },
-      {
-        title: 'Suchmaschinenoptimierung (SEO)',
-        description: 'Sie möchten, dass Ihre Webseite besser gefunden wird. Wir helfen Ihnen, dies zu erreichen.',
-        icon: 'tabler:arrows-right-left',
-      },
-      {
-        title: 'Offen für ihre Ideen',
-        description:
-          'Wir sind neugierig, Ihre Ideen zu hören. Wir helfen Ihnen, diese in eine Softwarelösung umzusetzen.',
-        icon: 'tabler:bulb',
-      },
-    ]}
+  <!-- 3.9 FAQ -->
+  <section class="not-prose py-16 md:py-24" style="background: var(--surface); border-top: 4px solid var(--ink);">
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>FAQ</Sticker>
+      <Heading level={2} size="l">häufige fragen</Heading>
+      <Lead>Kurz und ehrlich beantwortet.</Lead>
+      <div class="grid md:grid-cols-2 gap-x-16" id="faq-list">
+        <div>
+          {
+            faqsLeft.map((f) => (
+              <FaqItem title={f.title} color={f.color} open={true}>
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
+              </FaqItem>
+            ))
+          }
+        </div>
+        <div>
+          {
+            faqsRight.map((f) => (
+              <FaqItem title={f.title} color={f.color} open={true}>
+                {f.bodyHtml ? <div class="cms-rich" set:html={f.bodyHtml} /> : f.body}
+              </FaqItem>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <script>
+      // SPEC §6: mobile FAQ as accordion (closed); desktop stays open
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        document.querySelectorAll('#faq-list details.pop-faq-item').forEach((el) => {
+          el.removeAttribute('open');
+        });
+      }
+    </script>
+  </section>
+
+  <ZigzagDivider top="var(--surface)" bottom="var(--pop-fuchsia)" />
+
+  <CtaSection
+    title="lernen wir uns kennen"
+    text="Qualität, Tempo und Verlässlichkeit sind wichtig. Am wichtigsten ist aber, dass wir uns gegenseitig respektieren und vertrauen können. Finden wir in 30 Minuten heraus, ob wir zusammenpassen."
+    showEmailLink={true}
   />
-  <!-- FAQs Widget ******************* -->
-
-  <FAQs
-    title="Dinge die wir oft gefragt werden"
-    subtitle="Kunden fragen, wir antworten. Hier sind einige der häufigsten Fragen, die wir erhalten."
-    tagline="FAQs"
-    classes={{ container: 'max-w-6xl' }}
-    items={[
-      {
-        title: 'Warum kieks.me und nicht eine andere Agentur?',
-        description:
-          'Die Frage ist berechtigt. Es gibt viele Mitbewerber in diesem Bereich. Offenheit, Ehrlichkeit und Transparenz sind unsere drei wichtigen Werte. Wir sind offen und ehrlich mit unseren Kunden und wir glauben, dass diese Werte unser Unternehmen auszeichnen.',
-      },
-      {
-        title: 'Was brauchen wir für die Erstellung eines Websites?',
-        description:
-          'Wir benötigen von Ihnen Informationen über Ihr Unternehmen, Ihre Produkte und Dienstleistungen. Wir benötigen auch Informationen über Ihre Zielgruppe und Ihre Ziele. Mit diesen Informationen können wir eine Website erstellen, die zu Ihrem Unternehmen passt.',
-      },
-      {
-        title: 'Wie lange dauert die Erstellung einer Website?',
-        description:
-          'Die Dauer der Erstellung einer Website hängt von verschiedenen Faktoren ab, wie z.B. der Größe der Website, den Anforderungen des Kunden und der Komplexität der Website. In der Regel dauert die Erstellung einer Website zwischen 4 und 8 Wochen.',
-      },
-      {
-        title: 'Wie viel kostet die Erstellung einer Website?',
-        description:
-          'Die Kosten für die Erstellung einer Website variieren je nach Größe und Komplexität der Website. In der Regel kostet die Erstellung einer Website zwischen 1.000 und 10.000 Euro.',
-      },
-      {
-        title: 'Wie kann ich die Website pflegen?',
-        description:
-          'Sie können die Website selbst pflegen oder wir können die Website für Sie pflegen. Wenn Sie die Website selbst pflegen möchten, können wir Ihnen eine Schulung geben, wie Sie die Website pflegen können. Wenn Sie möchten, dass wir die Website für Sie pflegen, können wir Ihnen ein Wartungspaket anbieten.',
-      },
-      {
-        title: 'Was passiert, wenn ich mit der Website nicht zufrieden bin?',
-        description:
-          'Wir möchten, dass Sie mit der Website zufrieden sind. Wenn Sie mit der Website nicht zufrieden sind, werden wir alles tun, um sicherzustellen, dass Sie mit der Website zufrieden sind. Wir werden Änderungen an der Website vornehmen, bis Sie mit der Website zufrieden sind.',
-      },
-    ]}
-  />
-
-  <!-- Stats Widget ****************** 
-  import Stats from '~/components/widgets/Stats.astro';
-
-  <Stats
-    stats={[
-      { title: 'Projekte', amount: '12' },
-      { title: 'APIs', amount: '8' },
-      { title: 'Kunden', amount: '6' },
-      { title: 'Kunden unser Kunden', amount: '248K' },
-    ]}
-  />
-  -->
-
-  <!-- CallToAction Widget *********** -->
-
-  <CallToAction
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Erstgespräch vereinbaren',
-        href: '/kontakt',
-        icon: 'tabler:calendar-event',
-      },
-    ]}
-  >
-    <Fragment slot="title"> Jetzt kennenlernen </Fragment>
-
-    <Fragment slot="subtitle">
-      Qualität, Schnelligkeit und Zuverlässigkeit sind wichtige Werte, doch am wichtigsten ist, das wir uns gegenseitig
-      respektieren und vertrauen können.
-      <br class="hidden md:inline" />Lassen sie uns kennenlernen, ob wir zusammenpassen.
-    </Fragment>
-  </CallToAction>
 </Layout>

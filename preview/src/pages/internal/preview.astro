@@ -1,0 +1,75 @@
+---
+import '~/assets/styles/tailwind.css';
+import CustomStyles from '~/components/CustomStyles.astro';
+import Logo from '~/components/ui/atoms/Logo.astro';
+import EditorialContent from '~/components/editorial/EditorialContent.astro';
+import { verifyRequest, PreviewError, privateHeaders } from '../../lib/security';
+let envelope: Awaited<ReturnType<typeof verifyRequest>>;
+try {
+  envelope = await verifyRequest(Astro.request, process.env.DATAHUB_PREVIEW_SECRET);
+} catch (error) {
+  return new Response('Preview unavailable', {
+    status: error instanceof PreviewError ? error.status : 400,
+    headers: privateHeaders,
+  });
+}
+for (const [key, value] of Object.entries(privateHeaders)) Astro.response.headers.set(key, value);
+---
+
+<!doctype html>
+<html lang="de">
+  <head
+    ><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta
+      name="robots"
+      content="noindex,nofollow,noarchive"
+    /><title>Redaktionsvorschau · kieks.me</title><CustomStyles /></head
+  >
+  <body
+    class="bg-page text-default font-sans"
+    data-preview-collection={envelope.collection}
+    data-preview-id={String(envelope.id)}
+  >
+    <header class="preview-header">
+      <Logo isAnimated={false} /><span>kieks.me <strong>Redaktionsvorschau</strong></span><span
+        id="preview-status"
+        role="status"
+        aria-live="polite">Nicht veröffentlicht</span
+      >
+    </header>
+    <main id="preview-content"><EditorialContent collection={envelope.collection} document={envelope.document} /></main>
+    <script>
+      import '../../lib/client';
+    </script>
+  </body>
+</html>
+<style>
+  .preview-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px 32px;
+    border-bottom: 3px solid var(--pop-ink);
+    background: var(--surface);
+  }
+  .preview-header strong {
+    display: block;
+    font-weight: 800;
+  }
+  #preview-status {
+    margin-left: auto;
+    border: 2px solid var(--pop-ink);
+    background: var(--pop-yellow);
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  @media (max-width: 767px) {
+    .preview-header {
+      padding: 16px 20px;
+      gap: 12px;
+    }
+    #preview-status {
+      margin-left: 0;
+    }
+  }
+</style>

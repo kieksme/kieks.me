@@ -1,0 +1,52 @@
+---
+import circleLogo from '~/assets/brand/logos/kieks.me-single-circle.svg?url';
+
+export interface Props {
+  /** The approved full-colour logo stays identical in every theme. */
+  variant?: 'auto' | 'light' | 'dark';
+  size?: 'sm' | 'md' | 'hero';
+  isAnimated?: boolean;
+  class?: string;
+}
+
+const { variant = 'auto', size = 'md', isAnimated = true, class: className = '' } = Astro.props;
+const sizes = {
+  sm: { dimension: 44, class: 'h-11 w-11' },
+  md: { dimension: 56, class: 'h-14 w-14' },
+  hero: { dimension: 520, class: 'h-auto w-full max-w-[520px]' },
+};
+const dimensions = sizes[size];
+---
+
+<span
+  class:list={['brand-logo inline-flex shrink-0 items-center', { 'brand-logo--animated': isAnimated }, className]}
+  data-logo-variant={variant}
+>
+  <img
+    src={circleLogo}
+    alt="kieks.me"
+    width={dimensions.dimension}
+    height={dimensions.dimension}
+    class:list={['aspect-square object-contain', dimensions.class]}
+    decoding="async"
+  />
+</span>
+
+<style>
+  .brand-logo--animated {
+    animation: brand-logo-reveal 600ms ease-out both;
+  }
+  @keyframes brand-logo-reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand-logo--animated {
+      animation: none;
+    }
+  }
+</style>

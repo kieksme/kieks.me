@@ -1,0 +1,76 @@
+---
+/** Pop Heading with hard text-shadow — SPEC §1.2 */
+export interface Props {
+  level?: 1 | 2 | 3;
+  size?: 'xl' | 'l' | 'cta' | 'cta-ki' | 's';
+  color?: string;
+  shadowColor?: string;
+  shadowSize?: string;
+  class?: string;
+  as?: string;
+}
+
+const {
+  level = 2,
+  size = 'l',
+  color = 'var(--text-primary)',
+  shadowColor = 'var(--pop-fuchsia)',
+  shadowSize,
+  class: className = '',
+  as,
+} = Astro.props;
+
+const tagName = as ?? `h${level}`;
+const sizes: Record<string, string> = {
+  xl: 'pop-heading--xl text-[52px] leading-[52px] md:text-[clamp(3.25rem,6.666667vw,6rem)] md:leading-[0.958333] tracking-[-0.02em]',
+  l: 'text-[clamp(2.25rem,4.5vw,4rem)] leading-none tracking-[-0.02em]',
+  cta: 'pop-heading--cta text-[48px] leading-[50px] md:text-[clamp(3rem,6.111111vw,5.5rem)] md:leading-[1.306818]',
+  'cta-ki': 'text-[clamp(2.25rem,4.5vw,4.25rem)] leading-[1.06]',
+  s: 'text-2xl leading-[1.25]',
+};
+const defaultShadow =
+  shadowSize ??
+  (size === 'xl' || size === 'cta' ? 'var(--pop-heading-shadow)' : size.startsWith('cta') ? '7px 7px 0' : '4px 4px 0');
+---
+
+{
+  tagName === 'h1' ? (
+    <h1
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h1>
+  ) : tagName === 'h3' ? (
+    <h3
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h3>
+  ) : (
+    <h2
+      class:list={['font-heading font-black lowercase', sizes[size], className]}
+      style={`color: ${color}; text-shadow: ${defaultShadow} ${shadowColor};`}
+    >
+      <slot />
+    </h2>
+  )
+}
+
+<style>
+  .pop-heading--xl {
+    --pop-heading-shadow: 4px 4px 0;
+  }
+  .pop-heading--cta {
+    --pop-heading-shadow: 5px 5px 0;
+  }
+  @media (min-width: 768px) {
+    .pop-heading--xl {
+      --pop-heading-shadow: 6px 6px 0;
+    }
+    .pop-heading--cta {
+      --pop-heading-shadow: 7px 7px 0;
+    }
+  }
+</style>

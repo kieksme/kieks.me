@@ -1,0 +1,11 @@
+# pnpm ≥10.26 / ≥11: build approvals live here (package.json#pnpm is ignored).
+# Without allowBuilds, pnpm@latest (12.x) fails with ERR_PNPM_IGNORED_BUILDS for
+# sharp/esbuild — that is what made the PR `check` job red.
+packages:
+  - '.'
+
+shamefullyHoist: true
+
+allowBuilds:
+  esbuild: true
+  sharp: true

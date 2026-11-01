@@ -1,40 +1,27 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { twMerge } from 'tailwind-merge';
+/** Compatibility wrapper → atoms/Button */
+import AtomButton from '~/components/ui/atoms/Button.astro';
 import type { CallToAction as Props } from '~/types';
 
-const {
-  variant = 'secondary',
-  target,
-  text = Astro.slots.render('default'),
-  icon = '',
-  class: className = '',
-  type,
-  ...rest
-} = Astro.props;
-
-const variants = {
-  primary: 'btn-primary',
-  secondary: 'btn-secondary',
-  tertiary: 'btn btn-tertiary',
-  link: 'cursor-pointer hover:text-primary',
-};
+const props = Astro.props as Props & { class?: string };
+const variant =
+  props.variant === 'primary'
+    ? 'primary'
+    : props.variant === 'secondary'
+      ? 'secondary'
+      : props.variant === 'link'
+        ? 'secondary'
+        : 'primary';
 ---
 
-{
-  type === 'button' || type === 'submit' || type === 'reset' ? (
-    <button type={type} class={twMerge(variants[variant] || '', className)} {...rest}>
-      <Fragment set:html={text} />
-      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-    </button>
-  ) : (
-    <a
-      class={twMerge(variants[variant] || '', className)}
-      {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
-      {...rest}
-    >
-      <Fragment set:html={text} />
-      {icon && <Icon name={icon} class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" />}
-    </a>
-  )
-}
+<AtomButton
+  variant={variant}
+  href={props.href ? String(props.href) : undefined}
+  text={typeof props.text === 'string' ? props.text : undefined}
+  icon={props.icon}
+  type={props.type === 'button' || props.type === 'submit' || props.type === 'reset' ? props.type : undefined}
+  target={props.target ? String(props.target) : undefined}
+  class={props.class}
+>
+  <slot />
+</AtomButton>

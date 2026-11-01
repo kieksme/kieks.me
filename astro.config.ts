@@ -11,6 +11,7 @@ import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
 
+import { prepareCmsBuild, finishCmsBuild } from './src/utils/payload-build';
 import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
@@ -23,12 +24,42 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
+  site: 'https://kieks.me',
+
+  redirects: {
+    '/contact': '/kontakt',
+    '/terms': '/agb',
+  },
 
   integrations: [
+    {
+      name: 'payload-static-content',
+      hooks: {
+        'astro:build:start': async () => {
+          await prepareCmsBuild();
+        },
+        'astro:build:done': async () => {
+          await finishCmsBuild();
+        },
+      },
+    },
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/kontakt-erfolgreich') &&
+        !page.includes('/docs/') &&
+        !page.includes('/homes/') &&
+        !page.includes('/landing/') &&
+        !page.includes('/services') &&
+        !page.includes('/about') &&
+        !page.includes('/pricing') &&
+        !page.includes('/contact') &&
+        !page.includes('/terms') &&
+        !page.includes('/category/') &&
+        !page.includes('/tag/'),
+    }),
     mdx(),
     icon({
       include: {

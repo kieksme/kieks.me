@@ -1,0 +1,34 @@
+---
+import Marker from '~/components/ui/atoms/Marker.astro';
+
+export interface Props {
+  title: string;
+  color?: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  open?: boolean;
+  class?: string;
+}
+
+const { title, color = 'aqua', open = true, class: className = '' } = Astro.props;
+---
+
+<details
+  class:list={['pop-faq-item py-6 border-b-[3px] border-[var(--ink)] group', className]}
+  open={open || undefined}
+>
+  <summary class="flex gap-5 items-start cursor-pointer list-none">
+    <Marker variant="diamond" color={color} class="pop-faq-diamond mt-1.5" />
+    <span class="font-heading font-extrabold text-2xl leading-[30px]" style="color: var(--text-primary);">{title}</span>
+  </summary>
+  <div class="mt-2 pl-[38px] text-lg leading-7" style="color: var(--text-secondary);">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .pop-faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .pop-faq-item[open] :global(.pop-faq-diamond) {
+    transform: rotate(45deg) !important;
+  }
+</style>

@@ -1,0 +1,570 @@
+---
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import FaqItem from '~/components/ui/molecules/FaqItem.astro';
+import { renderMarkdown } from './safe-markdown';
+import { plainText, renderRichText, safeMedia, safeHref } from './rich-text';
+export interface Props {
+  collection: string;
+  document: Record<string, unknown>;
+}
+const { collection, document: data } = Astro.props;
+const title = plainText(data.title ?? data.name ?? data.question) || 'Noch ohne Überschrift';
+const image = safeMedia(data.heroImage ?? data.image ?? data.photo ?? data.avatar);
+const richBody = renderRichText(
+  data.contentRichText ?? data.descriptionRichText ?? data.bioRichText ?? data.answerRichText
+);
+const body = richBody || (collection === 'pages' ? renderMarkdown(data.contentMarkdown) : '');
+const excerpt = plainText(collection === 'posts' ? data.excerpt : data.summary);
+const publishedDate =
+  collection === 'posts' && typeof data.publishedAt === 'string' && Number.isFinite(Date.parse(data.publishedAt))
+    ? new Date(data.publishedAt)
+    : null;
+const authorRecord =
+  collection === 'posts' && data.author && typeof data.author === 'object' && !Array.isArray(data.author)
+    ? (data.author as Record<string, unknown>)
+    : null;
+const author = collection === 'posts' ? plainText(authorRecord?.name) || plainText(data.authorName) : '';
+const previewHref = (collectionName: string, id: unknown) =>
+  ['string', 'number'].includes(typeof id) && /^[a-zA-Z0-9_-]{1,100}$/.test(String(id))
+    ? `/preview/${collectionName}/${encodeURIComponent(String(id))}`
+    : null;
+const authorHref = authorRecord ? previewHref('authors', authorRecord.id) : null;
+const authorPosts =
+  collection === 'authors' && Array.isArray(data.posts)
+    ? (data.posts
+        .filter((item) => item && typeof item === 'object' && typeof item.title === 'string')
+        .slice(0, 100) as Record<string, unknown>[])
+    : [];
+const tags =
+  collection === 'posts' && Array.isArray(data.tags)
+    ? [
+        ...new Set(
+          data.tags
+            .filter((item) => item && typeof item === 'object' && typeof item.tag === 'string')
+            .map((item) => String(item.tag).trim())
+            .filter(Boolean)
+        ),
+      ].slice(0, 30)
+    : [];
+const fallback = plainText(data.description ?? data.bio ?? data.answer);
+const sections =
+  collection === 'pages' && Array.isArray(data.sections)
+    ? (data.sections.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, 100) as Record<
+        string,
+        unknown
+      >[])
+    : [];
+const records = (value: unknown, max = 100): Record<string, unknown>[] =>
+  Array.isArray(value)
+    ? (value.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, max) as Record<
+        string,
+        unknown
+      >[])
+    : [];
+const link = (item: Record<string, unknown>) => ({ label: plainText(item.label), href: safeHref(item.href) });
+const isNavigation = collection === 'navigation';
+const navLinks = isNavigation
+  ? records(data.links).map((item) => ({ ...link(item), children: records(item.children).map(link) }))
+  : [];
+const navActions = isNavigation ? records(data.actions).map(link) : [];
+const navLegal = isNavigation ? records(data.secondaryLinks).map(link) : [];
+const navSocial = isNavigation ? records(data.socialLinks).map(link) : [];
+const footNote = isNavigation ? plainText(data.footNote) : '';
+const hero =
+  collection === 'pages' && data.pageKind === 'home' && data.hero && typeof data.hero === 'object'
+    ? (data.hero as Record<string, unknown>)
+    : null;
+const heroLines = hero ? plainText(hero.headline).split('\n').filter(Boolean).slice(0, 6) : [];
+const heroCtas = hero
+  ? [hero.primaryCta, hero.secondaryCta]
+      .map((cta) => (cta && typeof cta === 'object' ? link(cta as Record<string, unknown>) : null))
+      .filter((cta) => cta && cta.label && cta.href)
+  : [];
+const highlights = collection === 'services' ? records(data.highlights, 20) : [];
+const accent = ['aqua', 'fuchsia', 'yellow', 'purple'].includes(String(data.accent)) ? String(data.accent) : '';
+const serviceLink = collection === 'services' ? link({ label: data.linkText, href: data.href }) : null;
+const profileHref = collection === 'team' ? safeHref(data.profileUrl) : null;
+const npmPackages =
+  collection === 'mcp-projects'
+    ? records(data.npmPackages, 10)
+        .map((item) => plainText(item.name))
+        .filter(Boolean)
+    : [];
+const eyebrow = isNavigation
+  ? ({ header: 'Kopfbereich', footer: 'Fußbereich' } as Record<string, string>)[String(data.key)] || ''
+  : hero
+    ? plainText(hero.eyebrow)
+    : collection === 'team'
+      ? plainText(data.position)
+      : collection === 'faqs'
+        ? [data.placement === 'home' ? 'Startseite' : '', plainText(data.category)].filter(Boolean).join(' · ')
+        : collection === 'services'
+          ? [plainText(data.number), accent].filter(Boolean).join(' · ')
+          : collection === 'posts'
+            ? plainText(data.category)
+            : plainText(data.kind);
+---
+
+<article class="editorial-content" data-editorial-collection={collection}>
+  <div class="editorial-content__eyebrow">{eyebrow}</div>
+  {
+    hero && heroLines.length > 0 ? (
+      <Heading level={1} size="xl">
+        {heroLines.map((line, index) => (
+          <Fragment>
+            {index > 0 && <br />}
+            {line}
+          </Fragment>
+        ))}
+      </Heading>
+    ) : (
+      <Heading level={1} size="xl">
+        {title}
+      </Heading>
+    )
+  }
+  {hero && plainText(hero.lead) && <Lead class="mt-8 max-w-3xl">{plainText(hero.lead)}</Lead>}
+  {
+    heroCtas.length > 0 && (
+      <nav aria-label="Aktionen" class="editorial-content__links">
+        {heroCtas.map((cta) => (
+          <a href={cta!.href!}>{cta!.label}</a>
+        ))}
+      </nav>
+    )
+  }
+  {
+    collection === 'posts' && (
+      <div class="editorial-content__meta">
+        {publishedDate && (
+          <time datetime={publishedDate.toISOString()}>
+            {new Intl.DateTimeFormat('de-DE', { dateStyle: 'long', timeZone: 'UTC' }).format(publishedDate)}
+          </time>
+        )}
+        {author && <span>Von {authorHref ? <a href={authorHref}>{author}</a> : author}</span>}
+      </div>
+    )
+  }
+  {excerpt && <Lead class="mt-8 max-w-3xl">{excerpt}</Lead>}
+  {
+    tags.length > 0 && (
+      <ul class="editorial-content__tags" aria-label="Schlagwörter">
+        {tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    image && (
+      <figure class="editorial-content__hero">
+        <img src={image.url} alt={image.alt} width={image.width} height={image.height} loading="eager" />
+      </figure>
+    )
+  }
+  {
+    collection === 'faqs' ? (
+      <div class="mt-10">
+        <FaqItem title={title} open>
+          <div class="editorial-prose">{body ? <Fragment set:html={body} /> : <p>{fallback}</p>}</div>
+        </FaqItem>
+      </div>
+    ) : (
+      <div class="editorial-prose mt-10">{body ? <Fragment set:html={body} /> : fallback && <p>{fallback}</p>}</div>
+    )
+  }
+  {
+    collection === 'authors' && (
+      <section class="editorial-content__section" aria-label="Artikel dieser Person">
+        <Heading level={2} size="l">
+          Artikel
+        </Heading>
+        {authorPosts.length > 0 ? (
+          <ul class="editorial-content__articles">
+            {authorPosts.map((post) => (
+              <li>
+                <h3>
+                  {previewHref('posts', post.id) ? (
+                    <a href={previewHref('posts', post.id)!}>{plainText(post.title)}</a>
+                  ) : (
+                    plainText(post.title)
+                  )}
+                </h3>
+                {plainText(post.excerpt) && <p>{plainText(post.excerpt)}</p>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="editorial-prose mt-6">Noch keine veröffentlichten Artikel zugeordnet.</p>
+        )}
+      </section>
+    )
+  }
+  {
+    collection === 'authors' && data.contactEnabled === true && (
+      <section class="editorial-content__section" aria-label="Kontaktformular-Vorschau">
+        <Heading level={2} size="l">
+          Kontakt aufnehmen
+        </Heading>
+        <p class="editorial-prose mt-6">Vorschau – Nachrichten können hier nicht gesendet werden.</p>
+        <form class="editorial-content__contact" aria-label="Inaktive Kontaktformular-Vorschau">
+          <fieldset disabled>
+            <legend>Kontakt an {title}</legend>
+            <label>
+              Name
+              <input name="name" type="text" autocomplete="off" />
+            </label>
+            <label>
+              E-Mail
+              <input name="email" type="email" autocomplete="off" />
+            </label>
+            <label>
+              Nachricht
+              <textarea name="message" rows={5} />
+            </label>
+            <button type="button" disabled>
+              Vorschau – kein Versand
+            </button>
+          </fieldset>
+        </form>
+      </section>
+    )
+  }
+  {
+    sections.map((section) => {
+      const sectionImage = safeMedia(section.media);
+      const rich = renderRichText(section.richText);
+      return (
+        <section class="editorial-content__section">
+          {plainText(section.heading) && (
+            <Heading level={2} size="l">
+              {plainText(section.heading)}
+            </Heading>
+          )}
+          <div class="editorial-prose mt-6">
+            {rich ? <Fragment set:html={rich} /> : <p>{plainText(section.body)}</p>}
+          </div>
+          {sectionImage && (
+            <figure>
+              <img
+                src={sectionImage.url}
+                alt={sectionImage.alt}
+                width={sectionImage.width}
+                height={sectionImage.height}
+                loading="lazy"
+              />
+            </figure>
+          )}
+        </section>
+      );
+    })
+  }
+  {
+    highlights.length > 0 && (
+      <section class="editorial-content__section" aria-label="Schwerpunkte">
+        <Heading level={2} size="l">
+          Schwerpunkte
+        </Heading>
+        <ul class="editorial-content__articles">
+          {highlights.map((item) => (
+            <li>
+              <h3>{plainText(item.title)}</h3>
+              {plainText(item.description) && <p>{plainText(item.description)}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+  {
+    serviceLink && serviceLink.href && (
+      <nav aria-label="Kachel-Link" class="editorial-content__links">
+        <a href={serviceLink.href}>{serviceLink.label || serviceLink.href}</a>
+      </nav>
+    )
+  }
+  {
+    profileHref && (
+      <nav aria-label="Profil" class="editorial-content__links">
+        <a href={profileHref} rel="noopener noreferrer">
+          Profil ↗
+        </a>
+      </nav>
+    )
+  }
+  {
+    npmPackages.length > 0 && (
+      <ul class="editorial-content__tags" aria-label="npm-Pakete">
+        {npmPackages.map((name) => (
+          <li>{name}</li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    collection === 'mcp-projects' && (
+      <nav aria-label="Projektlinks" class="editorial-content__links">
+        {[
+          ['Repository', data.repositoryUrl],
+          ['Dokumentation', data.documentationUrl],
+        ].map(
+          ([label, href]) =>
+            safeHref(href) && (
+              <a href={safeHref(href)!} rel="noopener noreferrer">
+                {label} ↗
+              </a>
+            )
+        )}
+        {plainText(data.license) && <span>Lizenz: {plainText(data.license)}</span>}
+      </nav>
+    )
+  }
+  {
+    navLinks.length > 0 && (
+      <ul class="editorial-content__tree" aria-label={title}>
+        {navLinks.map((item) => (
+          <li>
+            {item.href ? <a href={item.href}>{item.label}</a> : <strong>{item.label}</strong>}
+            {item.children.length > 0 && (
+              <ul>
+                {item.children.map((child) => (
+                  <li>{child.href ? <a href={child.href}>{child.label}</a> : child.label}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    [
+      ['Aktionen', navActions],
+      ['Rechtliche Links', navLegal],
+      ['Social-Links', navSocial],
+    ].map(
+      ([label, items]) =>
+        (items as { label: string; href: string | null }[]).length > 0 && (
+          <nav aria-label={label as string} class="editorial-content__links">
+            {(items as { label: string; href: string | null }[]).map(
+              (item) => item.href && <a href={item.href}>{item.label}</a>
+            )}
+          </nav>
+        )
+    )
+  }
+  {footNote && <p class="editorial-content__meta">{footNote}</p>}
+</article>
+<style is:global>
+  .editorial-content {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding: 64px 32px 100px;
+  }
+  .editorial-content__eyebrow {
+    font: 700 16px/1.5 var(--aw-font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+  }
+  .editorial-content__hero {
+    margin: 48px 0;
+    max-width: 900px;
+  }
+  .editorial-content figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 3px solid var(--pop-ink);
+    box-shadow: 8px 8px 0 var(--pop-aqua);
+  }
+  .editorial-content__section {
+    padding-top: 72px;
+  }
+  .editorial-prose {
+    max-width: 780px;
+    font: 400 22px/1.6 var(--aw-font-sans);
+    overflow-wrap: anywhere;
+  }
+  .editorial-prose p,
+  .editorial-prose ul,
+  .editorial-prose ol,
+  .editorial-prose blockquote,
+  .editorial-prose figure {
+    margin: 0 0 1.2em;
+  }
+  .editorial-prose h2,
+  .editorial-prose h3,
+  .editorial-prose h4 {
+    font-family: var(--aw-font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 1.5em 0 0.6em;
+  }
+  .editorial-prose h2 {
+    font-size: 40px;
+  }
+  .editorial-prose h3 {
+    font-size: 30px;
+  }
+  .editorial-prose ul {
+    list-style: disc;
+    padding-left: 1.4em;
+  }
+  .editorial-prose ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+  .editorial-prose blockquote {
+    border-left: 8px solid var(--pop-fuchsia);
+    padding-left: 24px;
+    font-style: italic;
+  }
+  .editorial-prose a,
+  .editorial-content__links a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    color: var(--text-link);
+  }
+  .editorial-prose code {
+    background: var(--pop-aqua);
+    color: var(--pop-ink);
+    padding: 0.1em 0.25em;
+  }
+  .editorial-content__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin-top: 28px;
+    color: var(--text-secondary);
+    font-size: 18px;
+  }
+  .editorial-content__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+    list-style: none;
+    padding: 0;
+  }
+  .editorial-content__tags li {
+    border: 2px solid var(--pop-ink);
+    background: var(--pop-aqua);
+    color: var(--pop-ink);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 10px;
+  }
+  .editorial-prose pre {
+    overflow: auto;
+    white-space: pre-wrap;
+    border: 2px solid var(--pop-ink);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .editorial-content[data-editorial-collection='authors'] .editorial-content__hero {
+    max-width: 360px;
+  }
+  .editorial-content__articles {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .editorial-content__articles li {
+    border: 3px solid var(--pop-ink);
+    box-shadow: 6px 6px 0 var(--pop-aqua);
+    padding: 24px;
+    max-width: 780px;
+  }
+  .editorial-content__articles h3 {
+    font: 800 28px/1.2 var(--aw-font-heading);
+  }
+  .editorial-content__articles p {
+    margin-top: 12px;
+    font-size: 18px;
+    line-height: 28px;
+  }
+  .editorial-content__articles a,
+  .editorial-content__meta a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .editorial-content__contact {
+    max-width: 780px;
+    margin-top: 32px;
+  }
+  .editorial-content__contact fieldset {
+    border: 3px solid var(--pop-ink);
+    padding: 24px;
+  }
+  .editorial-content__contact legend {
+    font-weight: 800;
+    padding-inline: 8px;
+  }
+  .editorial-content__contact label {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .editorial-content__contact input,
+  .editorial-content__contact textarea {
+    width: 100%;
+    border: 2px solid var(--pop-ink);
+    background: var(--surface);
+    padding: 12px;
+    font: inherit;
+    color: var(--text-primary);
+  }
+  .editorial-content__contact button {
+    border: 2px solid var(--pop-ink);
+    background: var(--pop-yellow);
+    color: var(--pop-ink);
+    padding: 12px;
+    font-weight: 800;
+    cursor: not-allowed;
+  }
+  .editorial-content__tree {
+    margin-top: 40px;
+    padding-left: 1.2em;
+    list-style: disc;
+    font-weight: 700;
+  }
+  .editorial-content__tree ul {
+    margin: 8px 0 16px;
+    padding-left: 1.4em;
+    list-style: circle;
+    font-weight: 400;
+  }
+  .editorial-content__tree a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .editorial-content__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 48px;
+    font-weight: 700;
+  }
+  @media (max-width: 767px) {
+    .editorial-content {
+      padding: 40px 20px 64px;
+    }
+    .editorial-prose {
+      font-size: 18px;
+      line-height: 28px;
+    }
+    .editorial-content__section {
+      padding-top: 48px;
+    }
+    .editorial-prose h2 {
+      font-size: 32px;
+    }
+  }
+</style>

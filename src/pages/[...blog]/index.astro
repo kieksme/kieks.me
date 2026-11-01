@@ -10,6 +10,7 @@ import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import { getCanonical, getPermalink } from '~/utils/permalinks';
 import { getStaticPathsBlogPost, blogPostRobots } from '~/utils/blog';
 import { findImage } from '~/utils/images';
+import { articleData, breadcrumbs } from '~/utils/structured-data';
 import type { MetaData } from '~/types';
 import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 
@@ -43,6 +44,14 @@ const metadata = merge(
   },
   { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
 ) as MetaData;
+metadata.structuredData = [
+  articleData(post),
+  breadcrumbs([
+    { name: 'Startseite', url: '/' },
+    { name: 'Blog', url: '/blog' },
+    { name: post.title, url: post.permalink },
+  ]),
+];
 ---
 
 <Layout metadata={metadata}>

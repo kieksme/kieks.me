@@ -1,0 +1,31 @@
+---
+import Logo from '~/components/ui/atoms/Logo.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+
+export interface Props {
+  class?: string;
+  /** true = always; false = never; auto = mobile always, desktop only in dark (SPEC §3.2 / §6) */
+  showOpenSource?: boolean | 'auto';
+}
+
+const { class: className = '', showOpenSource = 'auto' } = Astro.props;
+---
+
+<div class:list={['relative w-full max-w-[520px] aspect-square mx-auto', className]}>
+  <Logo size="hero" class="w-full" />
+  {
+    showOpenSource !== false && (
+      <div
+        class:list={[
+          'absolute top-[5%] right-[8%] z-10 motion-safe:pop-wobble',
+          showOpenSource === true ? 'block' : 'max-md:block md:hidden dark:md:block',
+        ]}
+        style="--pop-rotate: -8deg;"
+      >
+        <Sticker color="fuchsia" shadow="aqua" rotate={-8} size="md">
+          open source!
+        </Sticker>
+      </div>
+    )
+  }
+</div>

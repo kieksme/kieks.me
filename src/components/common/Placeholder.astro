@@ -1,0 +1,14 @@
+---
+import Note from '~/components/ui/atoms/Note.astro';
+
+export interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = 'Offener Punkt', class: className = '' } = Astro.props;
+---
+
+<Note label={label} class={className}>
+  <slot />
+</Note>

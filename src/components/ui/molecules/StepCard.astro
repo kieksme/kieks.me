@@ -1,0 +1,52 @@
+---
+export interface Props {
+  num: string;
+  title: string;
+  description: string;
+  accent: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  rotate?: number;
+  class?: string;
+}
+
+const { num, title, description, accent, rotate = 1.5, class: className = '' } = Astro.props;
+const colors = {
+  aqua: 'var(--pop-aqua)',
+  fuchsia: 'var(--pop-fuchsia)',
+  yellow: 'var(--pop-yellow)',
+  purple: 'var(--pop-purple)',
+};
+const numText = accent === 'purple' ? '#fff' : 'var(--pop-navy)';
+---
+
+<article
+  class:list={[
+    'pop-step-card flex flex-col gap-2.5 bg-[var(--surface)] border-[3px] border-[var(--ink)] pt-[22px] pb-6 px-[22px]',
+    className,
+  ]}
+  style={`--pop-rotate: ${rotate}deg; transform: rotate(${rotate}deg); box-shadow: 8px 8px 0 0 ${colors[accent]};`}
+>
+  <span
+    class="inline-flex w-fit border-[3px] border-[var(--ink)] px-3 py-0.5 font-heading font-black text-[44px] leading-none"
+    style={`background: ${colors[accent]}; color: ${numText};`}
+  >
+    {num}
+  </span>
+  <h3 class="font-heading font-extrabold text-2xl leading-[30px] lowercase" style="color: var(--text-primary);">
+    {title}
+  </h3>
+  <p class="text-lg leading-7" style="color: var(--text-secondary);">{description}</p>
+</article>
+
+<style>
+  .pop-step-card {
+    transition: transform 0.25s ease;
+  }
+  .pop-step-card:hover {
+    transform: rotate(0deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-step-card:hover {
+      transform: rotate(var(--pop-rotate, 0deg));
+    }
+  }
+</style>

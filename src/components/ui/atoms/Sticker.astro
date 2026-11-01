@@ -1,0 +1,54 @@
+---
+/** Pop Sticker / Badge — SPEC §2 rotations, §8 */
+export interface Props {
+  color?: 'yellow' | 'aqua' | 'fuchsia';
+  shadow?: 'fuchsia' | 'aqua';
+  rotate?: number;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  color = 'yellow',
+  shadow = color === 'fuchsia' ? 'aqua' : 'fuchsia',
+  rotate = 3,
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+const bgs = {
+  yellow: 'var(--pop-yellow)',
+  aqua: 'var(--pop-aqua)',
+  fuchsia: 'var(--pop-fuchsia)',
+};
+const text = color === 'fuchsia' ? 'var(--pop-white)' : 'var(--pop-navy)';
+const shadowColor = shadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
+const sizes = { sm: 'text-base px-3.5 py-2', md: 'text-base px-3.5 py-2', lg: 'text-xl px-3.5 py-2' };
+---
+
+<span
+  class:list={[
+    'pop-sticker motion-safe:pop-stamp inline-block font-heading font-extrabold leading-none border-[3px] border-[var(--ink)] w-fit',
+    sizes[size],
+    className,
+  ]}
+  style={`--pop-rotate: ${rotate}deg; background: ${bgs[color]}; color: ${text}; box-shadow: 4px 4px 0 0 ${shadowColor}; transform: rotate(${rotate}deg);`}
+>
+  <slot />
+</span>
+
+<style>
+  .pop-sticker {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .pop-sticker:hover {
+    transform: rotate(calc(var(--pop-rotate, 0deg) * 2)) scale(1.05);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-sticker:hover {
+      transform: rotate(var(--pop-rotate, 0deg));
+    }
+  }
+</style>

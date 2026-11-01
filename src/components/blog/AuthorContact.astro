@@ -1,0 +1,97 @@
+---
+export interface Props {
+  authorSlug: string;
+  authorName: string;
+  isDemo?: boolean;
+}
+const { authorSlug, authorName, isDemo = false } = Astro.props;
+if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(authorSlug)) throw new Error('Invalid public author slug');
+---
+
+<form
+  method="post"
+  action={`https://datahub.kieks.me/api/author-contact/${authorSlug}`}
+  data-author-contact
+  data-endpoint={`https://datahub.kieks.me/api/author-contact/${authorSlug}`}
+  data-demo={isDemo ? 'true' : undefined}
+  class="grid gap-4 mt-8 max-w-xl"
+>
+  <h2 class="text-2xl font-heading font-bold">Nachricht an {authorName}</h2>
+  <label class="grid gap-1"
+    >Dein Name<input
+      class="border rounded px-3 py-2 bg-transparent"
+      name="name"
+      autocomplete="name"
+      required
+      maxlength="100"
+    /></label
+  >
+  <label class="grid gap-1"
+    >Deine E-Mail-Adresse<input
+      class="border rounded px-3 py-2 bg-transparent"
+      type="email"
+      name="email"
+      autocomplete="email"
+      required
+      maxlength="254"
+    /></label
+  >
+  <label class="grid gap-1"
+    >Deine Nachricht<textarea
+      class="border rounded px-3 py-2 bg-transparent"
+      name="message"
+      rows="6"
+      required
+      minlength="10"
+      maxlength="5000"></textarea></label
+  >
+  <div hidden aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+  <p class="text-sm">
+    Deine Nachricht wird zur Bearbeitung in unserem Backend gespeichert. Hinweise findest du in der <a
+      href="/datenschutz"
+      class="underline">Datenschutzerklärung</a
+    >.
+  </p>
+  <button type="submit" disabled={isDemo} class="btn-primary justify-self-start">Nachricht senden</button>
+  <p data-contact-status role="status" aria-live="polite"></p>
+</form>
+<script>
+  function setupAuthorForms() {
+    document.querySelectorAll<HTMLFormElement>('form[data-author-contact]').forEach((form) => {
+      if (form.dataset.ready) return;
+      form.dataset.ready = 'true';
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (form.dataset.demo || !form.reportValidity()) return;
+        const status = form.querySelector<HTMLElement>('[data-contact-status]')!;
+        const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+        const data = new FormData(form);
+        button.disabled = true;
+        status.textContent = 'Deine Nachricht wird gesendet …';
+        try {
+          const response = await fetch(form.dataset.endpoint!, {
+            method: 'POST',
+            credentials: 'omit',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: data.get('name'),
+              email: data.get('email'),
+              message: data.get('message'),
+              website: data.get('website'),
+            }),
+            signal: AbortSignal.timeout(15000),
+          });
+          if (!response.ok) throw new Error('unavailable');
+          status.textContent = 'Danke! Deine Nachricht ist bei uns angekommen.';
+          form.reset();
+        } catch {
+          status.textContent = 'Die Nachricht konnte gerade nicht gesendet werden. Bitte versuche es später erneut.';
+        } finally {
+          button.disabled = false;
+        }
+      });
+    });
+  }
+  setupAuthorForms();
+  document.addEventListener('astro:page-load', setupAuthorForms);
+</script>

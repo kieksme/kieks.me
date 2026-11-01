@@ -52,7 +52,7 @@ Hardenbergstraße 48 - 04275 Leipzig - Germany
 Gesellschafter: Thomas Schöne, André Lademann
 VAT-ID/USt-IdNr: DE452741849
 Inhaltlich verantwortlich gemäß § 18 Abs. 2 MStV: Thomas Schöne
-Unsere Hinweise zur Verarbeitung Ihrer personenbezogenen Daten finden Sie unter https://kieks.me/datenschutzerklärung/
+Unsere Hinweise zur Verarbeitung Ihrer personenbezogenen Daten finden Sie unter https://kieks.me/datenschutz
 
 
 ```
