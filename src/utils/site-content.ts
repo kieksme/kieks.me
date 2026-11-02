@@ -99,6 +99,21 @@ const list = (value: unknown): Doc[] => {
     (a, b) => (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0) || String(a.id).localeCompare(String(b.id))
   );
 };
+const localizedList = (value: unknown, requiredFields: string[], locale: Locale): Doc[] => {
+  const docs = list(value);
+  if (locale === defaultLocale) return docs;
+  return docs.filter((doc) => requiredFields.every((field) => doc[field] !== null));
+};
+const hasNullNavigationLink = (value: unknown): boolean => {
+  if (value === null) return true;
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const link = value as Doc;
+  if (link.label === null) return true;
+  if (Array.isArray(link.children) && link.children.length) return link.children.some(hasNullNavigationLink);
+  return link.href === null;
+};
+const hasUntranslatedNavigationLinks = (value: unknown): boolean =>
+  value === null || (Array.isArray(value) && value.some(hasNullNavigationLink));
 const SERVICE_STYLE: Record<PopAccent, Pick<SiteServiceView, 'shadow' | 'numShadow' | 'numColor'>> = {
   aqua: { shadow: 'ink', numShadow: 'fuchsia' },
   fuchsia: { shadow: 'ink', numShadow: 'aqua' },
@@ -118,14 +133,15 @@ export function resolveSiteContent(
   const localizedNavigation = getNavigation(locale);
   const localizedHeader = structuredClone(localizedNavigation.header.links) as unknown as SiteContent['header'];
   const localizedFooter = structuredClone(localizedNavigation.footer.links) as unknown as SiteContent['footerColumns'];
+  const useGermanFallback = locale === defaultLocale;
   const result: SiteContent = {
-    services: fallbackServices,
-    faqsLeft: fallbackFaqsLeft,
-    faqsRight: fallbackFaqsRight,
-    team: fallbackTeam,
-    homeProjects: fallbackHomeProjects,
-    mcpServers: fallbackMcpServers,
-    otherProjects: fallbackOtherProjects,
+    services: useGermanFallback ? fallbackServices : [],
+    faqsLeft: useGermanFallback ? fallbackFaqsLeft : [],
+    faqsRight: useGermanFallback ? fallbackFaqsRight : [],
+    team: useGermanFallback ? fallbackTeam : [],
+    homeProjects: useGermanFallback ? fallbackHomeProjects : [],
+    mcpServers: useGermanFallback ? fallbackMcpServers : [],
+    otherProjects: useGermanFallback ? fallbackOtherProjects : [],
     header: locale === defaultLocale ? (headerData.links as SiteContent['header']) : localizedHeader,
     footerColumns: locale === defaultLocale ? (footerData.links as SiteContent['footerColumns']) : localizedFooter,
     legalLinks:
@@ -146,7 +162,7 @@ export function resolveSiteContent(
     fromCms,
   };
   if (!site) return result;
-  const services = list(site.services);
+  const services = localizedList(site.services, ['title', 'summary', 'href', 'linkText'], locale);
   if (services.length) {
     fromCms.push('services');
     result.services = services.map((doc, index) => {
@@ -162,7 +178,9 @@ export function resolveSiteContent(
       };
     });
   }
-  const highlighted = services.filter((doc) => doc.highlights !== undefined);
+  const highlighted = services.filter((doc) =>
+    locale === defaultLocale ? doc.highlights !== undefined : doc.highlights !== undefined && doc.highlights !== null
+  );
   for (const doc of highlighted) {
     const slug = str(doc.slug, 80, true);
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid service slug');
@@ -181,7 +199,7 @@ export function resolveSiteContent(
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid service slug');
     result.serviceDetails[slug] = html;
   }
-  const faqs = list(site.faqs).filter((doc) => doc.placement === 'home');
+  const faqs = localizedList(site.faqs, ['question', 'answer'], locale).filter((doc) => doc.placement === 'home');
   if (faqs.length) {
     fromCms.push('faqs');
     const views = faqs.map((doc, index) => ({
@@ -194,25 +212,29 @@ export function resolveSiteContent(
     result.faqsLeft = views.slice(0, half);
     result.faqsRight = views.slice(half);
   }
-  const team = list(site.team);
+  const team = localizedList(site.team, ['slug', 'name'], locale);
   if (team.length) {
     fromCms.push('team');
     result.team = team.map((doc) => {
       const slug = str(doc.slug, 80, true);
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid team slug');
       const name = str(doc.name, 120, true);
+      const role = str(doc.position, 400) || undefined;
       return {
         slug,
         name,
         label: name.split(' ')[0].toLowerCase(),
-        role: str(doc.position, 400) || undefined,
-        imageAlt: `${name}, Gesellschafter der kieks.me GbR`,
+        role,
+        imageAlt:
+          locale === defaultLocale
+            ? `${name}, Gesellschafter der kieks.me GbR`
+            : `${name}, ${role || 'team member'} at kieks.me GbR`,
         bio: str(doc.bio, 1500) || undefined,
         bioHtml: renderRich(doc.bioRichText) || undefined,
       };
     });
   }
-  const projects = list(site['mcp-projects']);
+  const projects = localizedList(site['mcp-projects'], ['name', 'summary', 'repositoryUrl'], locale);
   if (projects.length) {
     fromCms.push('mcp-projects');
     const kinds = ['mcp-server', 'skill', 'tool', 'product'];
@@ -247,14 +269,16 @@ export function resolveSiteContent(
         descriptionHtml: renderRich(doc.descriptionRichText) || undefined,
       }));
   }
-  const navigation = list(site.navigation);
+  const navigation = list(site.navigation).filter(
+    (doc) => locale === defaultLocale || !hasUntranslatedNavigationLinks(doc.links)
+  );
   if (navigation.length) {
     fromCms.push('navigation');
     const keys = navigation.map((doc) => String(doc.key));
     if (keys.some((key) => !['header', 'footer'].includes(key)) || new Set(keys).size !== keys.length)
       throw new Error('CMS site content: invalid navigation key');
     const entries = (value: unknown): Doc[] => {
-      if (value === undefined) return [];
+      if (value === undefined || (locale !== defaultLocale && value === null)) return [];
       if (!Array.isArray(value) || value.length > MAX_ITEMS)
         throw new Error('CMS site content: invalid navigation list');
       return value.map((raw) => {
@@ -302,12 +326,24 @@ export function resolveSiteContent(
         return { ...link(doc), variant };
       });
   }
-  const homes = list(site.home).filter((doc) => doc.slug === 'startseite');
+  const homes = list(site.home).filter(
+    (doc) =>
+      doc.slug === 'startseite' &&
+      (locale === defaultLocale ||
+        ((doc.title === undefined || doc.title !== null) &&
+          doc.hero !== null &&
+          (!doc.hero ||
+            typeof doc.hero !== 'object' ||
+            Array.isArray(doc.hero) ||
+            (doc.hero as Doc).headline !== null)))
+  );
   if (homes.length > 1) throw new Error('CMS site content: duplicate home page');
   const heroDoc = homes[0]?.hero;
+  if (heroDoc !== undefined && heroDoc !== null && (typeof heroDoc !== 'object' || Array.isArray(heroDoc)))
+    throw new Error('CMS site content: invalid home hero');
   if (heroDoc && typeof heroDoc === 'object' && !Array.isArray(heroDoc)) {
     const hero = heroDoc as Doc;
-    const headline = str(hero.headline, 400);
+    const headline = hero.headline === undefined ? '' : str(hero.headline, 400, true);
     if (headline) {
       const cta = (value: unknown): SiteNavLink | undefined => {
         const entry = value && typeof value === 'object' ? (value as Doc) : {};

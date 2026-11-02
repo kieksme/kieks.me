@@ -26,7 +26,20 @@ describe('editable site sections with static fallback', () => {
     expect(emptyEnglish.header).toEqual(english.header.links);
     expect(emptyEnglish.footerColumns).toEqual(english.footer.links);
     expect(emptyEnglish.legalLinks).toEqual([]);
-    expect(JSON.stringify(emptyEnglish.header)).not.toContain('Leistungen');
+    expect(emptyEnglish).toMatchObject({
+      services: [],
+      faqsLeft: [],
+      faqsRight: [],
+      team: [],
+      homeProjects: [],
+      mcpServers: [],
+      otherProjects: [],
+      serviceHighlights: {},
+      serviceDetails: {},
+    });
+    expect(emptyEnglish.hero).toBeUndefined();
+    for (const german of ['Leistungen', 'Datenschutz', 'Gesellschafter', 'Warum kieks.me', 'Mehr zu'])
+      expect(JSON.stringify(emptyEnglish)).not.toContain(german);
 
     const localized = resolveSiteContent(
       {
@@ -45,6 +58,182 @@ describe('editable site sections with static fallback', () => {
     expect(localized.header).toEqual([{ text: 'CMS Services', href: '/en/services' }]);
     expect(localized.footerColumns).toEqual(english.footer.links);
     expect(JSON.stringify(localized)).not.toContain('Leistungen');
+  });
+
+  it('ignores null untranslated English documents and keeps translated neighbors isolated', () => {
+    const content = resolveSiteContent(
+      {
+        services: [
+          {
+            ...published,
+            id: 'service-de',
+            slug: 'de-service',
+            title: null,
+            summary: 'DE SERVICE',
+            href: '/leistungen/de',
+            linkText: 'Mehr',
+          },
+          {
+            ...published,
+            id: 'service-en',
+            slug: 'english-service',
+            title: 'English service',
+            summary: 'English summary',
+            href: '/en/services/english',
+            linkText: 'Learn more',
+            highlights: null,
+          },
+        ],
+        faqs: [
+          { ...published, id: 'faq-de', placement: 'home', question: null, answer: 'DE FAQ' },
+          { ...published, id: 'faq-en', placement: 'home', question: 'English question', answer: 'English answer' },
+        ],
+        team: [
+          { ...published, id: 'team-de', slug: 'de-person', name: null, position: 'DE TEAM' },
+          { ...published, id: 'team-en', slug: 'alice', name: 'Alice Example', position: 'Partner' },
+        ],
+        'mcp-projects': [
+          {
+            ...published,
+            id: 'project-de',
+            kind: 'mcp-server',
+            name: 'DE PROJECT',
+            summary: null,
+            repositoryUrl: 'https://github.com/kieksme/de',
+          },
+          {
+            ...published,
+            id: 'project-en',
+            kind: 'mcp-server',
+            name: 'English MCP',
+            summary: 'English project',
+            repositoryUrl: 'https://github.com/kieksme/en',
+          },
+        ],
+        navigation: [
+          {
+            ...published,
+            id: 'nav-de',
+            key: 'header',
+            links: [{ label: null, href: '/leistungen/de' }],
+          },
+        ],
+        home: [
+          {
+            ...published,
+            id: 'home-de',
+            slug: 'startseite',
+            hero: { eyebrow: 'DE HERO', headline: null, lead: 'DE LEAD' },
+          },
+        ],
+      },
+      undefined,
+      'en'
+    );
+
+    expect(content.services.map((item) => item.title)).toEqual(['English service']);
+    expect(content.serviceHighlights).toEqual({});
+    expect([...content.faqsLeft, ...content.faqsRight].map((item) => item.title)).toEqual(['English question']);
+    expect(content.team).toEqual([
+      {
+        slug: 'alice',
+        name: 'Alice Example',
+        label: 'alice',
+        role: 'Partner',
+        imageAlt: 'Alice Example, Partner at kieks.me GbR',
+      },
+    ]);
+    expect(content.mcpServers.map((item) => item.name)).toEqual(['English MCP']);
+    expect(content.homeProjects.map((item) => item.name)).toEqual(['mcp-server · english']);
+    expect(content.header).toEqual(getNavigation('en').header.links);
+    expect(content.hero).toBeUndefined();
+    for (const german of ['DE SERVICE', 'DE FAQ', 'DE TEAM', 'DE PROJECT', 'DE HERO', 'DE LEAD', 'Gesellschafter'])
+      expect(JSON.stringify(content)).not.toContain(german);
+  });
+
+  it('keeps translated English sections when only optional localized fields are null', () => {
+    const content = resolveSiteContent(
+      {
+        navigation: [
+          {
+            ...published,
+            id: 'header-en',
+            key: 'header',
+            links: [
+              {
+                label: 'CMS Services',
+                href: null,
+                children: [{ label: 'CMS Service', href: '/en/services/cms' }],
+              },
+            ],
+            actions: null,
+          },
+        ],
+        home: [
+          {
+            ...published,
+            id: 'home-en',
+            slug: 'startseite',
+            title: 'Home',
+            hero: {
+              eyebrow: null,
+              headline: 'English headline',
+              lead: null,
+              primaryCta: null,
+              secondaryCta: null,
+            },
+          },
+        ],
+      },
+      undefined,
+      'en'
+    );
+
+    expect(content.header).toEqual([
+      {
+        text: 'CMS Services',
+        links: [{ text: 'CMS Service', href: '/en/services/cms' }],
+      },
+    ]);
+    expect(content.headerActions).toEqual(getNavigation('en').header.actions);
+    expect(content.hero).toEqual({
+      eyebrow: '',
+      headlineLines: ['English headline'],
+      lead: '',
+      primaryCta: undefined,
+      secondaryCta: undefined,
+    });
+  });
+
+  it('still fails closed for null German fields and malformed non-null English fields', () => {
+    const service = {
+      ...published,
+      id: 1,
+      slug: 'service',
+      summary: 'Summary',
+      href: '/en/services/service',
+      linkText: 'Learn more',
+    };
+    expect(() => resolveSiteContent({ services: [{ ...service, title: null }] })).toThrow('missing text');
+    expect(() =>
+      resolveSiteContent({ services: [{ ...service, title: { translated: false } }] }, undefined, 'en')
+    ).toThrow('missing text');
+    expect(() =>
+      resolveSiteContent(
+        {
+          navigation: [{ ...published, id: 1, key: 'header', links: [{ label: 42, href: '/en/services' }] }],
+        },
+        undefined,
+        'en'
+      )
+    ).toThrow('missing text');
+    expect(() =>
+      resolveSiteContent(
+        { home: [{ ...published, id: 1, slug: 'startseite', title: 'Home', hero: 'not-an-object' }] },
+        undefined,
+        'en'
+      )
+    ).toThrow('invalid home hero');
   });
 
   it('maps validated published documents in order and keeps untouched sections on fallback', () => {

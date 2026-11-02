@@ -3,8 +3,13 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import * as payloadBuild from '../../../src/utils/payload-build';
-import { fetchCmsBuildContent, mapCmsMetadata, resolvePublicMedia } from '../../../src/utils/payload-build';
+import {
+  fetchCmsBuildContent,
+  fetchCmsBuildSnapshot,
+  loadCmsBuildContent,
+  mapCmsMetadata,
+  resolvePublicMedia,
+} from '../../../src/utils/payload-build';
 import type { CmsBuildContent } from '../../../src/utils/payload-build';
 import { cmsPosts, renderPublicRichText } from '../../../src/utils/cms-content';
 import { articleData, personData, serializeStructuredData } from '../../../src/utils/structured-data';
@@ -62,6 +67,7 @@ describe('server-only static CMS build', () => {
     await expect(fetchCmsBuildContent({ url: 'http://unsafe.invalid', apiKey: secret, fetcher })).rejects.toThrow(
       'HTTPS'
     );
+    await expect(loadCmsBuildContent('fr' as 'de')).rejects.toThrow('Unsupported public CMS locale');
   });
   it('fetches all pages using only the published website allowlist with narrow selects', async () => {
     const fetcher = server({}, (body, url) => {
@@ -93,18 +99,7 @@ describe('server-only static CMS build', () => {
         slug === 'posts' ? [{ id: 1, _status: 'published', title: locale === 'en' ? 'English' : 'Deutsch' }] : [];
       return Response.json({ docs, totalPages: docs.length ? 1 : 0, totalDocs: docs.length, page: 1 });
     }) as unknown as typeof fetch;
-    const fetchLocales = (
-      payloadBuild as unknown as {
-        fetchCmsBuildSnapshot?: (options: {
-          url: string;
-          apiKey: string;
-          fetcher: typeof fetch;
-          mediaDirectory: string;
-        }) => Promise<Record<'de' | 'en', CmsBuildContent>>;
-      }
-    ).fetchCmsBuildSnapshot;
-    expect(fetchLocales).toBeTypeOf('function');
-    const snapshot = await fetchLocales!({
+    const snapshot = await fetchCmsBuildSnapshot({
       url: origin,
       apiKey: secret,
       fetcher,
@@ -118,6 +113,47 @@ describe('server-only static CMS build', () => {
     for (const locale of ['de', 'en'])
       for (const collection of ['pages', 'posts', 'authors', 'media'])
         expect(requests).toContain(`${locale}:${collection}:none`);
+  });
+  it('keeps localized media alt text isolated while sharing one deterministic file path', async () => {
+    const folder = await directory();
+    const localeRequests: string[] = [];
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = new URL(String(input));
+      if (url.pathname === '/api/media/file/shared.png')
+        return new Response(png, { headers: { 'Content-Type': 'image/png' } });
+      const locale = url.searchParams.get('locale')!;
+      const slug = url.pathname.split('/').pop()!;
+      localeRequests.push(`${locale}:${slug}`);
+      const docs =
+        slug === 'media'
+          ? [
+              {
+                id: 7,
+                websitePublished: true,
+                filename: 'shared.png',
+                url: '/api/media/file/shared.png',
+                mimeType: 'image/png',
+                alt: locale === 'de' ? 'Deutscher Alternativtext' : 'English alternative text',
+              },
+            ]
+          : [];
+      return Response.json({ docs, totalPages: docs.length ? 1 : 0, totalDocs: docs.length, page: 1 });
+    }) as unknown as typeof fetch;
+
+    const snapshot = await fetchCmsBuildSnapshot({
+      url: origin,
+      apiKey: secret,
+      fetcher,
+      mediaDirectory: folder,
+    });
+
+    expect(snapshot.de.media['7'].alt).toBe('Deutscher Alternativtext');
+    expect(snapshot.en.media['7'].alt).toBe('English alternative text');
+    expect(snapshot.de.media['7'].url).toBe(snapshot.en.media['7'].url);
+    expect(snapshot.de.media['7'].url).toMatch(/^\/_cms-media\/[a-f0-9]{64}\.png$/);
+    expect(await readFile(path.join(folder, path.basename(snapshot.de.media['7'].url)))).toEqual(png);
+    expect(localeRequests.slice(0, 4).every((request) => request.startsWith('de:'))).toBe(true);
+    expect(localeRequests.slice(4).every((request) => request.startsWith('en:'))).toBe(true);
   });
   it('fails closed if the server returns drafts or incomplete/duplicate pagination', async () => {
     await expect(
