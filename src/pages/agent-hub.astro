@@ -61,7 +61,7 @@ const offersBase = [
     edge: 'fuchsia' as const,
   },
 ];
-const { serviceHighlights, serviceDetails } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent('de');
 const offers = withHighlights(serviceHighlights['agent-hub'], offersBase);
 
 const benefits = [

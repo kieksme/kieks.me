@@ -8,7 +8,7 @@ import { fetchPosts } from '~/utils/blog';
 import { personData, breadcrumbs } from '~/utils/structured-data';
 import type { PublicAuthor } from '~/types';
 export async function getStaticPaths() {
-  return cmsAuthors(await loadCmsBuildContent()).map((author) => ({
+  return cmsAuthors(await loadCmsBuildContent('de')).map((author) => ({
     params: { slug: author.slug },
     props: { author },
   }));

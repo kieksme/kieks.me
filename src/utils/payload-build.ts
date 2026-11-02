@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { MetaData } from '../types';
+import { defaultLocale, isLocale, locales, type Locale } from '../i18n/locales';
 
 export type CmsDocument = Record<string, unknown>;
 export interface CmsBuildContent {
@@ -14,6 +15,7 @@ export interface CmsBuildContent {
   /** Optional editable site sections (services, team, faqs, mcp-projects, navigation). Empty unless enabled. */
   site: Record<string, CmsDocument[]>;
 }
+export type CmsBuildSnapshot = Record<Locale, CmsBuildContent>;
 const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
   pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'hero', 'seo'],
@@ -101,6 +103,7 @@ export async function fetchCmsBuildContent(
     mediaDirectory?: string;
     /** Opt in to editable site sections. Off by default so builds never request unknown collections. */
     siteContent?: boolean;
+    locale?: Locale;
   } = {}
 ): Promise<CmsBuildContent> {
   if (!options.url && !options.apiKey) return empty();
@@ -120,6 +123,8 @@ export async function fetchCmsBuildContent(
     origin.pathname !== '/'
   )
     throw new Error('PAYLOAD_URL must be an HTTPS origin');
+  const locale = options.locale ?? defaultLocale;
+  if (!isLocale(locale)) throw new Error('Unsupported public CMS locale');
   const fetcher = options.fetcher ?? fetch;
   const headers = { Authorization: `users API-Key ${options.apiKey}` };
   async function request(url: URL): Promise<Response> {
@@ -142,6 +147,8 @@ export async function fetchCmsBuildContent(
       url.searchParams.set('limit', '100');
       url.searchParams.set('page', String(page));
       url.searchParams.set('sort', 'id');
+      url.searchParams.set('locale', locale);
+      url.searchParams.set('fallback-locale', 'none');
       for (const field of fields[slug]) url.searchParams.set(`select[${field}]`, 'true');
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
       else {
@@ -289,6 +296,18 @@ export async function fetchCmsBuildContent(
   return result;
 }
 
+type CmsBuildOptions = Omit<Parameters<typeof fetchCmsBuildContent>[0], 'locale'>;
+
+/**
+ * Fetches public locales in a fixed order. In particular, media writes cannot race when localized
+ * records point at the same content-addressed file.
+ */
+export async function fetchCmsBuildSnapshot(options: CmsBuildOptions = {}): Promise<CmsBuildSnapshot> {
+  const snapshot = {} as CmsBuildSnapshot;
+  for (const locale of locales) snapshot[locale] = await fetchCmsBuildContent({ ...options, locale });
+  return snapshot;
+}
+
 export function resolvePublicMedia(content: CmsBuildContent, value: unknown) {
   if (value === undefined || value === null || value === '') return undefined;
   const media = content.media[relationId(value)];
@@ -343,19 +362,23 @@ const configuration = () => ({
 });
 export async function prepareCmsBuild() {
   await rm(path.resolve('public/_cms-media'), { recursive: true, force: true });
-  const content = await fetchCmsBuildContent(configuration());
+  const content = await fetchCmsBuildSnapshot(configuration());
   await mkdir(path.dirname(snapshot), { recursive: true });
   await writeFile(snapshot, JSON.stringify(content), { mode: 0o600 });
 }
-let cached: Promise<CmsBuildContent> | undefined;
-export async function loadCmsBuildContent(): Promise<CmsBuildContent> {
-  return (cached ??= (async () => {
+let cached: Promise<CmsBuildSnapshot> | undefined;
+export async function loadCmsBuildContent(locale: Locale): Promise<CmsBuildContent> {
+  if (!isLocale(locale)) throw new Error('Unsupported public CMS locale');
+  const content = await (cached ??= (async () => {
     try {
-      return JSON.parse(await readFile(snapshot, 'utf8')) as CmsBuildContent;
+      const value = JSON.parse(await readFile(snapshot, 'utf8')) as Partial<CmsBuildSnapshot>;
+      if (!value.de || !value.en) throw new Error('CMS build snapshot is missing a public locale');
+      return value as CmsBuildSnapshot;
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-      return fetchCmsBuildContent(configuration());
+      return fetchCmsBuildSnapshot(configuration());
     }
   })());
+  return content[locale];
 }
 export const finishCmsBuild = () => rm(snapshot, { force: true });

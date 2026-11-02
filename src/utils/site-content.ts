@@ -19,6 +19,8 @@ import type {
   SiteSocialLink,
 } from '../content-model/site-content';
 import { footerData, headerData } from '../navigation';
+import { getNavigation } from '../i18n/navigation';
+import { defaultLocale, type Locale } from '../i18n/locales';
 import { escapeHtml, renderRichText } from '../components/editorial/rich-text';
 import { renderPublicRichText } from './cms-content';
 import { loadCmsBuildContent } from './payload-build';
@@ -109,9 +111,13 @@ export type RichRenderer = (value: unknown) => string;
 
 export function resolveSiteContent(
   site?: Record<string, unknown>,
-  renderRich: RichRenderer = renderRichText
+  renderRich: RichRenderer = renderRichText,
+  locale: Locale = defaultLocale
 ): SiteContent {
   const fromCms: string[] = [];
+  const localizedNavigation = getNavigation(locale);
+  const localizedHeader = structuredClone(localizedNavigation.header.links) as unknown as SiteContent['header'];
+  const localizedFooter = structuredClone(localizedNavigation.footer.links) as unknown as SiteContent['footerColumns'];
   const result: SiteContent = {
     services: fallbackServices,
     faqsLeft: fallbackFaqsLeft,
@@ -120,12 +126,23 @@ export function resolveSiteContent(
     homeProjects: fallbackHomeProjects,
     mcpServers: fallbackMcpServers,
     otherProjects: fallbackOtherProjects,
-    header: headerData.links as SiteContent['header'],
-    footerColumns: footerData.links as SiteContent['footerColumns'],
-    legalLinks: footerData.secondaryLinks,
+    header: locale === defaultLocale ? (headerData.links as SiteContent['header']) : localizedHeader,
+    footerColumns: locale === defaultLocale ? (footerData.links as SiteContent['footerColumns']) : localizedFooter,
+    legalLinks:
+      locale === defaultLocale
+        ? footerData.secondaryLinks
+        : (structuredClone(localizedNavigation.footer.secondaryLinks) as unknown as SiteContent['legalLinks']),
+    headerActions:
+      locale === defaultLocale
+        ? undefined
+        : (structuredClone(localizedNavigation.header.actions) as unknown as SiteContent['headerActions']),
     serviceHighlights: {},
     serviceDetails: {},
-    socialLinks: [],
+    socialLinks:
+      locale === defaultLocale
+        ? []
+        : (structuredClone(localizedNavigation.footer.socialLinks) as unknown as SiteContent['socialLinks']),
+    footNote: locale === defaultLocale ? undefined : localizedNavigation.footer.footNote,
     fromCms,
   };
   if (!site) return result;
@@ -325,11 +342,12 @@ export function withHighlights<T extends { title: string; description: string }>
 }
 
 /** Build-time entry point for pages: published CMS sections (if enabled) over the static fallback. */
-export async function getSiteContent(): Promise<SiteContent> {
-  const content = await loadCmsBuildContent();
+export async function getSiteContent(locale: Locale): Promise<SiteContent> {
+  const content = await loadCmsBuildContent(locale);
   const site = content.enabled && Object.keys(content.site ?? {}).length ? content.site : undefined;
   return resolveSiteContent(
     site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') },
-    (value) => renderPublicRichText(value, content)
+    (value) => renderPublicRichText(value, content),
+    locale
   );
 }

@@ -7,7 +7,7 @@ import SectionCTA from '~/components/widgets/SectionCTA.astro';
 import Features from '~/components/widgets/Features.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights, serviceDetails } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent('de');
 const highlights = withHighlights(serviceHighlights['beratung'], [
   {
     title: 'Bestandsaufnahme',

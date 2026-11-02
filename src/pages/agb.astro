@@ -4,7 +4,7 @@ import { Content as Fallback, frontmatter } from '../content/legal/agb.md';
 import { loadCmsBuildContent, mapCmsMetadata, text } from '~/utils/payload-build';
 import { renderMarkdown } from '~/components/editorial/safe-markdown';
 import { breadcrumbs } from '~/utils/structured-data';
-const content = await loadCmsBuildContent();
+const content = await loadCmsBuildContent('de');
 const page = content.pages.find((page) => page.slug === 'agb');
 const metadata = page ? mapCmsMetadata(page.seo, content) : { ...frontmatter.metadata };
 metadata.structuredData = [

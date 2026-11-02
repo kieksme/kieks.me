@@ -3,6 +3,7 @@ import { fetchCmsBuildContent } from '../../../src/utils/payload-build';
 import { resolveSiteContent, safeHref, withHighlights } from '../../../src/utils/site-content';
 import { fallbackFaqsLeft, fallbackMcpServers, fallbackServices } from '../../../src/content-model/fallback';
 import { footerData, headerData } from '../../../src/navigation';
+import { getNavigation } from '../../../src/i18n/navigation';
 
 const published = { _status: 'published' as const };
 describe('editable site sections with static fallback', () => {
@@ -17,6 +18,33 @@ describe('editable site sections with static fallback', () => {
       expect(content.footerColumns).toEqual(footerData.links);
       expect(content.legalLinks).toEqual(footerData.secondaryLinks);
     }
+  });
+
+  it('uses English static navigation when its CMS locale has no values and never falls back to German CMS fields', () => {
+    const english = getNavigation('en');
+    const emptyEnglish = resolveSiteContent(undefined, undefined, 'en');
+    expect(emptyEnglish.header).toEqual(english.header.links);
+    expect(emptyEnglish.footerColumns).toEqual(english.footer.links);
+    expect(emptyEnglish.legalLinks).toEqual([]);
+    expect(JSON.stringify(emptyEnglish.header)).not.toContain('Leistungen');
+
+    const localized = resolveSiteContent(
+      {
+        navigation: [
+          {
+            ...published,
+            id: 1,
+            key: 'header',
+            links: [{ label: 'CMS Services', href: '/en/services' }],
+          },
+        ],
+      },
+      undefined,
+      'en'
+    );
+    expect(localized.header).toEqual([{ text: 'CMS Services', href: '/en/services' }]);
+    expect(localized.footerColumns).toEqual(english.footer.links);
+    expect(JSON.stringify(localized)).not.toContain('Leistungen');
   });
 
   it('maps validated published documents in order and keeps untouched sections on fallback', () => {
@@ -492,10 +520,14 @@ describe('editable site sections with static fallback', () => {
     const origin = 'https://cms.example.invalid';
     const requested: string[] = [];
     const mediaSelects: (string | null)[] = [];
+    const requestedLocales: (string | null)[] = [];
+    const requestedFallbacks: (string | null)[] = [];
     const fetcher = vi.fn(async (input: string | URL | Request) => {
       const url = new URL(String(input));
       const slug = url.pathname.split('/').pop()!;
       requested.push(slug);
+      requestedLocales.push(url.searchParams.get('locale'));
+      requestedFallbacks.push(url.searchParams.get('fallback-locale'));
       if (slug === 'media') mediaSelects.push(url.searchParams.get('select[filename]'));
       expect(url.searchParams.get('draft')).toBe('false');
       expect(url.searchParams.get('where[_status][equals]') ?? 'media').toMatch(/published|media/);
@@ -504,15 +536,22 @@ describe('editable site sections with static fallback', () => {
     }) as unknown as typeof fetch;
     await fetchCmsBuildContent({ url: origin, apiKey: 'k'.repeat(40), fetcher, mediaDirectory: '/tmp/none-site-test' });
     expect(requested.sort()).toEqual(['authors', 'media', 'pages', 'posts']);
+    expect(requestedLocales).toEqual(['de', 'de', 'de', 'de']);
+    expect(requestedFallbacks).toEqual(['none', 'none', 'none', 'none']);
     requested.length = 0;
+    requestedLocales.length = 0;
+    requestedFallbacks.length = 0;
     const withSite = await fetchCmsBuildContent({
       url: origin,
       apiKey: 'k'.repeat(40),
       fetcher,
       siteContent: true,
+      locale: 'en',
       mediaDirectory: '/tmp/none-site-test',
     });
     expect(requested).toEqual(expect.arrayContaining(['services', 'team', 'faqs', 'mcp-projects', 'navigation']));
+    expect(requestedLocales.every((locale) => locale === 'en')).toBe(true);
+    expect(requestedFallbacks.every((fallback) => fallback === 'none')).toBe(true);
     expect(mediaSelects).toContain('true');
     expect(withSite.site.faqs).toEqual([{ id: 1, _status: 'published', question: 'Q', answer: 'A' }]);
     expect(withSite.site.navigation).toEqual([]);
@@ -552,5 +591,12 @@ describe('editable site sections with static fallback', () => {
       team: [{ ...published, id: 1, slug: 'andre', name: 'André Lademann', position: 'Gesellschafter' }],
     }).team;
     expect(cms.some((m) => m.bio || m.bioHtml || (m.role && !m.role.includes('⟦')))).toBe(true);
+  });
+
+  it('loads locale-specific site content in PageLayout for both public locales', async () => {
+    const { readFile } = await import('node:fs/promises');
+    const layout = await readFile(new URL('../../../src/layouts/PageLayout.astro', import.meta.url), 'utf8');
+    expect(layout).toContain('await getSiteContent(locale)');
+    expect(layout).not.toContain("locale === 'de' ? await getSiteContent()");
   });
 });

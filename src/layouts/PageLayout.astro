@@ -2,7 +2,6 @@
 import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/ui/organisms/Header.astro';
 import Footer from '~/components/ui/organisms/Footer.astro';
-import { headerData, footerData } from '~/navigation';
 import { getNavigation } from '~/i18n/navigation';
 import { getLocaleFromPath, isLocale, type Locale } from '~/i18n/locales';
 import { getSiteContent } from '~/utils/site-content';
@@ -17,25 +16,19 @@ const { metadata } = Astro.props;
 const requestedLocale = Astro.props.locale ?? Astro.currentLocale;
 const locale = isLocale(requestedLocale) ? requestedLocale : getLocaleFromPath(Astro.url.pathname);
 const staticNavigation = getNavigation(locale);
-const site = locale === 'de' ? await getSiteContent() : undefined;
-const header =
-  locale === 'de' && site
-    ? {
-        ...headerData,
-        links: site.header,
-        actions: (site.headerActions ?? headerData.actions) as CallToAction[],
-      }
-    : staticNavigation.header;
-const footer =
-  locale === 'de' && site
-    ? {
-        ...footerData,
-        links: site.footerColumns,
-        secondaryLinks: site.legalLinks,
-        socialLinks: site.socialLinks,
-        footNote: site.footNote ?? footerData.footNote,
-      }
-    : staticNavigation.footer;
+const site = await getSiteContent(locale);
+const header = {
+  ...staticNavigation.header,
+  links: site.header,
+  actions: (site.headerActions ?? staticNavigation.header.actions) as CallToAction[],
+};
+const footer = {
+  ...staticNavigation.footer,
+  links: site.footerColumns,
+  secondaryLinks: site.legalLinks,
+  socialLinks: site.socialLinks,
+  footNote: site.footNote ?? staticNavigation.footer.footNote,
+};
 ---
 
 <Layout metadata={metadata} locale={locale}>

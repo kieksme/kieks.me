@@ -8,7 +8,7 @@ import Features from '~/components/widgets/Features.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights, serviceDetails } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent('de');
 const highlights = withHighlights(serviceHighlights['cloud-devops'], [
   {
     title: 'Infrastruktur als Code',

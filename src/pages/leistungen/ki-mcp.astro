@@ -52,7 +52,7 @@ const offersBase = [
     shadow: 'purple' as const,
   },
 ];
-const { serviceHighlights, serviceDetails } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent('de');
 const offers = withHighlights(serviceHighlights['ki-mcp'], offersBase);
 
 const steps = [

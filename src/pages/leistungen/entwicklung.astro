@@ -9,7 +9,7 @@ import Steps from '~/components/widgets/Steps.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Placeholder from '~/components/common/Placeholder.astro';
 
-const { serviceHighlights, serviceDetails } = await getSiteContent();
+const { serviceHighlights, serviceDetails } = await getSiteContent('de');
 const highlights = withHighlights(serviceHighlights['entwicklung'], [
   {
     title: 'Websites',

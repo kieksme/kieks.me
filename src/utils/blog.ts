@@ -106,7 +106,7 @@ const load = async function (): Promise<Array<Post>> {
   const posts = await getCollection('post');
   const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post));
 
-  const cms = cmsPosts(await loadCmsBuildContent());
+  const cms = cmsPosts(await loadCmsBuildContent('de'));
   const local = await Promise.all(normalizedPosts);
   const slugs = new Set(cms.map((post) => post.slug));
   const results = [...cms, ...local.filter((post) => !slugs.has(post.slug))]

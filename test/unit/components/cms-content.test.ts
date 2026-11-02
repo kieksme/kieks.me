@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import * as payloadBuild from '../../../src/utils/payload-build';
 import { fetchCmsBuildContent, mapCmsMetadata, resolvePublicMedia } from '../../../src/utils/payload-build';
 import type { CmsBuildContent } from '../../../src/utils/payload-build';
 import { cmsPosts, renderPublicRichText } from '../../../src/utils/cms-content';
@@ -39,6 +40,8 @@ function server(
       return new Response(png, { headers: { 'Content-Type': 'image/png' } });
     const slug = url.pathname.split('/').pop()!;
     expect(['pages', 'posts', 'authors', 'media']).toContain(slug);
+    expect(url.searchParams.get('locale')).toBe('de');
+    expect(url.searchParams.get('fallback-locale')).toBe('none');
     expect(url.searchParams.get('draft')).toBe('false');
     expect(url.searchParams.get('depth')).toBe('0');
     const body: Record<string, unknown> = {
@@ -78,6 +81,43 @@ describe('server-only static CMS build', () => {
     expect(result.posts[0]).not.toHaveProperty('privateCustomerData');
     expect(fetcher.mock.calls.map((call) => new URL(String(call[0])).pathname)).not.toContain('/api/customers');
     expect(new URL(String(fetcher.mock.calls[0][0])).searchParams.get('select[title]')).toBe('true');
+  });
+  it('builds isolated locale snapshots without Payload field fallback', async () => {
+    const requests: string[] = [];
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = new URL(String(input));
+      const slug = url.pathname.split('/').pop()!;
+      const locale = url.searchParams.get('locale');
+      requests.push(`${locale}:${slug}:${url.searchParams.get('fallback-locale')}`);
+      const docs =
+        slug === 'posts' ? [{ id: 1, _status: 'published', title: locale === 'en' ? 'English' : 'Deutsch' }] : [];
+      return Response.json({ docs, totalPages: docs.length ? 1 : 0, totalDocs: docs.length, page: 1 });
+    }) as unknown as typeof fetch;
+    const fetchLocales = (
+      payloadBuild as unknown as {
+        fetchCmsBuildSnapshot?: (options: {
+          url: string;
+          apiKey: string;
+          fetcher: typeof fetch;
+          mediaDirectory: string;
+        }) => Promise<Record<'de' | 'en', CmsBuildContent>>;
+      }
+    ).fetchCmsBuildSnapshot;
+    expect(fetchLocales).toBeTypeOf('function');
+    const snapshot = await fetchLocales!({
+      url: origin,
+      apiKey: secret,
+      fetcher,
+      mediaDirectory: await directory(),
+    });
+    expect(snapshot.de.posts[0].title).toBe('Deutsch');
+    expect(snapshot.en.posts[0].title).toBe('English');
+    expect(snapshot.de).not.toBe(snapshot.en);
+    snapshot.de.posts[0].title = 'changed';
+    expect(snapshot.en.posts[0].title).toBe('English');
+    for (const locale of ['de', 'en'])
+      for (const collection of ['pages', 'posts', 'authors', 'media'])
+        expect(requests).toContain(`${locale}:${collection}:none`);
   });
   it('fails closed if the server returns drafts or incomplete/duplicate pagination', async () => {
     await expect(

@@ -26,7 +26,7 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 
-const { services, homeProjects: projects, faqsLeft, faqsRight, team, hero } = await getSiteContent();
+const { services, homeProjects: projects, faqsLeft, faqsRight, team, hero } = await getSiteContent('de');
 const portraits = { andre: avatarAndre, thomas: avatarThomas } as const;
 const teamMembers = team.filter((member) => Object.hasOwn(portraits, member.slug));
 // The open-decision hint stays until at least one member has a real role or biography (not the ⟦…⟧ placeholder).
