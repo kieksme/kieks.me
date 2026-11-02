@@ -25,6 +25,13 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   output: 'static',
   site: 'https://kieks.me',
+  i18n: {
+    defaultLocale: 'de',
+    locales: ['de', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
 
   redirects: {
     '/contact': '/kontakt',
@@ -47,18 +54,23 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     sitemap({
-      filter: (page) =>
-        !page.includes('/kontakt-erfolgreich') &&
-        !page.includes('/docs/') &&
-        !page.includes('/homes/') &&
-        !page.includes('/landing/') &&
-        !page.includes('/services') &&
-        !page.includes('/about') &&
-        !page.includes('/pricing') &&
-        !page.includes('/contact') &&
-        !page.includes('/terms') &&
-        !page.includes('/category/') &&
-        !page.includes('/tag/'),
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
+        return (
+          pathname !== '/kontakt-erfolgreich' &&
+          pathname !== '/en/contact/success' &&
+          !pathname.includes('/docs/') &&
+          !pathname.includes('/homes/') &&
+          !pathname.includes('/landing/') &&
+          pathname !== '/services' &&
+          !pathname.includes('/about') &&
+          !pathname.includes('/pricing') &&
+          pathname !== '/contact' &&
+          pathname !== '/terms' &&
+          !pathname.includes('/category/') &&
+          !pathname.includes('/tag/')
+        );
+      },
     }),
     mdx(),
     icon({

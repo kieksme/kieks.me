@@ -2,26 +2,31 @@
 import Logo from '~/components/ui/atoms/Logo.astro';
 import Button from '~/components/ui/atoms/Button.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
-import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
+import type { Locale } from '~/i18n/locales';
+import { getMessages } from '~/i18n/messages';
+import { getLanguageSwitchLinks, localizedRoutes } from '~/i18n/routes';
 import { Icon } from 'astro-icon/components';
 
 interface Link {
   text?: string;
   href?: string;
-  links?: Array<Link>;
+  links?: ReadonlyArray<Link>;
 }
 
 export interface Props {
-  links?: Array<Link>;
-  actions?: Array<CallToAction>;
+  links?: ReadonlyArray<Link>;
+  actions?: ReadonlyArray<CallToAction>;
   isSticky?: boolean;
   showToggleTheme?: boolean;
+  locale?: Locale;
 }
 
-const { links = [], actions = [], isSticky = false, showToggleTheme = false } = Astro.props;
+const { links = [], actions = [], isSticky = false, showToggleTheme = false, locale = 'de' } = Astro.props;
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const messages = getMessages(locale);
+const languageLinks = getLanguageSwitchLinks(currentPath);
 ---
 
 <header
@@ -31,13 +36,13 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
 >
   <div class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex items-center justify-between gap-4">
-    <a href={getHomePermalink()} class="shrink-0" aria-label="kieks.me Startseite">
+    <a href={localizedRoutes.home.paths[locale]} class="shrink-0" aria-label={messages.navigation.home}>
       <Logo layout="horizontal" size="md" class="max-md:hidden" />
       <Logo layout="horizontal" size="sm" class="md:hidden" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8" aria-label="Main navigation">
-      <ul class="flex items-center gap-8 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
+    <nav class="hidden md:flex items-center gap-6" aria-label={messages.navigation.main}>
+      <ul class="flex items-center gap-6 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
         {
           links.map(({ text, href, links: sub }) => (
             <li class={sub?.length ? 'relative group' : ''}>
@@ -76,9 +81,31 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     </nav>
 
     <div class="flex items-center gap-3">
+      <nav
+        class="hidden md:flex items-center border-[3px] border-[var(--ink)] bg-[var(--surface)]"
+        aria-label={messages.navigation.languages}
+      >
+        {
+          languageLinks.map((link) => (
+            <a
+              href={link.href}
+              hreflang={link.locale}
+              lang={link.locale}
+              aria-current={link.active ? 'page' : undefined}
+              class:list={[
+                'px-2 py-1 font-heading text-sm font-black',
+                { 'bg-[var(--pop-aqua)] text-[var(--pop-navy)]': link.active },
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
       {
         showToggleTheme && (
           <ToggleTheme
+            label={messages.theme.toggle}
             class="inline-flex items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] p-2 text-[var(--pop-navy)] shadow-[4px_4px_0_0_var(--pop-fuchsia)]"
             iconClass="w-5 h-5"
           />
@@ -102,7 +129,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           class="list-none cursor-pointer font-heading font-black text-lg lowercase px-3 py-2 border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] text-[var(--pop-navy)]"
           style="box-shadow: 4px 4px 0 0 var(--pop-fuchsia);"
         >
-          menü
+          {messages.navigation.menu}
         </summary>
         <div
           class="absolute right-0 top-full mt-2 w-[min(90vw,280px)] border-[3px] border-[var(--ink)] bg-[var(--surface)] p-4 z-50"
@@ -142,6 +169,27 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ))
             }
           </div>
+          <nav
+            class="mt-4 flex items-center border-[3px] border-[var(--ink)]"
+            aria-label={messages.navigation.languages}
+          >
+            {
+              languageLinks.map((link) => (
+                <a
+                  href={link.href}
+                  hreflang={link.locale}
+                  lang={link.locale}
+                  aria-current={link.active ? 'page' : undefined}
+                  class:list={[
+                    'flex-1 px-3 py-2 text-center font-heading font-black',
+                    { 'bg-[var(--pop-aqua)] text-[var(--pop-navy)]': link.active },
+                  ]}
+                >
+                  {link.label}
+                </a>
+              ))
+            }
+          </nav>
         </div>
       </details>
     </div>

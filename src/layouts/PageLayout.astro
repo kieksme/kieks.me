@@ -3,37 +3,49 @@ import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/ui/organisms/Header.astro';
 import Footer from '~/components/ui/organisms/Footer.astro';
 import { headerData, footerData } from '~/navigation';
+import { getNavigation } from '~/i18n/navigation';
+import { getLocaleFromPath, isLocale, type Locale } from '~/i18n/locales';
 import { getSiteContent } from '~/utils/site-content';
 import type { CallToAction, MetaData } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
+  locale?: Locale;
 }
 
 const { metadata } = Astro.props;
-const site = await getSiteContent();
-const header = {
-  ...headerData,
-  links: site.header,
-  actions: (site.headerActions ?? headerData.actions) as CallToAction[],
-};
-const footer = {
-  ...footerData,
-  links: site.footerColumns,
-  secondaryLinks: site.legalLinks,
-  socialLinks: site.socialLinks,
-  footNote: site.footNote ?? footerData.footNote,
-};
+const requestedLocale = Astro.props.locale ?? Astro.currentLocale;
+const locale = isLocale(requestedLocale) ? requestedLocale : getLocaleFromPath(Astro.url.pathname);
+const staticNavigation = getNavigation(locale);
+const site = locale === 'de' ? await getSiteContent() : undefined;
+const header =
+  locale === 'de' && site
+    ? {
+        ...headerData,
+        links: site.header,
+        actions: (site.headerActions ?? headerData.actions) as CallToAction[],
+      }
+    : staticNavigation.header;
+const footer =
+  locale === 'de' && site
+    ? {
+        ...footerData,
+        links: site.footerColumns,
+        secondaryLinks: site.legalLinks,
+        socialLinks: site.socialLinks,
+        footNote: site.footNote ?? footerData.footNote,
+      }
+    : staticNavigation.footer;
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} locale={locale}>
   <slot name="header">
-    <Header {...header} isSticky showToggleTheme />
+    <Header {...header} locale={locale} isSticky showToggleTheme />
   </slot>
   <main>
     <slot />
   </main>
   <slot name="footer">
-    <Footer {...footer} />
+    <Footer {...footer} locale={locale} />
   </slot>
 </Layout>

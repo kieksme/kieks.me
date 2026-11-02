@@ -1,7 +1,9 @@
 ---
 import Logo from '~/components/ui/atoms/Logo.astro';
 import { Icon } from 'astro-icon/components';
-import { getHomePermalink } from '~/utils/permalinks';
+import type { Locale } from '~/i18n/locales';
+import { getMessages } from '~/i18n/messages';
+import { localizedRoutes } from '~/i18n/routes';
 
 interface Link {
   text?: string;
@@ -12,24 +14,26 @@ interface Link {
 
 interface Links {
   title?: string;
-  links: Array<Link>;
+  links: ReadonlyArray<Link>;
 }
 
 export interface Props {
-  links: Array<Links>;
-  secondaryLinks: Array<Link>;
-  socialLinks?: Array<Link>;
+  links: ReadonlyArray<Links>;
+  secondaryLinks: ReadonlyArray<Link>;
+  socialLinks?: ReadonlyArray<Link>;
   footNote?: string;
+  locale?: Locale;
 }
 
-const { links = [], secondaryLinks = [], socialLinks = [], footNote = '' } = Astro.props;
+const { links = [], secondaryLinks = [], socialLinks = [], footNote = '', locale = 'de' } = Astro.props;
+const messages = getMessages(locale);
 ---
 
 <footer class="not-prose" style="background: var(--footer-bg); color: var(--footer-text);">
   <div class="mx-auto max-w-[1440px] px-5 md:px-20 pt-[72px] pb-10 flex flex-col gap-12">
     <div class="grid grid-cols-12 gap-8">
       <div class="col-span-12 lg:col-span-4">
-        <a href={getHomePermalink()} aria-label="kieks.me">
+        <a href={localizedRoutes.home.paths[locale]} aria-label={messages.navigation.home}>
           <Logo variant="dark" />
         </a>
         <p class="mt-4 text-[17px] opacity-90">kieks.me GbR · Leipzig</p>
@@ -55,7 +59,7 @@ const { links = [], secondaryLinks = [], socialLinks = [], footNote = '' } = Ast
     </div>
     {
       socialLinks.length > 0 && (
-        <ul class="flex flex-wrap gap-3" aria-label="Soziale Netzwerke">
+        <ul class="flex flex-wrap gap-3" aria-label={messages.navigation.social}>
           {socialLinks.map(({ text, href, icon }) => (
             <li>
               <a

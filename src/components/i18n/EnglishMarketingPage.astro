@@ -1,0 +1,116 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
+import FeatureCard from '~/components/ui/molecules/FeatureCard.astro';
+import type { EnglishMarketingPage } from '~/i18n/english-pages';
+
+export interface Props {
+  page: EnglishMarketingPage;
+  locale?: 'en';
+}
+
+const { page } = Astro.props;
+const edges = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
+---
+
+<PageLayout locale="en" metadata={page.metadata}>
+  <section class="relative overflow-hidden not-prose" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={620}
+      height={560}
+      pitch={20}
+      origin="top-right"
+      d0={14.78}
+      k={0.018}
+      color="var(--hero-dots)"
+      opacity={0.22}
+    />
+    <div class="relative mx-auto max-w-[1440px] px-5 py-16 md:px-20 md:py-[88px]">
+      <div class="flex max-w-[940px] flex-col gap-7">
+        <Sticker color="yellow" shadow="fuchsia" rotate={3}>{page.badge}</Sticker>
+        <Heading level={1} size="l" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)" shadowSize="6px 6px 0">
+          {page.title}
+        </Heading>
+        <Lead size="l" class="!text-[color:var(--hero-text)]">{page.lead}</Lead>
+        <div class="flex flex-col gap-5 sm:flex-row">
+          <Button variant="primary" shadow="fuchsia" href={page.primary.href} text={page.primary.text} />
+          {
+            page.secondary && (
+              <Button
+                variant="secondary"
+                shadow="aqua"
+                href={page.secondary.href}
+                text={page.secondary.text}
+                target={page.secondary.external ? '_blank' : undefined}
+              />
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ZigzagDivider top="var(--hero-bg)" bottom="var(--surface)" />
+
+  {
+    page.sections.map((section, sectionIndex) => (
+      <>
+        <section
+          id={sectionIndex === 0 ? 'services' : undefined}
+          class="not-prose py-16 md:py-24"
+          style={`background: ${sectionIndex % 2 === 0 ? 'var(--surface)' : 'var(--page-bg)'};`}
+        >
+          <div class="mx-auto max-w-[1440px] px-5 md:px-20">
+            <Sticker
+              color={sectionIndex % 2 === 0 ? 'aqua' : 'fuchsia'}
+              shadow={sectionIndex % 2 === 0 ? 'fuchsia' : 'aqua'}
+              rotate={sectionIndex % 2 === 0 ? 3 : -2}
+            >
+              {section.eyebrow}
+            </Sticker>
+            <Heading level={2} size="l" class="mt-6">
+              {section.title}
+            </Heading>
+            <Lead class="mt-6 max-w-[820px]">{section.intro}</Lead>
+            <div class="mt-9 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              {section.items.map((item, index) => (
+                <FeatureCard title={item.title} description={item.description} edge={edges[index % edges.length]} />
+              ))}
+            </div>
+          </div>
+        </section>
+        {sectionIndex < page.sections.length - 1 && (
+          <ZigzagDivider
+            top={sectionIndex % 2 === 0 ? 'var(--surface)' : 'var(--page-bg)'}
+            bottom={sectionIndex % 2 === 0 ? 'var(--page-bg)' : 'var(--surface)'}
+          />
+        )}
+      </>
+    ))
+  }
+
+  <ZigzagDivider
+    top={page.sections.length % 2 === 0 ? 'var(--page-bg)' : 'var(--surface)'}
+    bottom="var(--pop-fuchsia)"
+  />
+  <section class="not-prose py-16 md:py-24" style="background: var(--pop-fuchsia);">
+    <div class="mx-auto flex max-w-[900px] flex-col items-start gap-6 px-5 md:px-20">
+      <Heading level={2} size="l" color="var(--pop-navy)" shadowColor="var(--pop-aqua)">
+        {page.closing.title}
+      </Heading>
+      <Lead class="!text-[color:var(--pop-navy)]">{page.closing.text}</Lead>
+      <Button
+        variant="aqua"
+        shadow="fuchsia"
+        href="/en/contact"
+        text={page.closing.ctaText ?? 'Start a conversation'}
+      />
+    </div>
+  </section>
+</PageLayout>

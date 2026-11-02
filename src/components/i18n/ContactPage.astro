@@ -1,0 +1,179 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Sticker from '~/components/ui/atoms/Sticker.astro';
+import Heading from '~/components/ui/atoms/Heading.astro';
+import Lead from '~/components/ui/atoms/Lead.astro';
+import Button from '~/components/ui/atoms/Button.astro';
+import Halftone from '~/components/ui/atoms/Halftone.astro';
+import Note from '~/components/ui/atoms/Note.astro';
+import TextLink from '~/components/ui/atoms/TextLink.astro';
+import { BOOKING_URL, HAS_BOOKING_URL } from '~/config/site';
+import type { Locale } from '~/i18n/locales';
+import { getLocalizedPath } from '~/i18n/routes';
+
+export interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const en = locale === 'en';
+const copy = en
+  ? {
+      metadata: {
+        title: 'Contact kieks.me',
+        description: 'Contact kieks.me GbR about AI, MCP, cloud or software work and arrange an initial consultation.',
+      },
+      sticker: 'Contact',
+      title: 'let’s talk',
+      lead: 'Tell us what you are working on and we will get back to you. You can also book an initial consultation.',
+      booking: 'Book a consultation',
+      bookingMissing: 'Online booking is not configured yet. Please use this contact form.',
+      firstName: 'First name',
+      lastName: 'Last name',
+      company: 'Company',
+      email: 'Email',
+      message: 'Message',
+      consentPrefix: 'I have read the',
+      privacy: 'German privacy notice',
+      consentSuffix: 'and agree that my details may be processed to respond to this request.',
+      honeypot: 'Leave this field empty:',
+      submit: 'Send message',
+      success: '/en/contact/success',
+    }
+  : {
+      metadata: {
+        title: 'Kontakt',
+        description: 'Schreiben Sie kieks.me GbR oder buchen Sie ein Erstgespräch. Wir melden uns bei Ihnen.',
+      },
+      sticker: 'Kontakt',
+      title: 'kontakt',
+      lead: 'Schreiben Sie uns, wir melden uns bei Ihnen. Oder buchen Sie direkt ein Erstgespräch.',
+      booking: 'Erstgespräch buchen',
+      bookingMissing:
+        'Buchungslink noch nicht gesetzt — CTAs führen auf diese Kontaktseite (src/config/site.ts → BOOKING_URL).',
+      firstName: 'Vorname',
+      lastName: 'Nachname',
+      company: 'Firma',
+      email: 'E-Mail',
+      message: 'Nachricht',
+      consentPrefix: 'Ich habe die',
+      privacy: 'Datenschutzerklärung',
+      consentSuffix: 'gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage einverstanden.',
+      honeypot: 'Nicht ausfüllen:',
+      submit: 'Absenden',
+      success: '/kontakt-erfolgreich',
+    };
+
+const field =
+  'block w-full border-[3px] border-[var(--ink)] bg-[var(--surface)] px-3.5 py-2.5 text-base outline-none focus:shadow-[4px_4px_0_0_var(--pop-aqua)]';
+const bookingHref = BOOKING_URL.startsWith('/') ? getLocalizedPath(BOOKING_URL, locale) : BOOKING_URL;
+---
+
+<PageLayout locale={locale} metadata={copy.metadata}>
+  <section class="relative overflow-hidden not-prose py-16 md:py-24" style="background: var(--hero-bg);">
+    <Halftone
+      class="hidden md:block right-0 top-0"
+      width={390}
+      height={420}
+      pitch={16}
+      origin="top-right"
+      d0={10.7}
+      k={0.02}
+      color="var(--hero-dots)"
+      opacity={0.2}
+    />
+    <div class="relative mx-auto max-w-[720px] px-5 md:px-20 text-center flex flex-col items-center gap-6">
+      <Sticker color="yellow" shadow="fuchsia" rotate={3}>{copy.sticker}</Sticker>
+      <Heading level={1} size="l" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)" shadowSize="6px 6px 0">
+        {copy.title}
+      </Heading>
+      <Lead size="l" class="!text-[color:var(--hero-text)]">{copy.lead}</Lead>
+      {
+        HAS_BOOKING_URL ? (
+          <TextLink href={bookingHref}>{copy.booking}</TextLink>
+        ) : (
+          <Note label={en ? 'Note' : '⟦PLATZHALTER D1⟧'} class="text-left w-full">
+            {copy.bookingMissing}
+          </Note>
+        )
+      }
+    </div>
+  </section>
+
+  <div class="not-prose py-12 md:py-16" style="background: var(--page-bg);">
+    <form
+      name="contact"
+      action={copy.success}
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      method="POST"
+      class="mx-auto max-w-xl px-5 border-[3px] border-[var(--ink)] bg-[var(--surface)] p-6 sm:p-8"
+      style="box-shadow: 8px 8px 0 0 var(--pop-fuchsia);"
+    >
+      <p class="hidden">
+        <label>{copy.honeypot} <input name="bot-field" /></label>
+      </p>
+      <input type="hidden" name="form-name" value="contact" />
+      <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div>
+          <label for="first-name" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);">
+            {copy.firstName}
+          </label>
+          <div class="mt-2.5">
+            <input type="text" name="first-name" id="first-name" autocomplete="given-name" required class={field} />
+          </div>
+        </div>
+        <div>
+          <label for="last-name" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);">
+            {copy.lastName}
+          </label>
+          <div class="mt-2.5">
+            <input type="text" name="last-name" id="last-name" autocomplete="family-name" required class={field} />
+          </div>
+        </div>
+        <div class="sm:col-span-2">
+          <label for="company" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);">
+            {copy.company}
+          </label>
+          <div class="mt-2.5">
+            <input type="text" name="company" id="company" autocomplete="organization" class={field} />
+          </div>
+        </div>
+        <div class="sm:col-span-2">
+          <label for="email" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);">
+            {copy.email}
+          </label>
+          <div class="mt-2.5">
+            <input type="email" name="email" id="email" autocomplete="email" required class={field} />
+          </div>
+        </div>
+        <div class="sm:col-span-2">
+          <label for="message" class="block font-heading font-extrabold text-sm" style="color: var(--text-primary);">
+            {copy.message}
+          </label>
+          <div class="mt-2.5">
+            <textarea name="message" id="message" rows="4" required class={field}></textarea>
+          </div>
+        </div>
+        <div class="flex gap-x-3 sm:col-span-2 items-start">
+          <input
+            type="checkbox"
+            name="datenschutz"
+            id="datenschutz"
+            value="accepted"
+            required
+            class="mt-1 h-4 w-4 accent-[var(--pop-aqua)] border-[var(--ink)]"
+          />
+          <label for="datenschutz" class="text-sm" style="color: var(--text-secondary);">
+            {copy.consentPrefix}{' '}
+            <a href="/datenschutz" class="font-semibold" style="color: var(--text-link);">{copy.privacy}</a>{' '}
+            {copy.consentSuffix}
+          </label>
+        </div>
+      </div>
+      <div class="mt-10">
+        <Button variant="primary" type="submit" text={copy.submit} class="w-full" />
+      </div>
+    </form>
+  </div>
+</PageLayout>
