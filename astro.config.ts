@@ -12,6 +12,7 @@ import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
 
 import { prepareCmsBuild, finishCmsBuild } from './src/utils/payload-build';
+import { shouldIncludeSitemapPage } from './src/utils/sitemap';
 import astrowind from './vendor/integration';
 
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
@@ -53,25 +54,7 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap({
-      filter: (page) => {
-        const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
-        return (
-          pathname !== '/kontakt-erfolgreich' &&
-          pathname !== '/en/contact/success' &&
-          !pathname.includes('/docs/') &&
-          !pathname.includes('/homes/') &&
-          !pathname.includes('/landing/') &&
-          pathname !== '/services' &&
-          !pathname.includes('/about') &&
-          !pathname.includes('/pricing') &&
-          pathname !== '/contact' &&
-          pathname !== '/terms' &&
-          !pathname.includes('/category/') &&
-          !pathname.includes('/tag/')
-        );
-      },
-    }),
+    sitemap({ filter: shouldIncludeSitemapPage }),
     mdx(),
     icon({
       include: {

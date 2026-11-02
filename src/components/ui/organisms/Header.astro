@@ -26,7 +26,7 @@ export interface Props {
 const { links = [], actions = [], isSticky = false, showToggleTheme = false, locale = 'de' } = Astro.props;
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 const messages = getMessages(locale);
-const languageLinks = getLanguageSwitchLinks(currentPath);
+const languageLinks = getLanguageSwitchLinks(currentPath, locale);
 ---
 
 <header
@@ -41,8 +41,8 @@ const languageLinks = getLanguageSwitchLinks(currentPath);
       <Logo layout="horizontal" size="sm" class="md:hidden" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-6" aria-label={messages.navigation.main}>
-      <ul class="flex items-center gap-6 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
+    <nav class="hidden md:flex items-center gap-8" aria-label={messages.navigation.main}>
+      <ul class="flex items-center gap-8 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
         {
           links.map(({ text, href, links: sub }) => (
             <li class={sub?.length ? 'relative group' : ''}>
@@ -89,8 +89,7 @@ const languageLinks = getLanguageSwitchLinks(currentPath);
           languageLinks.map((link) => (
             <a
               href={link.href}
-              hreflang={link.locale}
-              lang={link.locale}
+              aria-label={link.ariaLabel}
               aria-current={link.active ? 'page' : undefined}
               class:list={[
                 'px-2 py-1 font-heading text-sm font-black',
@@ -177,8 +176,7 @@ const languageLinks = getLanguageSwitchLinks(currentPath);
               languageLinks.map((link) => (
                 <a
                   href={link.href}
-                  hreflang={link.locale}
-                  lang={link.locale}
+                  aria-label={link.ariaLabel}
                   aria-current={link.active ? 'page' : undefined}
                   class:list={[
                     'flex-1 px-3 py-2 text-center font-heading font-black',

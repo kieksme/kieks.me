@@ -4,6 +4,7 @@ interface MarketingItem {
 }
 
 interface MarketingSection {
+  id?: 'services';
   eyebrow: string;
   title: string;
   intro: string;
@@ -35,6 +36,7 @@ export const englishPages = {
     secondary: { text: 'Explore our services', href: '#services' },
     sections: [
       {
+        id: 'services',
         eyebrow: 'Services',
         title: 'practical expertise, built around your organization',
         intro: 'From the first architectural question to documented production delivery, we work alongside your team.',

@@ -4,42 +4,22 @@ import Button from '~/components/ui/atoms/Button.astro';
 import Heading from '~/components/ui/atoms/Heading.astro';
 import Lead from '~/components/ui/atoms/Lead.astro';
 import Sticker from '~/components/ui/atoms/Sticker.astro';
-import type { Locale } from '~/i18n/locales';
+import { localizedRoutes } from '~/i18n/routes';
 
-export interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-const en = locale === 'en';
-const copy = en
-  ? {
-      metadata: {
-        title: 'Message received',
-        description: 'Thank you for contacting kieks.me. Your message has been received.',
-        robots: { index: false, follow: false },
-      },
-      sticker: 'Thank you',
-      title: 'your message is on its way',
-      text: 'Thank you for getting in touch. We will review your message and respond as soon as possible.',
-      button: 'Back to the home page',
-      href: '/en',
-    }
-  : {
-      metadata: {
-        title: 'Nachricht erhalten',
-        description: 'Vielen Dank für Ihre Nachricht an kieks.me. Ihre Anfrage ist bei uns eingegangen.',
-        robots: { index: false, follow: false },
-      },
-      sticker: 'Vielen Dank',
-      title: 'ihre nachricht ist unterwegs',
-      text: 'Vielen Dank für Ihre Anfrage. Wir sehen uns Ihre Nachricht an und melden uns so bald wie möglich.',
-      button: 'Zurück zur Startseite',
-      href: '/',
-    };
+const copy = {
+  metadata: {
+    title: 'Message received',
+    description: 'Thank you for contacting kieks.me. Your message has been received.',
+    robots: { index: false, follow: false },
+  },
+  sticker: 'Thank you',
+  title: 'your message is on its way',
+  text: 'Thank you for getting in touch. We will review your message and respond as soon as possible.',
+  button: 'Back to the home page',
+};
 ---
 
-<PageLayout locale={locale} metadata={copy.metadata}>
+<PageLayout locale="en" metadata={copy.metadata}>
   <section class="not-prose min-h-[60vh] py-20 md:py-28" style="background: var(--hero-bg);">
     <div class="mx-auto flex max-w-[800px] flex-col items-start gap-7 px-5 md:px-20">
       <Sticker color="yellow" shadow="fuchsia" rotate={3}>{copy.sticker}</Sticker>
@@ -47,7 +27,7 @@ const copy = en
         {copy.title}
       </Heading>
       <Lead size="l" class="!text-[color:var(--hero-text)]">{copy.text}</Lead>
-      <Button variant="primary" href={copy.href} text={copy.button} />
+      <Button variant="primary" href={localizedRoutes.home.paths.en} text={copy.button} />
     </div>
   </section>
 </PageLayout>

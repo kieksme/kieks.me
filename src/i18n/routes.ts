@@ -1,4 +1,4 @@
-import { getLocaleFromPath, locales, type Locale } from './locales';
+import { locales, type Locale } from './locales';
 
 type RouteKey =
   | 'home'
@@ -81,15 +81,21 @@ export function getLocalizedPath(pathname: string, targetLocale: Locale): string
 export interface LanguageSwitchLink {
   locale: Locale;
   label: 'DE' | 'EN';
+  ariaLabel: 'Deutsch' | 'English';
   href: string;
   active: boolean;
 }
 
-export function getLanguageSwitchLinks(pathname: string): LanguageSwitchLink[] {
-  const currentLocale = getLocaleFromPath(pathname);
+const languageLabels: Record<Locale, LanguageSwitchLink['ariaLabel']> = {
+  de: 'Deutsch',
+  en: 'English',
+};
+
+export function getLanguageSwitchLinks(pathname: string, currentLocale: Locale): LanguageSwitchLink[] {
   return locales.map((locale) => ({
     locale,
     label: locale.toUpperCase() as 'DE' | 'EN',
+    ariaLabel: languageLabels[locale],
     href: getLocalizedPath(pathname, locale),
     active: locale === currentLocale,
   }));

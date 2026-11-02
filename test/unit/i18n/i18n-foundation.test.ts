@@ -6,6 +6,7 @@ import { getLanguageSwitchLinks, getLocalizedPath, localizedRoutes, routeKeys } 
 import { getNavigation } from '../../../src/i18n/navigation';
 import { getMessages } from '../../../src/i18n/messages';
 import { englishPages } from '../../../src/i18n/english-pages';
+import { shouldIncludeSitemapPage } from '../../../src/utils/sitemap';
 
 describe('locale parsing', () => {
   it('recognizes supported locales and keeps German as the unprefixed default', () => {
@@ -61,17 +62,31 @@ describe('localized route equivalence', () => {
     expect(getLocalizedPath('/unknown', 'en')).toBe('/en');
   });
 
-  it('builds explicit switcher links for the current equivalent route', () => {
-    expect(getLanguageSwitchLinks('/en/contact')).toEqual([
-      { locale: 'de', label: 'DE', href: '/kontakt', active: false },
-      { locale: 'en', label: 'EN', href: '/en/contact', active: true },
+  it('builds explicit, accessible switcher links for the current equivalent route', () => {
+    expect(getLanguageSwitchLinks('/en/contact', 'en')).toEqual([
+      { locale: 'de', label: 'DE', ariaLabel: 'Deutsch', href: '/kontakt', active: false },
+      { locale: 'en', label: 'EN', ariaLabel: 'English', href: '/en/contact', active: true },
     ]);
-    expect(getLanguageSwitchLinks('/agb')[1]).toEqual({
+    expect(getLanguageSwitchLinks('/agb', 'de')[1]).toEqual({
       locale: 'en',
       label: 'EN',
+      ariaLabel: 'English',
       href: '/en',
       active: false,
     });
+  });
+
+  it('uses the supplied locale as the only active-locale source', () => {
+    const links = getLanguageSwitchLinks('/en/contact', 'de');
+    expect(links.find((link) => link.active)?.locale).toBe('de');
+    expect(links.find((link) => link.locale === 'de')?.href).toBe('/kontakt');
+  });
+
+  it('falls both switcher targets back to their locale home on an unknown route', () => {
+    expect(getLanguageSwitchLinks('/nicht-uebersetzt', 'de')).toEqual([
+      { locale: 'de', label: 'DE', ariaLabel: 'Deutsch', href: '/', active: true },
+      { locale: 'en', label: 'EN', ariaLabel: 'English', href: '/en', active: false },
+    ]);
   });
 });
 
@@ -101,9 +116,41 @@ describe('localized static navigation and interface messages', () => {
       'utf8'
     );
     expect(source).toContain('getLanguageSwitchLinks');
+    expect(source).toContain('getLanguageSwitchLinks(currentPath, locale)');
     expect(source).toContain('messages.navigation.main');
     expect(source).toContain('aria-current');
-    expect(source).toContain('hreflang');
+    expect(source).toContain('aria-label={link.ariaLabel}');
+    expect(source).not.toContain('hreflang');
+  });
+});
+
+describe('sitemap filtering', () => {
+  it.each([
+    'https://kieks.me/en',
+    'https://kieks.me/en/contact',
+    'https://kieks.me/en/services/consulting',
+    'https://kieks.me/en/services/cloud-devops/',
+    'https://kieks.me/en/services/development',
+    'https://kieks.me/en/services/ai-mcp',
+  ])('includes published English route %s', (url) => {
+    expect(shouldIncludeSitemapPage(url)).toBe(true);
+  });
+
+  it.each([
+    'https://kieks.me/kontakt-erfolgreich',
+    'https://kieks.me/en/contact/success',
+    'https://kieks.me/docs/cms-content',
+    'https://kieks.me/homes/example',
+    'https://kieks.me/landing/example',
+    'https://kieks.me/services',
+    'https://kieks.me/about',
+    'https://kieks.me/pricing',
+    'https://kieks.me/contact',
+    'https://kieks.me/terms',
+    'https://kieks.me/blog/category/example',
+    'https://kieks.me/blog/tag/example',
+  ])('excludes noindex or legacy route %s', (url) => {
+    expect(shouldIncludeSitemapPage(url)).toBe(false);
   });
 });
 
@@ -129,6 +176,12 @@ describe('English route files', () => {
     expect(englishPages.consulting.title).toContain('Understand first');
     expect(englishPages.aiMcp.primary.href).toBe('/en/contact');
     expect(englishPages.mcpServers.secondary?.href).toBe('https://github.com/kieksme');
+    expect(englishPages.home.sections[0].id).toBe('services');
+    expect(
+      Object.entries(englishPages)
+        .filter(([key]) => key !== 'home')
+        .every(([, page]) => page.sections.every((section) => !('id' in section)))
+    ).toBe(true);
   });
 
   it.each([
@@ -140,12 +193,22 @@ describe('English route files', () => {
     'services/development.astro',
     'services/ai-mcp.astro',
     'projects/mcp-server.astro',
-    'contact.astro',
-    'contact/success.astro',
   ])('publishes /en/%s', async (path) => {
     await expect(readFile(new URL(`../../../src/pages/en/${path}`, import.meta.url), 'utf8')).resolves.toContain(
-      'locale="en"'
+      'page={englishPages'
     );
+  });
+
+  it('keeps locale only where the bilingual contact page needs it', async () => {
+    const contact = await readFile(new URL('../../../src/pages/en/contact.astro', import.meta.url), 'utf8');
+    const success = await readFile(new URL('../../../src/pages/en/contact/success.astro', import.meta.url), 'utf8');
+    const marketing = await readFile(
+      new URL('../../../src/components/i18n/EnglishMarketingPage.astro', import.meta.url),
+      'utf8'
+    );
+    expect(contact).toContain('locale="en"');
+    expect(success).toContain('<ContactSuccessPage />');
+    expect(marketing).not.toContain("locale?: 'en'");
   });
 
   it.each(['legal-notice.astro', 'privacy.astro', 'terms.astro', 'blog.astro'])(

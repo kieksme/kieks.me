@@ -8,10 +8,10 @@ import Sticker from '~/components/ui/atoms/Sticker.astro';
 import ZigzagDivider from '~/components/ui/atoms/ZigzagDivider.astro';
 import FeatureCard from '~/components/ui/molecules/FeatureCard.astro';
 import type { EnglishMarketingPage } from '~/i18n/english-pages';
+import { localizedRoutes } from '~/i18n/routes';
 
 export interface Props {
   page: EnglishMarketingPage;
-  locale?: 'en';
 }
 
 const { page } = Astro.props;
@@ -62,7 +62,7 @@ const edges = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
     page.sections.map((section, sectionIndex) => (
       <>
         <section
-          id={sectionIndex === 0 ? 'services' : undefined}
+          id={section.id}
           class="not-prose py-16 md:py-24"
           style={`background: ${sectionIndex % 2 === 0 ? 'var(--surface)' : 'var(--page-bg)'};`}
         >
@@ -108,7 +108,7 @@ const edges = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
       <Button
         variant="aqua"
         shadow="fuchsia"
-        href="/en/contact"
+        href={localizedRoutes.contact.paths.en}
         text={page.closing.ctaText ?? 'Start a conversation'}
       />
     </div>
