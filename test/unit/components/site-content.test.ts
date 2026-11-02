@@ -205,6 +205,131 @@ describe('editable site sections with static fallback', () => {
     });
   });
 
+  it('treats undefined English required fields as untranslated across site collections', () => {
+    const content = resolveSiteContent(
+      {
+        services: [
+          {
+            ...published,
+            id: 'service',
+            title: 'Service',
+            summary: undefined,
+            href: '/en/services/service',
+            linkText: 'Learn more',
+          },
+        ],
+        faqs: [{ ...published, id: 'faq', placement: 'home', question: 'Question', answer: undefined }],
+        team: [{ ...published, id: 'team', slug: 'person', name: undefined }],
+        'mcp-projects': [
+          {
+            ...published,
+            id: 'project',
+            name: undefined,
+            summary: 'Summary',
+            repositoryUrl: 'https://github.com/kieksme/project',
+          },
+        ],
+        home: [{ ...published, id: 'home', slug: 'startseite', title: undefined, hero: { headline: 'Headline' } }],
+      },
+      undefined,
+      'en'
+    );
+
+    expect(content.services).toEqual([]);
+    expect(content.faqsLeft).toEqual([]);
+    expect(content.faqsRight).toEqual([]);
+    expect(content.team).toEqual([]);
+    expect(content.mcpServers).toEqual([]);
+    expect(content.otherProjects).toEqual([]);
+    expect(content.hero).toBeUndefined();
+    expect(content.fromCms).toEqual([]);
+  });
+
+  it('skips untranslated English navigation items and retains static sections when none remain', () => {
+    const english = getNavigation('en');
+    const content = resolveSiteContent(
+      {
+        navigation: [
+          {
+            ...published,
+            id: 'header',
+            key: 'header',
+            links: [null, { label: undefined, href: '/en/missing' }, { label: 'CMS Home', href: '/en' }],
+            actions: [undefined, { label: null, href: '/en/missing' }],
+          },
+          {
+            ...published,
+            id: 'footer',
+            key: 'footer',
+            links: [
+              undefined,
+              { label: null, children: [{ label: 'Missing', href: '/en/missing' }] },
+              {
+                label: 'CMS Company',
+                children: [
+                  null,
+                  { label: undefined, href: '/en/missing' },
+                  { label: 'CMS Contact', href: '/en/contact' },
+                ],
+              },
+            ],
+            secondaryLinks: [
+              null,
+              { label: undefined, href: '/en/missing' },
+              { label: 'CMS Privacy', href: '/en/privacy' },
+            ],
+            socialLinks: [undefined, { label: null, href: 'https://example.invalid', icon: 'tabler:mail' }],
+          },
+        ],
+      },
+      undefined,
+      'en'
+    );
+
+    expect(content.header).toEqual([{ text: 'CMS Home', href: '/en' }]);
+    expect(content.headerActions).toEqual(english.header.actions);
+    expect(content.footerColumns).toEqual([
+      { title: 'CMS Company', links: [{ text: 'CMS Contact', href: '/en/contact' }] },
+    ]);
+    expect(content.legalLinks).toEqual([{ text: 'CMS Privacy', href: '/en/privacy' }]);
+    expect(content.socialLinks).toEqual(english.footer.socialLinks);
+  });
+
+  it('skips nullish English highlight titles but rejects malformed non-null titles', () => {
+    const service = {
+      ...published,
+      id: 1,
+      slug: 'service',
+      title: 'Service',
+      summary: 'Summary',
+      href: '/en/services/service',
+      linkText: 'Learn more',
+    };
+    const content = resolveSiteContent(
+      {
+        services: [
+          {
+            ...service,
+            highlights: [
+              null,
+              { title: null, description: 'Untranslated null' },
+              { title: undefined, description: 'Untranslated undefined' },
+              { title: 'Translated', description: 'Visible' },
+            ],
+          },
+        ],
+      },
+      undefined,
+      'en'
+    );
+    expect(content.serviceHighlights).toEqual({
+      service: [{ title: 'Translated', description: 'Visible' }],
+    });
+    expect(() =>
+      resolveSiteContent({ services: [{ ...service, highlights: [{ title: { malformed: true } }] }] }, undefined, 'en')
+    ).toThrow('missing text');
+  });
+
   it('still fails closed for null German fields and malformed non-null English fields', () => {
     const service = {
       ...published,
@@ -234,6 +359,14 @@ describe('editable site sections with static fallback', () => {
         'en'
       )
     ).toThrow('invalid home hero');
+  });
+
+  it.each([null, undefined, '', '   '])('keeps the German static home hero when the CMS headline is %j', (headline) => {
+    const content = resolveSiteContent({
+      home: [{ ...published, id: 1, slug: 'startseite', hero: { eyebrow: 'CMS', headline, lead: 'CMS lead' } }],
+    });
+    expect(content.hero).toBeUndefined();
+    expect(content.fromCms).not.toContain('home');
   });
 
   it('maps validated published documents in order and keeps untouched sections on fallback', () => {

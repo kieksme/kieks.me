@@ -102,18 +102,8 @@ const list = (value: unknown): Doc[] => {
 const localizedList = (value: unknown, requiredFields: string[], locale: Locale): Doc[] => {
   const docs = list(value);
   if (locale === defaultLocale) return docs;
-  return docs.filter((doc) => requiredFields.every((field) => doc[field] !== null));
+  return docs.filter((doc) => requiredFields.every((field) => doc[field] !== null && doc[field] !== undefined));
 };
-const hasNullNavigationLink = (value: unknown): boolean => {
-  if (value === null) return true;
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
-  const link = value as Doc;
-  if (link.label === null) return true;
-  if (Array.isArray(link.children) && link.children.length) return link.children.some(hasNullNavigationLink);
-  return link.href === null;
-};
-const hasUntranslatedNavigationLinks = (value: unknown): boolean =>
-  value === null || (Array.isArray(value) && value.some(hasNullNavigationLink));
 const SERVICE_STYLE: Record<PopAccent, Pick<SiteServiceView, 'shadow' | 'numShadow' | 'numColor'>> = {
   aqua: { shadow: 'ink', numShadow: 'fuchsia' },
   fuchsia: { shadow: 'ink', numShadow: 'aqua' },
@@ -186,7 +176,16 @@ export function resolveSiteContent(
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('CMS site content: invalid service slug');
     const items = doc.highlights;
     if (!Array.isArray(items) || items.length > 12) throw new Error('CMS site content: invalid highlights');
-    const views: SiteHighlight[] = items.map((item) => {
+    const translatedItems =
+      locale === defaultLocale
+        ? items
+        : items.filter((item) => {
+            if (item === null || item === undefined) return false;
+            if (!item || typeof item !== 'object' || Array.isArray(item)) return true;
+            const title = (item as Doc).title;
+            return title !== null && title !== undefined;
+          });
+    const views: SiteHighlight[] = translatedItems.map((item) => {
       const entry = item && typeof item === 'object' ? (item as Doc) : {};
       return { title: str(entry.title, 160, true), description: str(entry.description, 800) };
     });
@@ -269,9 +268,7 @@ export function resolveSiteContent(
         descriptionHtml: renderRich(doc.descriptionRichText) || undefined,
       }));
   }
-  const navigation = list(site.navigation).filter(
-    (doc) => locale === defaultLocale || !hasUntranslatedNavigationLinks(doc.links)
-  );
+  const navigation = list(site.navigation);
   if (navigation.length) {
     fromCms.push('navigation');
     const keys = navigation.map((doc) => String(doc.key));
@@ -281,32 +278,43 @@ export function resolveSiteContent(
       if (value === undefined || (locale !== defaultLocale && value === null)) return [];
       if (!Array.isArray(value) || value.length > MAX_ITEMS)
         throw new Error('CMS site content: invalid navigation list');
-      return value.map((raw) => {
+      return value.flatMap((raw) => {
+        if (locale !== defaultLocale && (raw === null || raw === undefined)) return [];
         if (!raw || typeof raw !== 'object' || Array.isArray(raw))
           throw new Error('CMS site content: invalid navigation entry');
-        return raw as Doc;
+        return [raw as Doc];
       });
     };
+    const translatedEntries = (value: unknown, requiredFields: string[]): Doc[] =>
+      entries(value).filter(
+        (doc) =>
+          locale === defaultLocale || requiredFields.every((field) => doc[field] !== null && doc[field] !== undefined)
+      );
     const link = (doc: Doc): SiteNavLink => ({ text: str(doc.label, 80, true), href: safeHref(doc.href) });
     // The footer renders link texts as HTML, so CMS text is escaped here (header text is escaped by Astro).
     const footerLink = (doc: Doc): SiteNavLink => ({ ...link(doc), text: escapeHtml(link(doc).text) });
     const header = navigation.find((doc) => doc.key === 'header');
-    const headerLinks = entries(header?.links);
-    if (headerLinks.length)
-      result.header = headerLinks.map((doc) => {
-        const children = entries(doc.children);
-        return children.length ? { text: str(doc.label, 80, true), links: children.map(link) } : link(doc);
-      });
+    const headerLinks = translatedEntries(header?.links, ['label']).flatMap(
+      (doc): (SiteNavLink | { text: string; links: SiteNavLink[] })[] => {
+        const children = translatedEntries(doc.children, ['label', 'href']);
+        if (children.length) return [{ text: str(doc.label, 80, true), links: children.map(link) }];
+        if (locale !== defaultLocale && (doc.href === null || doc.href === undefined)) return [];
+        return [link(doc)];
+      }
+    );
+    if (headerLinks.length) result.header = headerLinks;
     const footer = navigation.find((doc) => doc.key === 'footer');
-    const columns = entries(footer?.links).filter((doc) => entries(doc.children).length);
+    const columns = translatedEntries(footer?.links, ['label'])
+      .map((doc) => ({ doc, children: translatedEntries(doc.children, ['label', 'href']) }))
+      .filter(({ children }) => children.length);
     if (columns.length)
-      result.footerColumns = columns.map((doc) => ({
+      result.footerColumns = columns.map(({ doc, children }) => ({
         title: str(doc.label, 80, true),
-        links: entries(doc.children).map(footerLink),
+        links: children.map(footerLink),
       }));
-    const legal = entries(footer?.secondaryLinks);
+    const legal = translatedEntries(footer?.secondaryLinks, ['label', 'href']);
     if (legal.length) result.legalLinks = legal.map(footerLink);
-    const social = entries(footer?.socialLinks);
+    const social = translatedEntries(footer?.socialLinks, ['label', 'href']);
     if (social.length > 8) throw new Error('CMS site content: too many social links');
     if (social.length)
       result.socialLinks = social.map((doc): SiteSocialLink => {
@@ -316,7 +324,7 @@ export function resolveSiteContent(
       });
     const footNote = str(footer?.footNote, 200);
     if (footNote) result.footNote = escapeHtml(footNote);
-    const actions = entries(header?.actions);
+    const actions = translatedEntries(header?.actions, ['label', 'href']);
     if (actions.length > 3) throw new Error('CMS site content: too many header actions');
     if (actions.length)
       result.headerActions = actions.map((doc): SiteAction => {
@@ -330,12 +338,13 @@ export function resolveSiteContent(
     (doc) =>
       doc.slug === 'startseite' &&
       (locale === defaultLocale ||
-        ((doc.title === undefined || doc.title !== null) &&
+        (doc.title !== null &&
+          doc.title !== undefined &&
           doc.hero !== null &&
-          (!doc.hero ||
-            typeof doc.hero !== 'object' ||
+          doc.hero !== undefined &&
+          (typeof doc.hero !== 'object' ||
             Array.isArray(doc.hero) ||
-            (doc.hero as Doc).headline !== null)))
+            ((doc.hero as Doc).headline !== null && (doc.hero as Doc).headline !== undefined))))
   );
   if (homes.length > 1) throw new Error('CMS site content: duplicate home page');
   const heroDoc = homes[0]?.hero;
@@ -343,7 +352,7 @@ export function resolveSiteContent(
     throw new Error('CMS site content: invalid home hero');
   if (heroDoc && typeof heroDoc === 'object' && !Array.isArray(heroDoc)) {
     const hero = heroDoc as Doc;
-    const headline = hero.headline === undefined ? '' : str(hero.headline, 400, true);
+    const headline = locale === defaultLocale ? str(hero.headline, 400) : str(hero.headline, 400, true);
     if (headline) {
       const cta = (value: unknown): SiteNavLink | undefined => {
         const entry = value && typeof value === 'object' ? (value as Doc) : {};
