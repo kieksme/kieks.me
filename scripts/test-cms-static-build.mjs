@@ -184,7 +184,10 @@ globalThis.fetch = async (input,init) => {
   {
     const home = await readFile('dist/index.html', 'utf8');
     // Fallback founders ship with real roles/bios — the open-decision placeholder stays hidden.
-    assert.ok(!home.includes('Rollen und Kurztexte fehlen'), 'Filled fallback team texts must hide the placeholder hint');
+    assert.ok(
+      !home.includes('Rollen und Kurztexte fehlen'),
+      'Filled fallback team texts must hide the placeholder hint'
+    );
     assert.ok(home.includes('CTO &amp; Chief AI Consultant') || home.includes('CTO & Chief AI Consultant'));
     assert.ok(home.includes('KI-Assistent'), 'KI-Team cards must render with a visible KI-Assistent label');
     assert.ok(
