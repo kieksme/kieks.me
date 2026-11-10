@@ -37,6 +37,9 @@ importers:
       astro-icon:
         specifier: ^1.1.5
         version: 1.1.5(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      highlight.js:
+        specifier: 11.12.0
+        version: 11.12.0
       limax:
         specifier: 4.1.0
         version: 4.1.0
@@ -2290,6 +2293,11 @@ packages:
     resolution:
       { integrity: sha512-v/VUHmiHhNbjDBGxYkwDXzYvfOTIKFquAn0KrPtH1D3Zv539VBPEOGYoWpLnb/FBT9vAx9anQef3noJZ2fPIBw== }
     engines: { node: '>=4' }
+
+  highlight.js@11.12.0:
+    resolution:
+      { integrity: sha512-nbfWpyRMcMrPMmDwJB+dhX/eiaPKtc2RB+0QZskqJ3WjRA/FDS0e9hZrx8EC/lbEv8gXy98FcDbNa/dspAaJMg== }
+    engines: { node: '>=12.0.0' }
 
   html-escaper@3.0.3:
     resolution:
@@ -6448,6 +6456,8 @@ snapshots:
   hepburn@1.2.1:
     dependencies:
       bulk-replace: 0.0.1
+
+  highlight.js@11.12.0: {}
 
   html-escaper@3.0.3: {}
 
