@@ -1,6 +1,6 @@
 // Audits the already built public site (run `pnpm build` first). Content is public static output only.
 import { auditSeo } from './lib/seo-audit.mjs';
-const pages = await auditSeo('dist', { expectTypes: { '^(impressum|datenschutz|agb)/': ['BreadcrumbList'] } });
+const pages = await auditSeo('dist', { expectTypes: { '^(impressum|datenschutz)/': ['BreadcrumbList'] } });
 console.log(`SEO audit passed for ${pages.length} pages`);
 // Contact form: honeypot, required fields, no secrets, no query-string submission.
 import { readFile } from 'node:fs/promises';

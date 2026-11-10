@@ -20,7 +20,7 @@ export interface Props {
 
 const {
   variant = 'primary',
-  shadow = variant === 'secondary' ? 'aqua' : 'fuchsia',
+  shadow = 'fuchsia',
   size = 'md',
   href,
   text = await Astro.slots.render('default'),
@@ -38,7 +38,8 @@ const sizes = {
 };
 const variants = {
   primary: 'bg-[var(--pop-yellow)] text-[var(--pop-navy)]',
-  secondary: 'bg-[var(--surface)] text-[var(--text-primary)]',
+  /* Solid white keeps contrast in light and dark; fuchsia offset matches primary Pop-Art weight. */
+  secondary: 'bg-[var(--pop-white)] text-[var(--pop-navy)]',
   aqua: 'bg-[var(--pop-aqua)] text-[var(--pop-navy)]',
 };
 const cls = [

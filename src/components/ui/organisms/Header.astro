@@ -26,8 +26,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 <header
   id="header"
-  class:list={[{ sticky: isSticky, relative: !isSticky }, 'top-0 z-40 w-full']}
-  style="background: var(--surface); border-bottom: 4px solid var(--ink);"
+  class:list={[{ sticky: isSticky, relative: !isSticky }, 'top-0 z-40 w-full pop-site-header']}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
 >
   <div class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex items-center justify-between gap-4">
@@ -149,6 +148,15 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 </header>
 
 <style>
+  .pop-site-header {
+    background: var(--page-bg);
+    border-bottom: 4px solid var(--ink);
+  }
+  :global(.dark) .pop-site-header {
+    /* Blend into the dark page canvas — no solid black bar, no aqua frame. */
+    background: var(--page-bg);
+    border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
+  }
   details > summary::-webkit-details-marker {
     display: none;
   }

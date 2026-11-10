@@ -11,7 +11,3 @@
   from = "/contact"
   to = "/kontakt"
   status = 301
-[[redirects]]
-  from = "/terms"
-  to = "/agb"
-  status = 301

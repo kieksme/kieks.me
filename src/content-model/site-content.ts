@@ -120,6 +120,8 @@ export interface SiteTeamView {
   bio?: string;
   /** Sanitized HTML from the rich-text biography. */
   bioHtml?: string;
+  /** Focus tags shown under the role (static fallback / optional CMS). */
+  tags?: string[];
 }
 export interface SiteMcpServerView {
   name: string;

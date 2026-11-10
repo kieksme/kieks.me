@@ -28,7 +28,6 @@ export default defineConfig({
 
   redirects: {
     '/contact': '/kontakt',
-    '/terms': '/agb',
   },
 
   integrations: [
@@ -56,7 +55,6 @@ export default defineConfig({
         !page.includes('/about') &&
         !page.includes('/pricing') &&
         !page.includes('/contact') &&
-        !page.includes('/terms') &&
         !page.includes('/category/') &&
         !page.includes('/tag/'),
     }),

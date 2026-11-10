@@ -218,7 +218,6 @@ try {
     'kontakt/',
     'impressum/',
     'datenschutz/',
-    'agb/',
     'blog/',
     'projekte/mcp-server/',
     'leistungen/beratung/',
@@ -230,7 +229,7 @@ try {
       [...pages].some((p) => p.replace(/\/?$/, '/') === `/site/${page}`.replace(/\/+$/, '/')),
       `crawl missed ${page}`
     );
-  assert.ok(pages.size >= 13, `crawled only ${pages.size} pages`);
+  assert.ok(pages.size >= 12, `crawled only ${pages.size} pages`);
   for (const asset of assetsSeen) {
     const r = await signedGet(asset);
     assert.equal(r.status, 200, `asset ${asset} -> ${r.status}`);

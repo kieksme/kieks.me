@@ -2,7 +2,7 @@
 title: 'Impressum'
 ---
 
-## Angaben gemäß § 5 TMG
+## Angaben gemäß § 5 DDG
 
 <address>
 kieks.me GbR<br>
@@ -11,27 +11,27 @@ Hardenbergstraße 48<br>
 Deutschland<br>
 </address>
 
-Vertreten durch die Gesellschafter:
-André Lademann, Thomas Schöne
+Vertreten durch die Gesellschafter:<br>
+André Lademann und Thomas Schöne
+
+<!-- TODO: Registergericht und Registernummer eintragen, falls die Gesellschaft als eGbR eingetragen ist. -->
 
 ## Kontakt
 
 E-Mail: <kontakt@kieks.me><br>
 Telefon: [+49 170 7353 067](tel:+491707353067)
 
-**Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:**<br>
-DE452741849
+<!-- TODO: USt-IdNr. erst nach BZSt-Bestätigung eintragen. -->
 
-**Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:**<br>
-André Lademann, Thomas Schöne
-Hardenbergstraße 48, 04275 Leipzig, Deutschland
+## Verantwortlich nach § 18 Abs. 2 MStV
+
+André Lademann<br>
+Hardenbergstraße 48<br>
+04275 Leipzig<br>
+Deutschland
 
 ## Haftungsausschluss
 
 Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.
 
-## EU-Streitschlichtung
-
-Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <https://ec.europa.eu/consumers/odr>. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-
-Stand: Februar 2025
+Stand: November 2026

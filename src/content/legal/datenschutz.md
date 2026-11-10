@@ -4,6 +4,8 @@ title: 'Datenschutzerklärung'
 
 ## 1. Verantwortlicher
 
+Verantwortlich für die Datenverarbeitung auf dieser Website ist:
+
 <address>
 kieks.me GbR<br>
 Hardenbergstraße 48<br>
@@ -11,76 +13,88 @@ Hardenbergstraße 48<br>
 Deutschland<br>
 </address>
 
-E-Mail: kontakt@kieks.me<br>
+E-Mail: <kontakt@kieks.me><br>
 Telefon: [+49 170 7353 067](tel:+491707353067)
 
-## 2. Allgemeine Hinweise
+## 2. Hosting (Netlify)
 
-Der Schutz Ihrer personenbezogenen Daten ist uns ein wichtiges Anliegen. Wir behandeln Ihre Daten vertraulich und gemäß den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
-
-## 3. Erhebung und Speicherung personenbezogener Daten sowie Art und Zweck der Verwendung
-
-### a) Beim Besuch unserer Website
-
-Beim Aufrufen unserer Website werden automatisch Informationen durch den Webserver erfasst:
+Unsere Website wird bei Netlify, Inc., 44 Montgomery Street, Suite 300, San Francisco, CA 94104, USA („Netlify“) gehostet. Netlify verarbeitet dabei als Auftragsverarbeiter technische Zugriffsdaten, insbesondere:
 
 - IP-Adresse
 - Datum und Uhrzeit des Zugriffs
+- angeforderte Ressource / URL
 - Browsertyp und -version
 - Betriebssystem
-- Referrer-URL (die zuvor besuchte Seite)
+- Referrer-URL (soweit übermittelt)
 
-Diese Daten sind technisch erforderlich, um unsere Website korrekt anzuzeigen und ihre Stabilität und Sicherheit zu gewährleisten (Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO).
+Diese Server-Logs sind erforderlich, um die Website bereitzustellen, Angriffe abzuwehren und die Stabilität und Sicherheit des Angebots zu gewährleisten (Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO).
 
-### b) Bei Nutzung unseres Kontaktformulars
+<!-- TODO: konkrete Speicherfrist der Netlify-Server-Logs eintragen. -->
 
-Wenn Sie uns per Kontaktformular oder E-Mail Anfragen senden, werden folgende Daten verarbeitet:
+Die Speicherdauer der Server-Logs richtet sich nach den Einstellungen und Vorgaben von Netlify.
 
-- Name
-- E-Mail-Adresse
-- Nachricht
+Eine Übermittlung in die USA kann stattfinden. Netlify nimmt am EU-US Data Privacy Framework teil; hilfsweise stützen wir die Übermittlung auf die Standardvertragsklauseln der Europäischen Kommission. Mit Netlify besteht ein Auftragsverarbeitungsvertrag (AVV).
 
-Diese Daten verarbeiten wir zur Beantwortung Ihrer Anfrage (Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO).
+## 3. Kontaktformular (Netlify Forms)
 
-### c) Cookies und Tracking-Technologien
+Wenn Sie uns über das Kontaktformular schreiben, verarbeiten wir die von Ihnen angegebenen Daten (insbesondere Name, E-Mail-Adresse, Firma sofern angegeben, und Nachricht), um Ihre Anfrage zu bearbeiten und zu beantworten.
 
-Unsere Website verwendet Cookies. Diese dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen.
+Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf den Abschluss oder die Anbahnung eines Vertrags gerichtet ist; im Übrigen Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung eingehender Anfragen). Die Formularübermittlung erfolgt über Netlify Forms (Auftragsverarbeiter, siehe Abschnitt 2).
 
-- Essenzielle Cookies: Notwendig für den Betrieb der Website
-- Analyse-Cookies (z. B. Google Analytics, falls verwendet)
+<!-- TODO: Speicherfrist für Kontaktanfragen über Netlify Forms eintragen. -->
 
-Sie können die Speicherung von Cookies in den Browsereinstellungen deaktivieren.
+Kontaktanfragen speichern wir nur so lange, wie es zur Bearbeitung erforderlich ist, und löschen sie anschließend, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
 
-## 4. Weitergabe von Daten
+## 4. Reichweitenmessung mit Swetrix
 
-Wir geben personenbezogene Daten nur weiter, wenn:
+Wir nutzen Swetrix (Swetrix Ltd. bzw. die jeweils angegebene Betreiberin des Dienstes) zur anonymisierten bzw. pseudonymisierten Reichweitenmessung. Swetrix wird in unserer Einbindung cookielos betrieben: Es werden keine Cookies gesetzt, kein Local Storage für Tracking genutzt und kein Fingerprinting eingesetzt.
 
-- dies zur Vertragserfüllung erforderlich ist (Art. 6 Abs. 1 lit. b DSGVO),
-- eine gesetzliche Verpflichtung besteht (Art. 6 Abs. 1 lit. c DSGVO) oder
-- Sie ausdrücklich eingewilligt haben (Art. 6 Abs. 1 lit. a DSGVO).
+Verarbeitet werden technische Nutzungsdaten (z. B. aufgerufene Seiten, Referrer, grobe Geräte-/Browserinformationen), soweit sie für die Statistik erforderlich sind. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Analyse der Website-Nutzung zur Verbesserung unseres Angebots).
 
-## 5. Ihre Rechte
+<!-- TODO: Hosting-Ort / Verarbeitungsort von Swetrix eintragen. -->
 
-Sie haben das Recht:
+## 5. Cookies und Speicherung nach § 25 TDDDG
 
-- Auskunft über Ihre gespeicherten Daten zu verlangen (Art. 15 DSGVO),
-- Berichtigung unrichtiger Daten zu fordern (Art. 16 DSGVO),
-- die Löschung Ihrer Daten zu verlangen (Art. 17 DSGVO),
-- die Verarbeitung Ihrer Daten einzuschränken (Art. 18 DSGVO),
-- der Verarbeitung zu widersprechen (Art. 21 DSGVO),
-- Ihre Einwilligung jederzeit zu widerrufen (Art. 7 Abs. 3 DSGVO),
-- sich bei einer Aufsichtsbehörde zu beschweren (Art. 77 DSGVO).
+Auf dieser Website setzen wir keine einwilligungspflichtigen Cookies oder vergleichbaren Technologien im Sinne von § 25 Abs. 1 TDDDG ein. Für die rein technische Bereitstellung der Website und die cookielose Reichweitenmessung mit Swetrix ist keine Einwilligung erforderlich. Ein Consent-Banner ist daher nicht vorgesehen.
 
-## 6. Speicherdauer
+Technisch notwendige Speichervorgänge (etwa die vom Browser lokal gehaltene Theme-Einstellung) dienen ausschließlich der Darstellung und fallen unter § 25 Abs. 2 TDDDG.
 
-Personenbezogene Daten werden nur so lange gespeichert, wie es für den jeweiligen Zweck erforderlich ist oder gesetzliche Aufbewahrungsfristen bestehen.
+## 6. Buchungstool
 
-## 7. Datensicherheit
+<!-- TODO: Abschnitt zum Buchungstool ergänzen, sobald Tool und Anbieter feststehen (Zweck, Rechtsgrundlage, Speicherfrist, ggf. Drittlandtransfer). -->
 
-Wir setzen technische und organisatorische Sicherheitsmaßnahmen ein, um Ihre Daten vor Verlust, Missbrauch oder unbefugtem Zugriff zu schützen.
+Sobald wir ein externes Tool für Terminbuchungen einbinden, informieren wir an dieser Stelle über Zweck, Rechtsgrundlage, Speicherdauer und ggf. Empfänger.
 
-## 8. Änderungen dieser Datenschutzerklärung
+## 7. Ihre Rechte (Art. 15–20 DSGVO)
 
-Wir behalten uns vor, diese Datenschutzerklärung zu aktualisieren, um sie an neue gesetzliche Vorgaben anzupassen. Die aktuelle Version finden Sie stets auf unserer Website.
+Sie haben gegenüber uns insbesondere das Recht auf:
 
-Stand: 02, 2025
+- Auskunft über die verarbeiteten personenbezogenen Daten (Art. 15 DSGVO),
+- Berichtigung unrichtiger Daten (Art. 16 DSGVO),
+- Löschung (Art. 17 DSGVO),
+- Einschränkung der Verarbeitung (Art. 18 DSGVO),
+- Datenportabilität (Art. 20 DSGVO).
+
+Zur Ausübung Ihrer Rechte genügt eine formlose Nachricht an die oben genannten Kontaktdaten.
+
+## 8. Widerspruchsrecht nach Art. 21 DSGVO
+
+**Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung Sie betreffender personenbezogener Daten Widerspruch einzulegen, die auf Art. 6 Abs. 1 lit. f DSGVO beruht. Wir verarbeiten die Daten dann nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die Ihre Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.**
+
+Den Widerspruch richten Sie bitte an <kontakt@kieks.me>.
+
+## 9. Beschwerderecht
+
+Unbeschadet anderer Rechtsbehelfe haben Sie das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig für uns ist insbesondere:
+
+Sächsische Datenschutz- und Transparenzbeauftragte<br>
+Devrientstraße 5<br>
+01067 Dresden<br>
+Deutschland<br>
+Website: <https://www.datenschutz.sachsen.de>
+
+## 10. Änderungen
+
+Wir passen diese Datenschutzerklärung an, wenn sich Technik, Angebote oder Rechtslage ändern. Es gilt die jeweils auf dieser Seite veröffentlichte Fassung.
+
+Stand: November 2026
