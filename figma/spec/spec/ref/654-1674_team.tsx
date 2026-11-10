@@ -28,7 +28,7 @@ export default function TeamWerDahintersteht() {
         <p className="[word-break:break-word] font-['Source_Sans_3:Regular'] font-normal leading-[32px] min-w-full relative shrink-0 text-[22px] text-[color:var(--text\/secondary,#4a5370)] w-[min-content]" data-node-id="654:1679">
           kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
         </p>
-        <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#5c4a00)] w-full" data-node-id="654:1680" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
+        <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#1e2a45)] w-full" data-node-id="654:1680" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
           <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="654:1681">
             ⟦PLATZHALTER D10⟧
           </p>
@@ -56,7 +56,7 @@ export default function TeamWerDahintersteht() {
               andrë
             </p>
           </div>
-          <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#5c4a00)] w-[361px]" data-node-id="654:1685" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
+          <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#1e2a45)] w-[361px]" data-node-id="654:1685" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
             <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="654:1686">
               ⟦PLATZHALTER D10⟧
             </p>
@@ -83,7 +83,7 @@ export default function TeamWerDahintersteht() {
               thomas
             </p>
           </div>
-          <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#5c4a00)] w-[361px]" data-node-id="654:1689" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
+          <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#1e2a45)] w-[361px]" data-node-id="654:1689" data-name="Platzhalter – ⟦PLATZHALTER D10⟧">
             <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="654:1690">
               ⟦PLATZHALTER D10⟧
             </p>

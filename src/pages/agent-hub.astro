@@ -90,7 +90,7 @@ const steps = [
     num: '03',
     title: 'Aufbau',
     description: 'Wir richten den Hub ein und überführen die ersten Komponenten.',
-    accent: 'yellow' as const,
+    accent: 'navy' as const,
     rotate: 1.5,
   },
   {
@@ -123,7 +123,7 @@ const flowSteps = [
   },
 ];
 
-const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
+const flowColors = ['aqua', 'fuchsia', 'purple', 'navy'] as const;
 ---
 
 <Layout metadata={metadata}>
@@ -141,7 +141,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
     />
     <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
       <div class="flex flex-col gap-7 max-w-[900px]">
-        <Sticker color="yellow" shadow="fuchsia" rotate={3}>Agent-Hub</Sticker>
+        <Sticker color="aqua" shadow="fuchsia" rotate={3}>Agent-Hub</Sticker>
         <Heading level={1} size="l" color="var(--hero-heading)" shadowColor="var(--pop-fuchsia)" shadowSize="6px 6px 0">
           ein ort für alle skills, mcp-server und agents ihres unternehmens
         </Heading>
@@ -214,14 +214,14 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
 
   <section class="not-prose py-16 md:py-24" style="background: var(--pop-navy);">
     <div class="mx-auto max-w-[1440px] px-5 md:px-20 max-w-3xl flex flex-col gap-6">
-      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Sicherheit</Sticker>
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Sicherheit</Sticker>
       <Heading level={2} size="l" color="#fff" shadowColor="var(--pop-fuchsia)">
         das internet ist keine paketquelle
       </Heading>
       <Lead tone="onColor" class="!text-white/90">
         Ein Skill ist Software: Er kann einen Agenten anweisen, Befehle auszuführen, und eigene Skripte mitbringen. Jede
-        ungeprüfte Installation ist ungeprüfte Codeausführung. Koi Security hat Anfang 2026 alle 2.857 Skills im
-        öffentlichen Marketplace ClawHub geprüft und 341 bösartige gefunden (
+        ungeprüfte Installation ist ungeprüfte Codeausführung. Koi Security hat alle 2.857 Skills im öffentlichen
+        Marketplace ClawHub geprüft und 341 bösartige gefunden (
         <a
           href="https://labs.cloudsecurityalliance.org/research/csa-research-note-openclaw-clawhub-supply-chain-risk-2026070/"
           class="font-bold underline underline-offset-4"
@@ -229,7 +229,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
           target="_blank"
           rel="noopener"
         >
-          Quelle: Cloud Security Alliance
+          Quelle: Cloud Security Alliance, Stand: Anfang 2026
         </a>
         ). Scanner helfen, ersetzen aber kein Review. Für Unternehmen mit hohen Sicherheitsanforderungen, etwa im KRITIS-Umfeld,
         ist ein kontrollierter Hub deshalb Pflicht.
@@ -259,7 +259,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
             <li class="flex gap-5 items-start">
               <Marker
                 variant="diamond"
-                color={(['aqua', 'fuchsia', 'yellow', 'purple'] as const)[i % 4]}
+                color={(['aqua', 'fuchsia', 'purple', 'navy'] as const)[i % 4]}
                 class="mt-1.5"
               />
               <span class="text-lg" style="color: var(--text-primary);">
@@ -274,7 +274,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
 
   <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
     <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
-      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Vorgehen</Sticker>
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Vorgehen</Sticker>
       <Heading level={2} size="l">so starten wir</Heading>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {steps.map((s) => <StepCard {...s} />)}
@@ -282,7 +282,7 @@ const flowColors = ['aqua', 'fuchsia', 'yellow', 'purple'] as const;
       {/* TODO ⟦PLATZHALTER: Preisrahmen Agent-Hub, Angabe folgt von André⟧ */}
       <aside
         class="mt-4 max-w-xl p-6 border-[3px] border-[var(--ink)]"
-        style="background: var(--pop-yellow); box-shadow: 8px 8px 0 0 var(--pop-fuchsia); color: var(--pop-navy);"
+        style="background: var(--pop-aqua); box-shadow: 8px 8px 0 0 var(--pop-fuchsia); color: var(--pop-navy);"
         aria-label="Preisrahmen"
       >
         <p class="font-heading font-extrabold lowercase text-sm tracking-wide">Preisrahmen</p>

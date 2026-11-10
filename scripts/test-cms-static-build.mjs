@@ -20,7 +20,7 @@ const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
   pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
-  services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',descriptionRichText:{root:{type:'root',children:[{type:'heading',tag:'h2',children:[{type:'text',text:'Synthetic Detail Heading'}]},{type:'paragraph',children:[{type:'text',text:'Synthetic detail text',format:1}]}]}},highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'yellow',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
+  services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',descriptionRichText:{root:{type:'root',children:[{type:'heading',tag:'h2',children:[{type:'text',text:'Synthetic Detail Heading'}]},{type:'paragraph',children:[{type:'text',text:'Synthetic detail text',format:1}]}]}},highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'navy',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
   faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ rich fallback',answerRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich answer',format:1},{type:'link',fields:{url:'https://example.invalid/rich'},children:[{type:'text',text:'rich link'}]}]},{type:'html',html:'<script>synthetic()</script>'}]}},accent:'aqua'},{id:22,_status:'published',sortOrder:2,placement:'home',question:'Synthetic FAQ plain question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'fuchsia'}],
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role',bio:'Synthetic plain bio',bioRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich bio',format:1}]},{type:'html',html:'<script>bio()</script>'}]}}}],
   'mcp-projects':[{id:14,_status:'published',sortOrder:1,kind:'mcp-server',name:'Synthetic MCP',summary:'Synthetic MCP summary',repositoryUrl:'https://github.com/example-synthetic/mcp',npmPackages:[{name:'@example/synthetic'}],descriptionRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich description',format:1}]}]}},license:'MIT'}],
@@ -89,7 +89,7 @@ globalThis.fetch = async (input,init) => {
     expectTypes: {
       '^blog/synthetic-cms-article/': ['BlogPosting', 'BreadcrumbList'],
       '^blog/autoren/synthetic-author/': ['Person', 'BreadcrumbList'],
-      '^(impressum|datenschutz|agb)/': ['BreadcrumbList'],
+      '^(impressum|datenschutz)/': ['BreadcrumbList'],
     },
   });
   const articleSeo = parseHead(article);
@@ -181,12 +181,22 @@ globalThis.fetch = async (input,init) => {
   }
   assert.match(await readFile('dist/blog/index.html', 'utf8'), /Hier erscheinen bald unsere ersten Beiträge/);
   assert.match(await readFile('dist/impressum/index.html', 'utf8'), /Hardenbergstraße 48/);
-  assert.ok(
-    (await readFile('dist/index.html', 'utf8')).includes('Rollen und Kurztexte fehlen'),
-    'Without CMS team texts the open-decision hint must stay visible'
-  );
+  {
+    const home = await readFile('dist/index.html', 'utf8');
+    // Fallback founders ship with real roles/bios — the open-decision placeholder stays hidden.
+    assert.ok(
+      !home.includes('Rollen und Kurztexte fehlen'),
+      'Filled fallback team texts must hide the placeholder hint'
+    );
+    assert.ok(home.includes('CTO &amp; Chief AI Consultant') || home.includes('CTO & Chief AI Consultant'));
+    assert.ok(home.includes('KI-Assistent'), 'KI-Team cards must render with a visible KI-Assistent label');
+    assert.ok(
+      home.includes('Diese Assistenten sind KI-Systeme, keine Menschen'),
+      'KI-Team transparency notice must render above the assistants'
+    );
+  }
   assert.ok(!(await readFile('dist/impressum/index.html', 'utf8')).includes('Synthetic Legal'));
-  for (const slug of ['impressum', 'datenschutz', 'agb']) {
+  for (const slug of ['impressum', 'datenschutz']) {
     const html = await readFile(`dist/${slug}/index.html`, 'utf8');
     assert.equal((html.match(/<html\b/g) || []).length, 1, 'Legal fallback nested a second page layout');
     assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Legal fallback duplicated the page heading');

@@ -3,20 +3,19 @@ export interface Props {
   /** Fill colour of the jagged band (matches the section below or above) */
   class?: string;
   flip?: boolean;
-  from?: 'white' | 'navy' | 'aqua' | 'navy-50' | 'page' | 'fuchsia' | 'purple' | 'yellow' | 'surface' | 'ink';
+  from?: 'white' | 'navy' | 'aqua' | 'navy-50' | 'page' | 'fuchsia' | 'purple' | 'surface' | 'ink';
 }
 
 const { class: className = '', flip = false, from = 'white' } = Astro.props;
 
 const fills: Record<string, string> = {
   white: '#ffffff',
-  navy: '#1E2A45',
+  navy: 'var(--pop-navy)',
   aqua: '#00FFDC',
   'navy-50': '#F0F2F5',
   page: 'var(--pop-page-bg)',
   fuchsia: '#FF008F',
   purple: '#9747FF',
-  yellow: '#FFD60A',
   surface: 'var(--pop-surface)',
   ink: 'var(--pop-ink)',
 };

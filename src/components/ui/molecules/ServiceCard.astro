@@ -8,7 +8,7 @@ export interface Props {
   description: string;
   href: string;
   linkText: string;
-  headColor: 'aqua' | 'fuchsia' | 'purple' | 'yellow';
+  headColor: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   shadow?: 'ink' | 'fuchsia';
   numShadow?: 'fuchsia' | 'aqua';
   numColor?: string;
@@ -32,16 +32,17 @@ const heads = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
   purple: 'var(--pop-purple)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
 };
 const shadowColor = shadow === 'fuchsia' ? 'var(--pop-fuchsia)' : 'var(--ink)';
 const nShadow = numShadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
-const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)');
+const nColor = numColor ?? (headColor === 'purple' || headColor === 'navy' ? '#fff' : 'var(--pop-navy)');
 ---
 
 <article
   class:list={['pop-service-card flex flex-col bg-[var(--surface)] border-[3px] border-[var(--ink)]', className]}
   style={`--pop-card-shadow-color: ${shadowColor};`}
+  lang="de"
 >
   <div
     class="relative h-[132px] overflow-hidden border-b-[3px] border-[var(--ink)] pl-6 pt-[18px] max-md:h-auto max-md:w-[84px] max-md:shrink-0 max-md:border-b-0 max-md:border-r-[3px] max-md:flex max-md:justify-center max-md:pl-0 max-md:pt-[14px] max-md:pb-4"
@@ -63,14 +64,9 @@ const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)')
   <div
     class="pop-service-card__body flex flex-col gap-3 px-6 pt-[22px] pb-[26px] flex-1 max-md:gap-2 max-md:px-4 max-md:pt-4 max-md:pb-[18px]"
   >
-    <h3
-      class="font-heading font-extrabold text-xl leading-[26px] md:text-2xl md:leading-[30px]"
-      style="color: var(--text-primary);"
-    >
-      {title}
-    </h3>
+    <h3 class="pop-service-card__title font-heading font-extrabold" style="color: var(--text-primary);">{title}</h3>
     <p class="text-lg leading-7" style="color: var(--text-secondary);">{description}</p>
-    <TextLink href={href} class="max-md:!text-[15px]">{linkText}</TextLink>
+    <TextLink href={href} class="pop-service-card__link max-md:!text-[15px]">{linkText}</TextLink>
   </div>
 </article>
 
@@ -81,17 +77,25 @@ const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)')
       transform 0.2s ease,
       box-shadow 0.2s ease;
   }
-  .pop-service-card:hover,
-  .pop-service-card:focus-within {
-    --pop-card-shadow-color: var(--pop-fuchsia);
+  .pop-service-card__title {
+    font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+    line-height: 1.25;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  .pop-service-card__link {
+    margin-top: auto;
   }
   .pop-service-card__number {
     text-shadow: 4px 4px 0 var(--pop-number-shadow-color);
   }
   @media (min-width: 768px) {
-    .pop-service-card:hover {
-      transform: translate(-4px, -4px);
-      box-shadow: 12px 12px 0 0 var(--pop-card-shadow-color);
+    .pop-service-card:hover,
+    .pop-service-card:focus-within {
+      transform: translate(-4px, -4px) rotate(-0.4deg);
+      box-shadow: 12px 12px 0 0 var(--pop-fuchsia);
     }
   }
   @media (max-width: 767px) {
@@ -100,12 +104,20 @@ const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)')
       align-items: stretch;
       box-shadow: 6px 6px 0 0 var(--pop-card-shadow-color);
     }
+    .pop-service-card:hover,
+    .pop-service-card:focus-within {
+      box-shadow: 8px 8px 0 0 var(--pop-fuchsia);
+    }
     .pop-service-card__number {
       text-shadow: 3px 3px 0 var(--pop-number-shadow-color);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .pop-service-card:hover {
+    .pop-service-card {
+      transition: none;
+    }
+    .pop-service-card:hover,
+    .pop-service-card:focus-within {
       transform: none;
     }
   }

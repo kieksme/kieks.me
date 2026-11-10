@@ -252,7 +252,7 @@ describe('editable site sections with static fallback', () => {
           id: 2,
           key: 'footer',
           links: [{ label: 'Projekte', children: [{ label: 'A & <b>B</b>', href: '/projekte/mcp-server' }] }],
-          secondaryLinks: [{ label: 'AGB <i>x</i>', href: '/agb' }],
+          secondaryLinks: [{ label: 'Impressum <i>x</i>', href: '/impressum' }],
           socialLinks: [{ label: 'GitHub', href: 'https://github.com/kieksme', icon: 'tabler:brand-github' }],
           footNote: 'kieks.me <script>x</script> & Co',
         },
@@ -267,7 +267,7 @@ describe('editable site sections with static fallback', () => {
     ]);
     expect(content.footNote).toBe('kieks.me &lt;script&gt;x&lt;/script&gt; &amp; Co');
     expect(content.footerColumns[0].links[0].text).toBe('A &amp; &lt;b&gt;B&lt;/b&gt;');
-    expect(content.legalLinks[0].text).toBe('AGB &lt;i&gt;x&lt;/i&gt;');
+    expect(content.legalLinks[0].text).toBe('Impressum &lt;i&gt;x&lt;/i&gt;');
     expect(content.header).toEqual([{ text: 'Kontakt', href: '/kontakt' }]);
     const empty = resolveSiteContent();
     expect(empty.headerActions).toBeUndefined();
@@ -545,9 +545,9 @@ describe('editable site sections with static fallback', () => {
     const { readFile } = await import('node:fs/promises');
     const page = await readFile(new URL('../../../src/pages/index.astro', import.meta.url), 'utf8');
     expect(page).toContain('teamTextsMissing &&');
-    // Fallback team roles are placeholders, so the hint is shown without CMS texts.
+    // Fallback founders ship with real roles and bios — the homepage hint stays hidden.
     const fallback = resolveSiteContent().team;
-    expect(fallback.every((m) => !m.bio && !m.bioHtml && (m.role ?? '').includes('⟦'))).toBe(true);
+    expect(fallback.some((m) => m.bio || m.bioHtml || (m.role && !m.role.includes('⟦')))).toBe(true);
     const cms = resolveSiteContent({
       team: [{ ...published, id: 1, slug: 'andre', name: 'André Lademann', position: 'Gesellschafter' }],
     }).team;

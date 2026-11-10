@@ -1,6 +1,6 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="Burst gelb" filter="url(#filter0_d_0_12)">
-<use xlink:href="#stroke0_0_12" fill="#FFD60A"/>
+<use xlink:href="#stroke0_0_12" fill="#00FFDC"/>
 <mask id="stroke1_0_12" fill="white">
 <use xlink:href="#stroke0_0_12"/>
 </mask>

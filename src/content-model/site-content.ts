@@ -4,8 +4,8 @@
  * Every collection is optional: without CMS access, or without published documents, the static fallback
  * in `fallback.ts` renders unchanged. Collection slugs: services, team, faqs, mcp-projects, navigation.
  */
-export type PopAccent = 'aqua' | 'fuchsia' | 'yellow' | 'purple';
-export const POP_ACCENTS: readonly PopAccent[] = ['aqua', 'fuchsia', 'yellow', 'purple'];
+export type PopAccent = 'aqua' | 'fuchsia' | 'purple' | 'navy';
+export const POP_ACCENTS: readonly PopAccent[] = ['aqua', 'fuchsia', 'purple', 'navy'];
 
 /** Fields shared by all website collections. `_status` must be `published` for the static build. */
 interface CmsBase {
@@ -120,6 +120,8 @@ export interface SiteTeamView {
   bio?: string;
   /** Sanitized HTML from the rich-text biography. */
   bioHtml?: string;
+  /** Focus tags shown under the role (static fallback / optional CMS). */
+  tags?: string[];
 }
 export interface SiteMcpServerView {
   name: string;

@@ -4,7 +4,7 @@ import Marker from '~/components/ui/atoms/Marker.astro';
 export interface Props {
   name: string;
   href: string;
-  color: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  color: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   meta?: string;
   class?: string;
 }
@@ -13,7 +13,7 @@ const { name, href, color, meta = 'GitHub · npm', class: className = '' } = Ast
 const shadows = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple)',
 };
 ---

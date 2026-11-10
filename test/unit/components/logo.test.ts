@@ -6,8 +6,6 @@ import Logo from '../../../src/components/ui/atoms/Logo.astro';
 import HeroArtFinger from '../../../src/components/ui/organisms/HeroArtFinger.astro';
 import circleLogoUrl from '../../../src/assets/brand/logos/kieks.me-single-circle.svg?url';
 import circleLogoDarkUrl from '../../../src/assets/brand/logos/kieks.me-single-circle-dark.svg?url';
-import horizontalLightUrl from '../../../src/assets/brand/logos/kieks.me-horizontal-fuchsia-light.svg?url';
-import horizontalDarkUrl from '../../../src/assets/brand/logos/kieks.me-horizontal-fuchsia-dark.svg?url';
 
 const approvedBlob = '82c16492f94b6fee93eaf79d04b86ea0b556c349';
 
@@ -63,17 +61,22 @@ describe('approved circular brand logo', () => {
     expect(html).toContain('example-logo');
   });
 
-  it('shows the complete horizontal wordmark for light and dark surfaces', async () => {
+  it('shows the horizontal wordmark as navy disc plus HTML text (no aqua ring, no k-overlap)', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Logo, {
       props: { layout: 'horizontal', size: 'sm', isAnimated: false },
     });
     expect(html).toContain('data-logo-layout="horizontal"');
-    expect(html).toContain(`src="${horizontalLightUrl}"`);
-    expect(html).toContain(`src="${horizontalDarkUrl}"`);
-    expect(html).toContain('h-[34px]');
-    expect(html).not.toContain('aspect-square');
-    expect(html).not.toContain(circleLogoUrl);
+    expect(html).toContain('brand-logo--horizontal');
+    expect(html).toContain('gap-3');
+    expect(html).toContain(`src="${circleLogoUrl}"`);
+    expect(html).not.toContain(circleLogoDarkUrl);
+    expect(html).not.toContain('kieks.me-horizontal-fuchsia');
+    expect(html).toContain('brand-logo__word');
+    expect(html).toContain('kieks');
+    expect(html).toContain('.me');
+    expect(html).toContain('width="30" height="30"');
+    expect(html.match(/<img\b/g)).toHaveLength(1);
   });
 
   it('uses the same original in the hero without the jagged substitute', async () => {
@@ -83,6 +86,6 @@ describe('approved circular brand logo', () => {
     expect(html).toContain(`src="${circleLogoDarkUrl}"`);
     expect(html).toContain('width="520" height="520"');
     expect(html.match(/<img\b/g)).toHaveLength(2);
-    expect(html).not.toMatch(/imgHeroArt|BurstGelb|FingerMultiStacked|pop-spin|pop-tap/);
+    expect(html).not.toMatch(/imgHeroArt|BurstGelb|BurstAqua|FingerMultiStacked|pop-spin|pop-tap/);
   });
 });
