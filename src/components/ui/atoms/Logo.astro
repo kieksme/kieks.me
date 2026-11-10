@@ -14,13 +14,7 @@ export interface Props {
   class?: string;
 }
 
-const {
-  variant = 'auto',
-  size = 'md',
-  layout = 'mark',
-  isAnimated = true,
-  class: className = '',
-} = Astro.props;
+const { variant = 'auto', size = 'md', layout = 'mark', isAnimated = true, class: className = '' } = Astro.props;
 const markSizes = {
   sm: { dimension: 44, class: 'h-11 w-11' },
   md: { dimension: 56, class: 'h-14 w-14' },

@@ -1,9 +1,10 @@
 import { fromMarkdown } from 'mdast-util-from-markdown';
-import { escapeHtml, safeHref } from './rich-text';
+import { escapeHtml, renderCodeBlock, safeHref } from './rich-text';
 interface MarkdownNode {
   type: string;
   value?: string;
   depth?: number;
+  lang?: string | null;
   url?: string;
   ordered?: boolean;
   start?: number;
@@ -42,7 +43,7 @@ export function renderMarkdown(value: unknown): string {
       case 'inlineCode':
         return `<code>${escapeHtml(item.value)}</code>`;
       case 'code':
-        return `<pre><code>${escapeHtml(item.value)}</code></pre>`;
+        return renderCodeBlock(item.value, item.lang);
       case 'blockquote':
         return `<blockquote>${children()}</blockquote>`;
       case 'list': {

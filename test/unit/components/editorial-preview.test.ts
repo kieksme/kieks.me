@@ -271,7 +271,7 @@ describe('blog, legal and author previews', () => {
     expect(html).not.toContain('href="javascript:');
     expect(html).not.toContain('<script>');
     expect(html).toContain('&lt;script&gt;');
-    expect(renderMarkdown('```html\n<address>literal<br></address>\n```')).toContain(
+    expect(renderMarkdown('```html\n<address>literal<br></address>\n```').replace(/<[^>]*>/g, '')).toContain(
       '&lt;address&gt;literal&lt;br&gt;&lt;/address&gt;'
     );
   });

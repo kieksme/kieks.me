@@ -1,0 +1,49 @@
+@import 'highlight.js/styles/github-dark.css';
+
+pre.syntax-code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  overflow-wrap: normal;
+  tab-size: 2;
+  background: #0d1117;
+  color: #e6edf3;
+  border: 2px solid var(--pop-ink, #111827);
+  border-radius: 0.4rem;
+  padding: 0;
+  margin-block: 1.5rem;
+}
+pre.syntax-code::before {
+  content: attr(data-language);
+  display: block;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #30363d;
+  color: #c9d1d9;
+  font:
+    600 0.75rem/1.5 ui-monospace,
+    monospace;
+}
+pre.syntax-code > code.hljs {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  overflow: visible;
+  padding: 1rem;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font:
+    400 0.875rem/1.7 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+pre.syntax-code:focus-visible {
+  outline: 3px solid var(--pop-aqua, #22d3ee);
+  outline-offset: 3px;
+}

@@ -1,0 +1,40 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import EditorialContent from '~/components/editorial/EditorialContent.astro';
+const document = {
+  title: 'Syntax-Highlighting',
+  excerpt: 'Codeblöcke aus Payload: TypeScript, JSON und Shell mit unveränderten Einrückungen.',
+  contentRichText: {
+    root: {
+      type: 'root',
+      children: [
+        {
+          type: 'block',
+          fields: {
+            blockType: 'Code',
+            language: 'typescript',
+            code: 'const answer: number = 42;\nconsole.log(answer);',
+          },
+        },
+        { type: 'block', fields: { blockType: 'Code', language: 'json', code: '{\n  "allowed": true\n}' } },
+        {
+          type: 'block',
+          fields: { blockType: 'Code', language: 'shell', code: 'TRACE_EXPORTER=none pnpm scenario allowed' },
+        },
+        {
+          type: 'block',
+          fields: {
+            blockType: 'Code',
+            language: 'plaintext',
+            code: 'Trace-ID 15adbbbec688800e40563526668a67c0\n  ✓ invoke_agent dokumentenagent',
+          },
+        },
+      ],
+    },
+  },
+};
+---
+
+<Layout metadata={{ title: 'Code-Highlighting – Dokumentation', robots: { index: false, follow: false } }}>
+  <EditorialContent collection="posts" document={document} />
+</Layout>

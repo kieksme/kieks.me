@@ -1,3 +1,4 @@
+import hljs from 'highlight.js/lib/common';
 /** Small, closed Lexical renderer: no raw HTML, styles, arbitrary tags or scripts. */
 export const escapeHtml = (value: unknown): string =>
   String(value ?? '').replace(
@@ -54,6 +55,28 @@ export function mediaHtml(value: unknown): string {
     ? `<figure><img src="${escapeHtml(media.url)}" alt="${escapeHtml(media.alt)}"${media.width ? ` width="${media.width}"` : ''}${media.height ? ` height="${media.height}"` : ''} loading="lazy" decoding="async"></figure>`
     : '';
 }
+/** Render only escaped source and the highlighter's own token markup. */
+export function renderCodeBlock(value: unknown, languageValue: unknown): string {
+  if (typeof value !== 'string' || value.length > 100000) return '';
+  const aliases: Record<string, string> = {
+    ts: 'typescript',
+    js: 'javascript',
+    shell: 'bash',
+    sh: 'bash',
+    text: 'plaintext',
+    txt: 'plaintext',
+    html: 'xml',
+  };
+  const requested =
+    typeof languageValue === 'string' && /^[a-z0-9-]{1,40}$/i.test(languageValue)
+      ? languageValue.toLowerCase()
+      : 'plaintext';
+  const canonical = aliases[requested] || requested;
+  const language = hljs.getLanguage(canonical) ? canonical : 'plaintext';
+  const html =
+    language === 'plaintext' ? escapeHtml(value) : hljs.highlight(value, { language, ignoreIllegals: true }).value;
+  return `<pre class="syntax-code" data-language="${language}" tabindex="0" aria-label="Code: ${language}"><code class="hljs language-${language}">${html}</code></pre>`;
+}
 export function renderRichText(value: unknown): string {
   let budget = 5000;
   function node(input: unknown, depth = 0): string {
@@ -74,6 +97,10 @@ export function renderRichText(value: unknown): string {
       ] as const)
         if (format & flag) text = `<${tag}>${text}</${tag}>`;
       return text;
+    }
+    if (n.type === 'block') {
+      const fields = n.fields && typeof n.fields === 'object' ? (n.fields as Record<string, unknown>) : {};
+      return fields.blockType === 'Code' ? renderCodeBlock(fields.code, fields.language) : '';
     }
     if (n.type === 'linebreak') return '<br>';
     if (n.type === 'upload' && n.relationTo === 'media') return mediaHtml(n.value);
