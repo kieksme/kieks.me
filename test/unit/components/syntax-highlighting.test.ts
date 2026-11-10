@@ -7,6 +7,7 @@ describe('CMS code syntax highlighting', () => {
     ['ts', 'const answer: number = 42;', 'typescript'],
     ['json', '{"ok": true}', 'json'],
     ['shell', 'echo "$HOME"', 'bash'],
+    ['dockerfile', 'FROM node:24\nRUN echo hello', 'dockerfile'],
   ])('highlights %s on the server', (language, code, canonical) => {
     const html = renderCodeBlock(code, language);
     expect(html).toContain(`language-${canonical}`);
