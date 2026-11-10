@@ -181,10 +181,17 @@ globalThis.fetch = async (input,init) => {
   }
   assert.match(await readFile('dist/blog/index.html', 'utf8'), /Hier erscheinen bald unsere ersten Beiträge/);
   assert.match(await readFile('dist/impressum/index.html', 'utf8'), /Hardenbergstraße 48/);
-  assert.ok(
-    (await readFile('dist/index.html', 'utf8')).includes('Rollen und Kurztexte fehlen'),
-    'Without CMS team texts the open-decision hint must stay visible'
-  );
+  {
+    const home = await readFile('dist/index.html', 'utf8');
+    // Fallback founders ship with real roles/bios — the open-decision placeholder stays hidden.
+    assert.ok(!home.includes('Rollen und Kurztexte fehlen'), 'Filled fallback team texts must hide the placeholder hint');
+    assert.ok(home.includes('CTO &amp; Chief AI Consultant') || home.includes('CTO & Chief AI Consultant'));
+    assert.ok(home.includes('KI-Assistent'), 'KI-Team cards must render with a visible KI-Assistent label');
+    assert.ok(
+      home.includes('Diese Assistenten sind KI-Systeme, keine Menschen'),
+      'KI-Team transparency notice must render above the assistants'
+    );
+  }
   assert.ok(!(await readFile('dist/impressum/index.html', 'utf8')).includes('Synthetic Legal'));
   for (const slug of ['impressum', 'datenschutz']) {
     const html = await readFile(`dist/${slug}/index.html`, 'utf8');
