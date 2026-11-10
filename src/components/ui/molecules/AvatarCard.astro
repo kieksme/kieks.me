@@ -16,17 +16,17 @@ export interface Props {
   /** Plain biography; `bioHtml` (sanitized CMS rich text) takes precedence. */
   bio?: string;
   bioHtml?: string;
+  tags?: string[];
   class?: string;
 }
 
-const { name, label, image, imageAlt, role, bio, bioHtml, class: className = '' } = Astro.props;
+const { name, label, image, imageAlt, role, bio, bioHtml, tags = [], class: className = '' } = Astro.props;
 const display = label.toLocaleLowerCase('de-DE');
 const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PLATZHALTER')));
 ---
 
 <figure class:list={['pop-avatar flex flex-col items-center gap-[18px] w-full max-w-[400px]', className]}>
   <div class="pop-avatar__box relative w-[min(100%,361px)] aspect-[361/499]">
-    <!-- Polygon layers: grey offset → magenta → aqua (SPEC §3.8 / ref 654:1674) -->
     <img
       src={vector1}
       alt=""
@@ -66,7 +66,6 @@ const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PL
         decoding="async"
       />
     </div>
-    <!-- 96px name with aqua contour -->
     <figcaption
       class="absolute left-1/2 -translate-x-1/2 bottom-[4%] z-10 font-heading font-black lowercase text-[clamp(2.75rem,10vw,6rem)] leading-none tracking-[-0.05em] whitespace-nowrap pointer-events-none"
       style="color: var(--pop-navy); -webkit-text-stroke: 10px var(--pop-aqua); paint-order: stroke fill;"
@@ -81,17 +80,31 @@ const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PL
           {role.replace(/^⟦PLATZHALTER D10:\s*/, '').replace(/⟧$/, '') || 'Rolle und 1–2 Sätze, selbst formuliert'}
         </Note>
       ) : (
-        <p class="text-center text-sm max-w-[22rem]" style="color: var(--text-secondary);">
+        <p class="text-center font-heading text-base font-extrabold" style="color: var(--text-primary);">
           {role}
         </p>
       ))
   }
   {
+    tags.length > 0 && (
+      <ul class="flex flex-wrap justify-center gap-2 max-w-[22rem] list-none p-0 m-0">
+        {tags.map((tag) => (
+          <li
+            class="border-[2px] border-[var(--ink)] px-2 py-1 font-heading text-xs font-extrabold"
+            style="background: var(--pop-aqua); color: var(--pop-navy); box-shadow: 2px 2px 0 0 var(--pop-fuchsia);"
+          >
+            {tag}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
     bioHtml ? (
-      <div class="cms-rich text-sm max-w-[22rem]" style="color: var(--text-secondary);" set:html={bioHtml} />
+      <div class="cms-rich text-sm max-w-[22rem] text-center" style="color: var(--text-secondary);" set:html={bioHtml} />
     ) : (
       bio && (
-        <p class="text-center text-sm max-w-[22rem]" style="color: var(--text-secondary);">
+        <p class="text-center text-sm max-w-[22rem] leading-relaxed" style="color: var(--text-secondary);">
           {bio}
         </p>
       )

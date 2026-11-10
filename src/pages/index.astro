@@ -12,11 +12,13 @@ import ServiceCard from '~/components/ui/molecules/ServiceCard.astro';
 import RepoRow from '~/components/ui/molecules/RepoRow.astro';
 import FaqItem from '~/components/ui/molecules/FaqItem.astro';
 import AvatarCard from '~/components/ui/molecules/AvatarCard.astro';
+import AiAssistantCard from '~/components/ui/molecules/AiAssistantCard.astro';
 import MarqueeBand from '~/components/ui/organisms/MarqueeBand.astro';
 import HeroArtFinger from '~/components/ui/organisms/HeroArtFinger.astro';
 import CtaSection from '~/components/ui/organisms/CtaSection.astro';
 import { BOOKING_URL, GITHUB_ORG_URL } from '~/config/site';
 import { getSiteContent } from '~/utils/site-content';
+import { fallbackAiTeam } from '~/content-model/fallback';
 import avatarAndre from '~/assets/pop/654-1674_team__imgAndre1.png';
 import avatarThomas from '~/assets/pop/654-1674_team__imgThomas.png';
 const metadata = {
@@ -89,7 +91,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
             />
             <Button
               variant="secondary"
-              shadow="aqua"
+              shadow="fuchsia"
               href={hero?.secondaryCta?.href ?? '#leistungen'}
               text={hero?.secondaryCta?.text ?? 'Leistungen ansehen'}
             />
@@ -113,9 +115,9 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
       <Sticker color="aqua" shadow="fuchsia" rotate={3}>Leistungen</Sticker>
       <Heading level={2} size="l" class="mt-6">was wir für sie tun</Heading>
       <Lead class="mt-6 max-w-[760px]">
-        Fünf Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht.
+        Vier Schwerpunkte, ein Anspruch: Lösungen, die zu Ihrem Unternehmen passen und die Ihr Team versteht.
       </Lead>
-      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-7">
+      <div class="mt-6 grid sm:grid-cols-2 xl:grid-cols-4 gap-7">
         {services.map((s) => <ServiceCard {...s} />)}
       </div>
       <Note label="⟦ENTSCHEIDUNG D6⟧" class="mt-6 max-w-[640px]">
@@ -180,11 +182,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
         </Note>
       </div>
       <div class="relative justify-self-center w-full max-w-[400px] aspect-square">
-        <div
-          class="pointer-events-none absolute inset-0 z-0"
-          style="transform: translate(3%, 3%);"
-          aria-hidden="true"
-        >
+        <div class="pointer-events-none absolute inset-0 z-0" style="transform: translate(3%, 3%);" aria-hidden="true">
           <svg
             class="motion-safe:pop-spin-slow h-full w-full overflow-visible"
             viewBox="0 0 400 400"
@@ -194,8 +192,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
               d="M200 0L237.27 60.9067L300 26.7949L301.823 98.1766L373.205 100L339.093 162.73L400 200L339.093 237.27L373.205 300L301.823 301.823L300 373.205L237.27 339.093L200 400L162.73 339.093L100 373.205L98.1766 301.823L26.7949 300L60.9067 237.27L0 200L60.9067 162.73L26.7949 100L98.1766 98.1766L100 26.7949L162.73 60.9067L200 0Z"
               fill="#FF008F"
               stroke="#1E2A45"
-              stroke-width="5"
-            />
+              stroke-width="5"></path>
           </svg>
         </div>
         <svg
@@ -207,8 +204,7 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
             d="M200 0L237.27 60.9067L300 26.7949L301.823 98.1766L373.205 100L339.093 162.73L400 200L339.093 237.27L373.205 300L301.823 301.823L300 373.205L237.27 339.093L200 400L162.73 339.093L100 373.205L98.1766 301.823L26.7949 300L60.9067 237.27L0 200L60.9067 162.73L26.7949 100L98.1766 98.1766L100 26.7949L162.73 60.9067L200 0Z"
             fill="#00FFDC"
             stroke="#1E2A45"
-            stroke-width="5"
-          />
+            stroke-width="5"></path>
         </svg>
         <div
           class="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center font-heading font-black lowercase leading-none"
@@ -230,36 +226,55 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
 
   <!-- 3.8 Team -->
   <section class="not-prose py-16 md:py-24" style="background: var(--page-bg);">
-    <div class="mx-auto max-w-[1440px] px-5 md:px-20 grid lg:grid-cols-[1fr_auto] gap-12 items-center">
-      <div class="flex flex-col gap-6 max-w-md">
-        <Sticker color="fuchsia" shadow="aqua" rotate={3}>Team</Sticker>
-        <Heading level={2} size="l">wer<br />dahintersteht</Heading>
-        <Lead>
-          kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
-          Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
-        </Lead>
-        {
-          teamTextsMissing && (
-            <Note label="⟦PLATZHALTER D10⟧">
-              Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
-            </Note>
-          )
-        }
+    <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-16">
+      <div class="grid lg:grid-cols-[1fr_auto] gap-12 items-center">
+        <div class="flex flex-col gap-6 max-w-md">
+          <Sticker color="fuchsia" shadow="aqua" rotate={3}>Team</Sticker>
+          <Heading level={2} size="l">wer<br />dahintersteht</Heading>
+          <Lead>
+            kieks.me ist die GbR von André Lademann und Thomas Schöne in Leipzig – AI Consultants für Skills, MCP-Server,
+            Agents und Agent-Hubs. Sie sprechen bei uns direkt mit den Menschen, die Ihr Projekt umsetzen.
+          </Lead>
+          {
+            teamTextsMissing && (
+              <Note label="⟦PLATZHALTER D10⟧">
+                Rollen und Kurztexte fehlen in der Copy-Datei — hier bewusst nicht erfunden.
+              </Note>
+            )
+          }
+        </div>
+        <div class="flex flex-col sm:flex-row gap-10">
+          {
+            teamMembers.map((member) => (
+              <AvatarCard
+                name={member.name}
+                label={member.label}
+                image={portraits[member.slug as keyof typeof portraits]}
+                imageAlt={member.imageAlt}
+                role={member.role}
+                bio={member.bio}
+                bioHtml={member.bioHtml}
+                tags={member.tags}
+              />
+            ))
+          }
+        </div>
       </div>
-      <div class="flex flex-col sm:flex-row gap-10">
-        {
-          teamMembers.map((member) => (
-            <AvatarCard
-              name={member.name}
-              label={member.label}
-              image={portraits[member.slug as keyof typeof portraits]}
-              imageAlt={member.imageAlt}
-              role={member.role}
-              bio={member.bio}
-              bioHtml={member.bioHtml}
-            />
-          ))
-        }
+
+      <div class="flex flex-col gap-6">
+        <p
+          class="max-w-4xl border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] px-4 py-3 font-heading text-base font-extrabold leading-snug md:text-lg"
+          style="color: var(--pop-navy); box-shadow: 4px 4px 0 0 var(--pop-fuchsia);"
+          role="note"
+        >
+          Diese Assistenten sind KI-Systeme, keine Menschen. Sie unterstützen uns bei der Arbeit. Verantwortung und
+          Entscheidungen liegen bei André Lademann und Thomas Schöne.
+        </p>
+        <Sticker color="aqua" shadow="fuchsia" rotate={-2}>Unser KI-Team</Sticker>
+        <Heading level={2} size="l">unser ki-team</Heading>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+          {fallbackAiTeam.map((assistant) => <AiAssistantCard {...assistant} />)}
+        </div>
       </div>
     </div>
   </section>

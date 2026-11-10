@@ -252,7 +252,7 @@ describe('editable site sections with static fallback', () => {
           id: 2,
           key: 'footer',
           links: [{ label: 'Projekte', children: [{ label: 'A & <b>B</b>', href: '/projekte/mcp-server' }] }],
-          secondaryLinks: [{ label: 'AGB <i>x</i>', href: '/agb' }],
+          secondaryLinks: [{ label: 'Impressum <i>x</i>', href: '/impressum' }],
           socialLinks: [{ label: 'GitHub', href: 'https://github.com/kieksme', icon: 'tabler:brand-github' }],
           footNote: 'kieks.me <script>x</script> & Co',
         },
@@ -267,7 +267,7 @@ describe('editable site sections with static fallback', () => {
     ]);
     expect(content.footNote).toBe('kieks.me &lt;script&gt;x&lt;/script&gt; &amp; Co');
     expect(content.footerColumns[0].links[0].text).toBe('A &amp; &lt;b&gt;B&lt;/b&gt;');
-    expect(content.legalLinks[0].text).toBe('AGB &lt;i&gt;x&lt;/i&gt;');
+    expect(content.legalLinks[0].text).toBe('Impressum &lt;i&gt;x&lt;/i&gt;');
     expect(content.header).toEqual([{ text: 'Kontakt', href: '/kontakt' }]);
     const empty = resolveSiteContent();
     expect(empty.headerActions).toBeUndefined();

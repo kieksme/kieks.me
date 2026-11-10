@@ -66,6 +66,8 @@ export function renderMarkdown(value: unknown): string {
         return '';
       case 'html': {
         const html = item.value || '';
+        // Keep source TODOs as HTML comments; never render them as visible text.
+        if (/^<!--[\s\S]*-->$/.test(html.trim())) return '';
         if (/^<br\s*\/?>$/i.test(html.trim())) return '<br>';
         const address = html.match(/^\s*<address>\s*([\s\S]*?)\s*<\/address>\s*$/i);
         if (address)

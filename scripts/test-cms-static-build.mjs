@@ -89,7 +89,7 @@ globalThis.fetch = async (input,init) => {
     expectTypes: {
       '^blog/synthetic-cms-article/': ['BlogPosting', 'BreadcrumbList'],
       '^blog/autoren/synthetic-author/': ['Person', 'BreadcrumbList'],
-      '^(impressum|datenschutz|agb)/': ['BreadcrumbList'],
+      '^(impressum|datenschutz)/': ['BreadcrumbList'],
     },
   });
   const articleSeo = parseHead(article);
@@ -186,7 +186,7 @@ globalThis.fetch = async (input,init) => {
     'Without CMS team texts the open-decision hint must stay visible'
   );
   assert.ok(!(await readFile('dist/impressum/index.html', 'utf8')).includes('Synthetic Legal'));
-  for (const slug of ['impressum', 'datenschutz', 'agb']) {
+  for (const slug of ['impressum', 'datenschutz']) {
     const html = await readFile(`dist/${slug}/index.html`, 'utf8');
     assert.equal((html.match(/<html\b/g) || []).length, 1, 'Legal fallback nested a second page layout');
     assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Legal fallback duplicated the page heading');

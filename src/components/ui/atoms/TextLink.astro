@@ -11,9 +11,45 @@ const { href, arrow = true, class: className = '', target } = Astro.props;
 
 <a
   href={href}
-  class:list={['font-heading font-extrabold text-base md:text-lg underline-offset-4 hover:underline', className]}
+  class:list={['pop-text-link font-heading font-extrabold text-base md:text-lg underline-offset-4 hover:underline', className]}
   style="color: var(--service-link, var(--text-link));"
   {...target ? { target, rel: 'noopener noreferrer' } : {}}
 >
-  <slot />{arrow ? ' →' : ''}
+  <span class="pop-text-link__label"><slot /></span>{
+    arrow ? (
+      <span class="pop-text-link__arrow" aria-hidden="true">
+        →
+      </span>
+    ) : null
+  }
 </a>
+
+<style>
+  .pop-text-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    max-width: 100%;
+  }
+  .pop-text-link__label {
+    min-width: 0;
+  }
+  .pop-text-link__arrow {
+    display: inline-block;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .pop-text-link:hover .pop-text-link__arrow,
+  .pop-text-link:focus-visible .pop-text-link__arrow {
+    transform: translateX(4px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop-text-link__arrow {
+      transition: none;
+    }
+    .pop-text-link:hover .pop-text-link__arrow,
+    .pop-text-link:focus-visible .pop-text-link__arrow {
+      transform: none;
+    }
+  }
+</style>
