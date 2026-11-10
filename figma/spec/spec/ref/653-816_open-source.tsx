@@ -9,7 +9,7 @@ export default function WerkstattOpenSource() {
       <div className="content-stretch flex flex-[1_0_0] flex-col gap-[24px] items-start min-w-px overflow-clip relative" data-node-id="653:817" data-name="Text">
         <div className="flex h-[49.989px] items-center justify-center relative shrink-0 w-[202.378px]" data-node-id="653:818">
           <div className="-rotate-2 flex-none">
-            <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#00ffdc]" data-name="Sticker – Aus unserer Werkstatt">
+            <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#00ffdc]" data-name="Sticker – Aus unserer Werkstatt">
               <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[16px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="653:819">
                 Aus unserer Werkstatt
               </p>
@@ -64,11 +64,11 @@ export default function WerkstattOpenSource() {
             GitHub · npm
           </p>
         </div>
-        <div className="bg-[var(--surface,white)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center justify-between overflow-clip px-[20px] py-[16px] relative shadow-[6px_6px_0px_0px_#ffd60a] shrink-0 w-full" data-node-id="653:837" data-name="Repo – Listmonk">
+        <div className="bg-[var(--surface,white)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center justify-between overflow-clip px-[20px] py-[16px] relative shadow-[6px_6px_0px_0px_#00ffdc] shrink-0 w-full" data-node-id="653:837" data-name="Repo – Listmonk">
           <div className="content-stretch flex gap-[14px] items-center overflow-clip relative shrink-0" data-node-id="653:838" data-name="Frame">
             <div className="flex items-center justify-center relative shrink-0 size-[33.21px]" data-node-id="653:839">
               <div className="-rotate-12 flex-none">
-                <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[28px]" data-name="Farbklecks" />
+                <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[28px]" data-name="Farbklecks" />
               </div>
             </div>
             <p className="[word-break:break-word] font-['Hanken_Grotesk:Black'] font-black leading-[normal] relative shrink-0 text-[24px] text-[color:var(--text\/primary,#1e2a45)] whitespace-nowrap" data-node-id="653:840">

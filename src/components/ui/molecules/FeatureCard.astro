@@ -3,17 +3,17 @@
 export interface Props {
   title: string;
   description: string;
-  edge: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
-  shadow?: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  edge: 'aqua' | 'fuchsia' | 'purple' | 'navy';
+  shadow?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   class?: string;
 }
 
-const { title, description, edge, shadow = edge === 'yellow' ? 'fuchsia' : edge, class: className = '' } = Astro.props;
+const { title, description, edge, shadow = edge === 'navy' ? 'fuchsia' : edge, class: className = '' } = Astro.props;
 
 const colors = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple)',
 };
 ---

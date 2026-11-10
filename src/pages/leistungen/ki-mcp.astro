@@ -41,7 +41,7 @@ const offersBase = [
     title: 'Agent-Skills',
     description:
       'Wiederverwendbare Arbeitsanweisungen für KI-Coding-Assistenten, damit Ihr Team KI einheitlich und geprüft einsetzt.',
-    edge: 'yellow' as const,
+    edge: 'navy' as const,
     shadow: 'fuchsia' as const,
   },
   {
@@ -74,7 +74,7 @@ const steps = [
     num: '03',
     title: 'Umsetzen',
     description: 'MCP-Server entwickeln, testen und dokumentieren.',
-    accent: 'yellow' as const,
+    accent: 'navy' as const,
     rotate: 1.5,
   },
   {
@@ -104,7 +104,7 @@ const steps = [
     <div class="relative mx-auto max-w-[1440px] px-5 md:px-20 pt-16 md:pt-[88px] pb-16 md:pb-20">
       <div class="grid lg:grid-cols-[800fr_460fr] gap-10 items-start">
         <div class="flex flex-col gap-7 max-w-[800px]">
-          <Sticker color="yellow" shadow="fuchsia" rotate={3}>Leistung · KI & MCP</Sticker>
+          <Sticker color="aqua" shadow="fuchsia" rotate={3}>Leistung · KI & MCP</Sticker>
           <Heading
             level={1}
             size="l"
@@ -157,7 +157,7 @@ const steps = [
       </div>
       <div class="mt-11 flex flex-col md:flex-row md:flex-wrap md:items-center gap-3.5">
         <SchemaBox label={'ki-<br />assistent'} color="aqua" rotate={3} showArrow={true} />
-        <SchemaBox label={'mcp-<br />server'} color="yellow" rotate={-2} showArrow={true} />
+        <SchemaBox label={'mcp-<br />server'} color="aqua" rotate={-2} showArrow={true} />
         <SchemaBox label={'ihre<br />systeme'} color="purple" rotate={2} />
       </div>
     </div>
@@ -179,7 +179,7 @@ const steps = [
   <!-- 4.4 So arbeiten wir -->
   <section class="not-prose py-16 md:py-[88px]" style="background: var(--band-bg);">
     <div class="mx-auto max-w-[1440px] px-5 md:px-20 flex flex-col gap-6">
-      <Sticker color="yellow" shadow="fuchsia" rotate={3}>Ablauf</Sticker>
+      <Sticker color="aqua" shadow="fuchsia" rotate={3}>Ablauf</Sticker>
       <Heading level={2} size="l" color="var(--band-text)" shadowColor="var(--pop-fuchsia)"> so arbeiten wir </Heading>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-2">
         {steps.map((s) => <StepCard {...s} />)}

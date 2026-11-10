@@ -24,7 +24,7 @@
       <span class="agent-hub-flow__hint">prüft</span>
     </div>
     <span class="agent-hub-flow__arrow" aria-hidden="true">→</span>
-    <div class="agent-hub-flow__node agent-hub-flow__node--yellow" role="listitem">
+    <div class="agent-hub-flow__node agent-hub-flow__node--navy" role="listitem">
       <span class="agent-hub-flow__step">03</span>
       <span class="agent-hub-flow__label">Agent-Hub</span>
       <span class="agent-hub-flow__hint">versioniert &amp; pinnt</span>
@@ -39,7 +39,7 @@
 
   <div class="agent-hub-flow__blocked" role="note">
     <svg class="agent-hub-flow__blocked-icon" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
-      <rect x="4" y="4" width="40" height="40" fill="#ffd60a" stroke="#1e2a45" stroke-width="3"></rect>
+      <rect x="4" y="4" width="40" height="40" fill="var(--pop-aqua)" stroke="#1e2a45" stroke-width="3"></rect>
       <circle cx="24" cy="24" r="12" fill="none" stroke="#e8202a" stroke-width="3.5"></circle>
       <line x1="15" y1="33" x2="33" y2="15" stroke="#e8202a" stroke-width="3.5" stroke-linecap="square"></line>
     </svg>
@@ -87,16 +87,17 @@
 
   .agent-hub-flow__node--aqua {
     background: var(--pop-aqua);
-    box-shadow: 5px 5px 0 0 var(--pop-navy);
+    box-shadow: 5px 5px 0 0 var(--pop-fuchsia);
   }
   .agent-hub-flow__node--fuchsia {
     background: var(--pop-fuchsia);
     color: #fff;
     box-shadow: 5px 5px 0 0 var(--pop-navy);
   }
-  .agent-hub-flow__node--yellow {
-    background: var(--pop-yellow);
-    box-shadow: 5px 5px 0 0 var(--pop-fuchsia);
+  .agent-hub-flow__node--navy {
+    background: var(--pop-navy);
+    color: #fff;
+    box-shadow: 5px 5px 0 0 var(--pop-aqua);
   }
   .agent-hub-flow__node--purple {
     background: var(--pop-purple);
@@ -132,7 +133,7 @@
     font-family: var(--aw-font-heading), ui-sans-serif, sans-serif;
     font-weight: 900;
     font-size: 1.5rem;
-    color: var(--pop-yellow);
+    color: var(--pop-aqua);
     text-shadow: 2px 2px 0 var(--pop-navy);
   }
 

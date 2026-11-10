@@ -8,7 +8,7 @@ export interface Props {
   description: string;
   href: string;
   linkText: string;
-  headColor: 'aqua' | 'fuchsia' | 'purple' | 'yellow';
+  headColor: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   shadow?: 'ink' | 'fuchsia';
   numShadow?: 'fuchsia' | 'aqua';
   numColor?: string;
@@ -32,11 +32,11 @@ const heads = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
   purple: 'var(--pop-purple)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
 };
 const shadowColor = shadow === 'fuchsia' ? 'var(--pop-fuchsia)' : 'var(--ink)';
 const nShadow = numShadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
-const nColor = numColor ?? (headColor === 'purple' ? '#fff' : 'var(--pop-navy)');
+const nColor = numColor ?? (headColor === 'purple' || headColor === 'navy' ? '#fff' : 'var(--pop-navy)');
 ---
 
 <article

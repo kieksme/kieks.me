@@ -45,7 +45,7 @@ export default function WasWirFurSieTun() {
         </div>
         <div className="content-stretch flex gap-[28px] items-start overflow-clip relative shrink-0 w-full" data-node-id="659:1003" data-name="Frame">
           <div className="bg-[var(--surface,white)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex flex-[1_0_0] items-start min-w-px overflow-clip relative self-stretch shadow-[8px_8px_0px_0px_#ff008f]" data-node-id="659:1004" data-name="Karte – Agent-Skills">
-            <div className="bg-[var(--pop\/yellow,#ffd60a)] h-full relative shrink-0 w-[22px]" data-node-id="659:1005" data-name="Farbkante" />
+            <div className="bg-[var(--pop\/aqua,#00ffdc)] h-full relative shrink-0 w-[22px]" data-node-id="659:1005" data-name="Farbkante" />
             <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[10px] items-start min-w-px overflow-clip pb-[26px] pt-[24px] px-[24px] relative" data-node-id="659:1006" data-name="Frame">
               <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[30px] relative shrink-0 text-[24px] text-[color:var(--text\/primary,#1e2a45)] w-full" data-node-id="659:1007">
                 Agent-Skills

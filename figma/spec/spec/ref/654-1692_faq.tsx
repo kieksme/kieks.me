@@ -8,7 +8,7 @@ export default function Faq() {
     <div className="bg-[var(--surface,white)] border-[var(--ink,#1e2a45)] border-solid border-t-4 content-stretch flex flex-col gap-[24px] items-start px-[80px] py-[96px] relative size-full" data-node-id="654:1692" data-name="FAQ">
       <div className="flex h-[48.55px] items-center justify-center relative shrink-0 w-[71.261px]" data-node-id="654:1693">
         <div className="flex-none rotate-3">
-          <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – FAQ">
+          <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – FAQ">
             <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[18px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="654:1694">
               FAQ
             </p>
@@ -56,7 +56,7 @@ export default function Faq() {
           <div className="border-[var(--ink,#1e2a45)] border-b-3 border-solid content-stretch flex gap-[20px] items-start overflow-clip py-[24px] relative shrink-0 w-full" data-node-id="654:1709" data-name="FAQ – Was brauchen Sie von uns für den Start?">
             <div className="flex items-center justify-center relative shrink-0 size-[25.456px]" data-node-id="654:1710">
               <div className="-rotate-45 flex-none">
-                <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[18px]" data-name="Marker" />
+                <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[18px]" data-name="Marker" />
               </div>
             </div>
             <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-w-px overflow-clip relative" data-node-id="654:1711" data-name="Frame">
@@ -118,7 +118,7 @@ export default function Faq() {
           <div className="border-[var(--ink,#1e2a45)] border-b-3 border-solid content-stretch flex gap-[20px] items-start overflow-clip py-[24px] relative shrink-0 w-full" data-node-id="654:1730" data-name="FAQ – Was passiert, wenn Sie nicht zufrieden sind?">
             <div className="flex items-center justify-center relative shrink-0 size-[25.456px]" data-node-id="654:1731">
               <div className="-rotate-45 flex-none">
-                <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[18px]" data-name="Marker" />
+                <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid relative size-[18px]" data-name="Marker" />
               </div>
             </div>
             <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-w-px overflow-clip relative" data-node-id="654:1732" data-name="Frame">

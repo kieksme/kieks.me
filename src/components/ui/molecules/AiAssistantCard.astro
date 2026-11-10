@@ -3,7 +3,7 @@
 export interface Props {
   title: string;
   description: string;
-  accent?: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  accent?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   class?: string;
 }
 
@@ -11,13 +11,13 @@ const { title, description, accent = 'aqua', class: className = '' } = Astro.pro
 const colors = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple)',
 };
 const icons: Record<string, string> = {
   aqua: 'M12 3l2.2 4.5L19 8.2l-3.5 3.4.8 4.9L12 14.8 7.7 16.5l.8-4.9L5 8.2l4.8-.7L12 3z',
   fuchsia: 'M4 12h4l2-6 2 12 2-8 2 4h4',
-  yellow: 'M6 18V8a6 6 0 0112 0v10M8 18h8M9 21h6',
+  navy: 'M6 18V8a6 6 0 0112 0v10M8 18h8M9 21h6',
   purple: 'M12 3v3M12 18v3M3 12h3M18 12h3M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2',
 };
 ---
@@ -32,12 +32,20 @@ const icons: Record<string, string> = {
       style={`background: ${colors[accent]};`}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="var(--pop-navy)" stroke-width="2.2">
+      <svg
+        viewBox="0 0 24 24"
+        class="h-7 w-7"
+        fill="none"
+        stroke={accent === 'navy' || accent === 'fuchsia' || accent === 'purple'
+          ? 'var(--pop-white)'
+          : 'var(--pop-navy)'}
+        stroke-width="2.2"
+      >
         <path d={icons[accent]} stroke-linecap="square" stroke-linejoin="miter"></path>
       </svg>
     </span>
     <span
-      class="inline-block shrink-0 border-[3px] border-[var(--ink)] bg-[var(--pop-yellow)] px-2 py-1 font-heading text-xs font-black uppercase tracking-wide text-[var(--pop-navy)]"
+      class="inline-block shrink-0 border-[3px] border-[var(--ink)] bg-[var(--pop-aqua)] px-2 py-1 font-heading text-xs font-black uppercase tracking-wide text-[var(--pop-navy)]"
     >
       KI-Assistent
     </span>

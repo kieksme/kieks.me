@@ -8,7 +8,7 @@ export default function SoArbeitenWir() {
     <div className="bg-[var(--band\/bg,#1e2a45)] content-stretch flex flex-col gap-[24px] items-start pb-[88px] pt-[72px] px-[80px] relative size-full" data-node-id="659:1017" data-name="So arbeiten wir">
       <div className="flex h-[47.285px] items-center justify-center relative shrink-0 w-[85.137px]" data-node-id="659:1018">
         <div className="flex-none rotate-3">
-          <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – Ablauf">
+          <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – Ablauf">
             <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[16px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="659:1019">
               Ablauf
             </p>
@@ -55,8 +55,8 @@ export default function SoArbeitenWir() {
         </div>
         <div className="flex flex-[1_0_0] items-center justify-center min-w-px relative self-stretch" data-node-id="659:1032">
           <div className="flex-none rotate-[1.5deg] size-full">
-            <div className="bg-[var(--surface,white)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex flex-col gap-[10px] items-start overflow-clip pb-[24px] pt-[22px] px-[22px] relative shadow-[8px_8px_0px_0px_#ffd60a] size-full" data-name="Schritt – Umsetzen">
-              <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[12px] py-[2px] relative shrink-0" data-node-id="659:1033" data-name="Frame">
+            <div className="bg-[var(--surface,white)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex flex-col gap-[10px] items-start overflow-clip pb-[24px] pt-[22px] px-[22px] relative shadow-[8px_8px_0px_0px_#00ffdc] size-full" data-name="Schritt – Umsetzen">
+              <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[12px] py-[2px] relative shrink-0" data-node-id="659:1033" data-name="Frame">
                 <p className="[word-break:break-word] font-['Hanken_Grotesk:Black'] font-black leading-[normal] relative shrink-0 text-[44px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="659:1034">
                   03
                 </p>

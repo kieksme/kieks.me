@@ -101,7 +101,7 @@ const SERVICE_STYLE: Record<PopAccent, Pick<SiteServiceView, 'shadow' | 'numShad
   aqua: { shadow: 'ink', numShadow: 'fuchsia' },
   fuchsia: { shadow: 'ink', numShadow: 'aqua' },
   purple: { shadow: 'ink', numShadow: 'fuchsia', numColor: '#fff' },
-  yellow: { shadow: 'fuchsia', numShadow: 'fuchsia' },
+  navy: { shadow: 'ink', numShadow: 'fuchsia', numColor: '#fff' },
 };
 
 /** Renders Lexical JSON to sanitized HTML; the build passes a renderer that also resolves published media. */

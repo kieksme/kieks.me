@@ -11,7 +11,7 @@ export default function Navigation() {
           <img alt="" className="block max-w-none size-full" src={imgLogoKieksMeRed} />
         </div>
       </div>
-      <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[12px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f] shrink-0" data-node-id="657:39" data-name="Menü">
+      <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[12px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f] shrink-0" data-node-id="657:39" data-name="Menü">
         <p className="[word-break:break-word] font-['Hanken_Grotesk:Black'] font-black leading-[normal] relative shrink-0 text-[18px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="657:40">
           menü
         </p>

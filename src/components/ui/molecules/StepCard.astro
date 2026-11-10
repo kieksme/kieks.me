@@ -3,7 +3,7 @@ export interface Props {
   num: string;
   title: string;
   description: string;
-  accent: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  accent: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   rotate?: number;
   class?: string;
 }
@@ -12,10 +12,10 @@ const { num, title, description, accent, rotate = 1.5, class: className = '' } =
 const colors = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple)',
 };
-const numText = accent === 'purple' ? '#fff' : 'var(--pop-navy)';
+const numText = accent === 'purple' || accent === 'navy' || accent === 'fuchsia' ? '#fff' : 'var(--pop-navy)';
 ---
 
 <article

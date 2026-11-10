@@ -4,11 +4,11 @@
   --pop-navy: #1e2a45;
   --pop-aqua: #00ffdc;
   --pop-fuchsia: #ff008f;
-  --pop-yellow: #ffd60a;
   --pop-purple: #9747ff;
   --pop-purple-deep: #7b2ff7;
   --pop-red: #e8202a;
   --pop-white: #ffffff;
+  --pop-gray: #4a5370;
 
   --ink: #1e2a45;
   --surface: #ffffff;
@@ -22,8 +22,9 @@
   --hero-dots: #1e2a45;
   --band-bg: #1e2a45;
   --band-text: #00ffdc;
-  --note-bg: #fff3b0;
-  --note-text: #5c4a00;
+  /* Editorial notes use aqua tint + navy (no yellow/gold). */
+  --note-bg: #e6fffc;
+  --note-text: #1e2a45;
   --footer-bg: #1e2a45;
   --footer-text: #f0f2f9;
 
@@ -90,8 +91,9 @@
   --hero-dots: #00ffdc;
   --band-bg: #00ffdc;
   --band-text: #1e2a45;
-  --note-bg: #3a3420;
-  --note-text: #ffe27a;
+  --note-bg: #1e2a45;
+  --note-text: #00ffdc;
+  --pop-gray: #b9bfcf;
   --footer-bg: #07090d;
   --footer-text: #f0f2f9;
 }

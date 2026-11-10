@@ -25,7 +25,7 @@ export default function Navigation() {
         <p className="[word-break:break-word] font-['Hanken_Grotesk:Bold'] font-bold leading-[normal] relative shrink-0 text-[17px] text-[color:var(--text\/primary,#1e2a45)] whitespace-nowrap" data-node-id="652:20">
           Kontakt
         </p>
-        <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="652:21" data-name="Button – Erstgespräch buchen">
+        <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="652:21" data-name="Button – Erstgespräch buchen">
           <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[16px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="652:22">
             Erstgespräch buchen
           </p>

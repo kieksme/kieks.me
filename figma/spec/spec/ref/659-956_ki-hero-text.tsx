@@ -8,7 +8,7 @@ export default function HeroText() {
     <div className="content-stretch flex flex-col gap-[28px] items-start relative size-full" data-node-id="659:956" data-name="Hero-Text">
       <div className="flex h-[52.205px] items-center justify-center relative shrink-0 w-[179.008px]" data-node-id="659:957">
         <div className="flex-none rotate-3">
-          <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – Leistung · KI & MCP">
+          <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – Leistung · KI & MCP">
             <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[16px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="659:958">{`Leistung · KI & MCP`}</p>
           </div>
         </div>
@@ -19,7 +19,7 @@ export default function HeroText() {
       <p className="[word-break:break-word] font-['Source_Sans_3:Regular'] font-normal leading-[32px] min-w-full relative shrink-0 text-[22px] text-[color:var(--hero\/text,#1e2a45)] w-[min-content]" data-node-id="659:960">
         Wir verbinden KI-Assistenten wie Claude, Cursor oder VS Code über das Model Context Protocol (MCP) mit Ihren Werkzeugen und Daten, so gezielt und nachvollziehbar wie nötig.
       </p>
-      <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="659:961" data-name="Button – KI-Vorhaben besprechen">
+      <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="659:961" data-name="Button – KI-Vorhaben besprechen">
         <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[18px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="659:962">
           KI-Vorhaben besprechen
         </p>

@@ -32,7 +32,7 @@ Expected Payload structure lives in `src/content-model/site-content.ts` (TypeScr
 
 | Collection     | Fields (besides `id`, `_status`, `sortOrder`)                                                                                                   | Rendered on                                               |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `services`     | `title`, `summary`, `href`, `linkText`, `accent` (aqua/fuchsia/yellow/purple); card number follows the order                                    | Home service cards                                        |
+| `services`     | `title`, `summary`, `href`, `linkText`, `accent` (aqua/fuchsia/purple/navy); card number follows the order                                      | Home service cards                                        |
 | `faqs`         | `question`, `answer`, `placement` (only `home` is shown), `accent`                                                                              | Home FAQ (split into two columns)                         |
 | `team`         | `slug` (`andre`/`thomas` selects the bundled portrait), `name`, `position`                                                                      | Home team                                                 |
 | `mcp-projects` | `kind` (`mcp-server` or `skill`/`tool`/`product`), `name`, `summary`, `repositoryUrl`, `documentationUrl`, `license`, `npmPackages[]`, `accent` | MCP-Server page, first four servers as home chips         |

@@ -8,7 +8,7 @@ export default function HeroText() {
     <div className="content-stretch flex flex-col gap-[28px] items-start relative size-full" data-node-id="652:894" data-name="Hero-Text">
       <div className="flex h-[53.251px] items-center justify-center relative shrink-0 w-[198.98px]" data-node-id="652:895">
         <div className="flex-none rotate-3">
-          <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – kieks.me GbR · Leipzig">
+          <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-start overflow-clip px-[14px] py-[8px] relative shadow-[4px_4px_0px_0px_#ff008f]" data-name="Sticker – kieks.me GbR · Leipzig">
             <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[16px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="652:896">
               kieks.me GbR · Leipzig
             </p>
@@ -24,7 +24,7 @@ export default function HeroText() {
         Wir entwickeln, integrieren und übergeben, damit Sie danach selbst weiterkommen. Von KI- und MCP-Anbindung über Cloud und DevOps bis zur Web- und Softwareentwicklung für den Mittelstand.
       </p>
       <div className="content-stretch flex gap-[20px] items-start overflow-clip relative shrink-0" data-node-id="652:899" data-name="CTAs">
-        <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="652:900" data-name="Button – Erstgespräch buchen">
+        <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="652:900" data-name="Button – Erstgespräch buchen">
           <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[18px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="652:901">
             Erstgespräch buchen
           </p>
@@ -35,7 +35,7 @@ export default function HeroText() {
           </p>
         </div>
       </div>
-      <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#5c4a00)] w-[520px]" data-node-id="652:904" data-name="Platzhalter – ⟦BESTÄTIGEN⟧">
+      <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#1e2a45)] w-[520px]" data-node-id="652:904" data-name="Platzhalter – ⟦BESTÄTIGEN⟧">
         <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="652:905">
           ⟦BESTÄTIGEN⟧
         </p>

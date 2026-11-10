@@ -132,11 +132,13 @@ describe('Pop-Art layout components', () => {
     expect(html).toContain('width="1440" height="150"');
     expect(html).not.toContain('scaleY');
     expect(html).not.toContain('class="pop-flames ');
-    const yellow = await readFile(
-      new URL('../../../src/assets/pop/655-1040_flammen-gelb-original.svg', import.meta.url),
+    const flame = await readFile(
+      new URL('../../../src/assets/pop/655-1040_flammen-aqua-original.svg', import.meta.url),
       'utf8'
     );
-    expect(yellow).toContain('width="1440" height="150"');
+    expect(flame).toContain('width="1440" height="150"');
+    expect(flame.toLowerCase()).toContain('#00ffdc');
+    expect(flame.toLowerCase()).not.toContain('#ffd60a');
   });
 
   it('keeps a divider decorative and respects an explicit height', async () => {

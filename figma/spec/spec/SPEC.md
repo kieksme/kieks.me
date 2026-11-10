@@ -20,10 +20,10 @@ Das Dokument ist so geschrieben, dass man ohne Figma-Zugang danach bauen kann. A
 
 | Variable | Light | Dark | Verwendung |
 |---|---|---|---|
-| `pop/navy` | `#1e2a45` | `#1e2a45` | feste Markenfarbe (Text auf Gelb/Aqua, Schatten) |
+| `pop/navy` | `#1e2a45` | `#1e2a45` | feste Markenfarbe (Text auf Aqua, Schatten) |
 | `pop/aqua` | `#00ffdc` | `#00ffdc` | Akzent, Schatten, Footer-Überschriften |
 | `pop/fuchsia` | `#ff008f` | `#ff008f` | Akzent, Text-Schatten, CTA-Hintergrund |
-| `pop/yellow` | `#ffd60a` | `#ffd60a` | Primär-Button, Sticker, Burst |
+| `pop/aqua` | `#00ffdc` | `#00ffdc` | Primär-Button, Sticker, Burst |
 | `pop/purple` | `#9747ff` | `#9747ff` | Akzent (Karte 03, Marker, Schatten) |
 | `pop/purple-deep` | `#7b2ff7` | `#7b2ff7` | Hintergrund CSP/„Nachweis“-Sektion, Box „ihre systeme“ |
 | `pop/red` | `#e8202a` | `#e8202a` | Flammen (rot) |
@@ -40,8 +40,8 @@ Das Dokument ist so geschrieben, dass man ohne Figma-Zugang danach bauen kann. A
 | `hero/dots` | `#1e2a45` | `#00ffdc` | Halftone im Hero |
 | `band/bg` | `#1e2a45` | `#00ffdc` | Haltung-Band, „So arbeiten wir“ |
 | `band/text` | `#00ffdc` | `#1e2a45` | Text im Band |
-| `note/bg` | `#fff3b0` | `#3a3420` | Platzhalter-Notizen (nur Vorschau) |
-| `note/text` | `#5c4a00` | `#ffe27a` | Platzhalter-Text und gestrichelter Rahmen |
+| `note/bg` | `#e6fffc` | `#1e2a45` | Platzhalter-Notizen (nur Vorschau) |
+| `note/text` | `#1e2a45` | `#00ffdc` | Platzhalter-Text und gestrichelter Rahmen |
 | `footer/bg` | `#1e2a45` | `#07090d` | Footer |
 | `footer/text` | `#f0f2f9` | `#f0f2f9` | Footer-Text |
 
@@ -89,12 +89,12 @@ Schriften: **Hanken Grotesk** (Black 900, ExtraBold 800, Bold 700) und **Source 
 - Offset-Schatten (`box-shadow: Xpx Xpx 0 0 <farbe>`):
   - Sticker: `4px 4px 0 <aqua|fuchsia>`
   - Button: `6px 6px 0 <fuchsia|aqua>`
-  - Repo-Zeile: `6px 6px 0` in Aqua, Fuchsia, Gelb und Lila (`#9747ff`), der Reihe nach
+  - Repo-Zeile: `6px 6px 0` in Aqua, Fuchsia, Navy und Lila (`#9747ff`), der Reihe nach
   - Service-Karte: `8px 8px 0 ink` (Karten 01–03) und `8px 8px 0 #ff008f` (Karte 04)
   - KI-Karte: `8px 8px 0` in Aqua, Fuchsia, Fuchsia und Lila
   - Schritt-Karte und Schema-Box: `8px 8px 0` mit eigener Akzentfarbe beziehungsweise ink
   - Sprechblase: `10px 10px 0 #00ffdc`
-  - Burst-SVGs: Schatten `12px 12px` in Fuchsia (CSP) beziehungsweise Gelb (MCP), im SVG eingebacken
+  - Burst-SVGs: Schatten `12px 12px` in Fuchsia (CSP) beziehungsweise Aqua (MCP), im SVG eingebacken
 - Container: 1280 Inhalt, `px-80` (Desktop) und `px-20` (Mobil).
 
 ---
@@ -138,22 +138,22 @@ y-Werte sind absolut im Frame. Bei Dividern gilt: Hintergrund = Farbe der Sektio
 - `bg surface`, `border-bottom 4px ink`, `px 80, py 20`, `flex justify-between items-center`.
 - Logo `assets/652-3_navigation__imgLogoKieksMeRed.svg` mit 224.8 × 44, im Dark Mode `655-1052_footer__imgLogoKieksMeRedDark.svg`.
 - Links mit gap 32: „Leistungen ▾“ (Dropdown), „MCP-Server“, „CSP“, „Kontakt“ in Hanken 700 17 `text/primary`.
-- Button „Erstgespräch buchen“: `bg pop/yellow`, `border 3 ink`, `px 26 py 15`, Hanken 800 16 navy, `shadow 6 6 0 #ff008f`, Größe 212 × 57.
-- Mobil (657:27): h 77, `px 20 py 14`, Logo 173.7 × 34, Button „menü“ (gelb, Hanken 900 18, `px 12 py 8`, Rahmen 3, `shadow 4 4 0 #ff008f`).
+- Button „Erstgespräch buchen“: `bg pop/aqua`, `border 3 ink`, `px 26 py 15`, Hanken 800 16 navy, `shadow 6 6 0 #ff008f`, Größe 212 × 57.
+- Mobil (657:27): h 77, `px 20 py 14`, Logo 173.7 × 34, Button „menü“ (aqua, Hanken 900 18, `px 12 py 8`, Rahmen 3, `shadow 4 4 0 #ff008f`).
 
 ### 3.2 Hero (652:23, y 101, h 868), `screens/652-23_hero.png`
 - `bg hero/bg` (aqua beziehungsweise navy).
 - **Halftone** (652:24): Box 620 × 560 rechts oben (x 820, y 0), siehe 5.1.
 - Hero-Text (652:894) bei x 80, y 88, Breite 760, `flex-col gap 28`:
-  1. Sticker „kieks.me GbR · Leipzig“: gelb, Rahmen 3, `px 14 py 8`, Hanken 800 16, `shadow 4 4 0 #ff008f`, **rotate 3deg**.
+  1. Sticker „kieks.me GbR · Leipzig“: aqua, Rahmen 3, `px 14 py 8`, Hanken 800 16, `shadow 4 4 0 #ff008f`, **rotate 3deg**.
   2. H1 in 3 Zeilen („ihre software.“, „ihr code.“, „unsere erfahrung.“) mit Display/XL 96/92, `hero/heading`, `text-shadow 6 6 0 #ff008f`.
   3. Lead mit Body/L 22/32 `hero/text`, Breite 760.
-  4. CTAs mit gap 20: Primär-Button gelb mit Fuchsia-Schatten („Erstgespräch buchen“, 231 × 59) und Sekundär-Button `surface` mit `shadow 6 6 0 #00ffdc` („Leistungen ansehen“). Beide Hanken 800 18, `px 26 py 15`, Rahmen 3.
+  4. CTAs mit gap 20: Primär-Button aqua mit Fuchsia-Schatten („Erstgespräch buchen“, 231 × 59) und Sekundär-Button `surface` mit `shadow 6 6 0 #00ffdc` („Leistungen ansehen“). Beide Hanken 800 18, `px 26 py 15`, Rahmen 3.
   5. Notiz ⟦BESTÄTIGEN⟧, 520 breit (nur in der Vorschau).
 - Hero-Art (652:907) mit 520 × 520 bei x 880, y 170, als **eine SVG** `assets/652-907_hero-art__imgHeroArt.svg`:
-  - Gelber 24-zackiger Burst (500 × 500, Kontur 10 navy, Schatten fuchsia 12/12).
+  - Aqua 24-zackiger Burst (500 × 500, Kontur 10 navy, Schatten fuchsia 12/12).
   - Fuchsia „Finger“ (Hand aus dem Logo) 400 × 277, gekippt (≈ −7deg), mit aqua Offset-Kopie dahinter.
-  - Dark (661:962): getrennte Assets `661-962_hero-art-dark__imgBurstGelb.svg` und `…imgFingerMultiStacked.svg`, dazu der Sticker **„open source!“** (fuchsia, weiß, Hanken 900 24, `px 16 py 10`, Rahmen 3 ink, `shadow 5 5 0 #00ffdc`, **rotate −8deg**) bei left 330, top 26 im Art-Frame.
+  - Dark (661:962): getrennte Assets `661-962_hero-art-dark__imgBurstAqua.svg` und `…imgFingerMultiStacked.svg`, dazu der Sticker **„open source!“** (fuchsia, weiß, Hanken 900 24, `px 16 py 10`, Rahmen 3 ink, `shadow 5 5 0 #00ffdc`, **rotate −8deg**) bei left 330, top 26 im Art-Frame.
 
 ### 3.3 Divider „Zacken“ (652:914, 652:921, 654:1735, 654:1738, 656:26)
 - Höhe 26 (mobil 18), volle Breite. Zähne als Dreiecke mit **Breite 52 und Höhe 26**, Spitze oben, Basis unten (`assets/652-914_divider-zacken__imgZacken.svg`: `M0 26V0L26 26L52 0 … L1430 26H1440Z`).
@@ -174,7 +174,7 @@ y-Werte sind absolut im Frame. Bei Dividern gilt: Hintergrund = Farbe der Sektio
 - Sticker „Leistungen“: aqua, `shadow 4 4 0 #ff008f`, **rotate 3deg**. Darunter H2 „was wir für sie tun“ (Display/L, `text-shadow 4 4 0 #ff008f`), dann Lead 22/32 `text/secondary` mit Breite 760. Abstände: Sticker → H2 24, H2 → Lead 24, Lead → Karten 24.
 - Karten (653:20): 4 Spalten zu je 297 mit gap 28 (x 0/325/650/975), Höhe 403, `items-start` (gleich hoch).
   - Karte: `bg surface`, Rahmen 3 ink, `shadow 8 8 0 ink` (Karte 04: `#ff008f`).
-  - Kartenkopf mit Höhe 132, `border-bottom 3 ink`, `pl 24 pt 18`, Hintergrund **01 aqua / 02 fuchsia / 03 `#9747ff` / 04 yellow**.
+  - Kartenkopf mit Höhe 132, `border-bottom 3 ink`, `pl 24 pt 18`, Hintergrund **01 aqua / 02 fuchsia / 03 `#9747ff` / 04 navy**.
     - Halftone im Kopf: Box 300 × 132 bei left 120, `opacity .25`, Punkte navy, siehe 5.1 (Asset `653-21_service-card__imgGroup.svg`).
     - Nummer in Hanken 900 80: 01 navy mit Fuchsia-Schatten, 02 navy mit **Aqua**-Schatten, 03 **weiß** mit Fuchsia-Schatten, 04 navy mit Fuchsia-Schatten (jeweils `4px 4px 0`).
   - Kartentext: `pt 22 pb 26 px 24`, gap 12; Titel Heading/S 24/30; Body/M 18/28 `text/secondary`; Link in Hanken 800 16 `text/link` „Mehr zu … →“.
@@ -184,16 +184,16 @@ y-Werte sind absolut im Frame. Bei Dividern gilt: Hintergrund = Farbe der Sektio
 
 ### 3.6 Werkstatt / Open Source (653:816, h 605), `screens/653-816_open-source.png`
 - `bg surface`, `border-top 4 ink`, `border-bottom 4 ink`, `px 80 py 96`, `flex items-center gap 64`.
-- Links (flex 1, gap 24): Sticker „Aus unserer Werkstatt“ (gelb, `shadow 4 4 0 #00ffdc`, **rotate −2deg**), H2 „open source, öffentlich nachprüfbar“ (Display/L, Fuchsia-Schatten), Lead 22/32 secondary. Danach eine Zeile mit gap 24: Button **aqua** „Unsere MCP-Server ansehen“ (`shadow 6 6 0 #ff008f`) und der Link „Alle Projekte auf GitHub →“ (Hanken 800 18 `text/link`).
+- Links (flex 1, gap 24): Sticker „Aus unserer Werkstatt“ (aqua, `shadow 4 4 0 #00ffdc`, **rotate −2deg**), H2 „open source, öffentlich nachprüfbar“ (Display/L, Fuchsia-Schatten), Lead 22/32 secondary. Danach eine Zeile mit gap 24: Button **aqua** „Unsere MCP-Server ansehen“ (`shadow 6 6 0 #ff008f`) und der Link „Alle Projekte auf GitHub →“ (Hanken 800 18 `text/link`).
 - Rechts „Repos“ mit Breite 560, `flex-col gap 18`, je eine Zeile `bg surface`, Rahmen 3, `px 20 py 16`, `justify-between`:
   - Links ein Farbklecks 28 × 28 (Rahmen 3 ink, **rotate −12deg**) plus „mcp-server · contabo“ (Hanken 900 24), gap 14.
   - Rechts „GitHub · npm“ (Source Sans 600 16 secondary).
-  - Farbe je Zeile (Klecks = Schatten): contabo aqua, swetrix fuchsia, listmonk yellow, balena `#9747ff`; `shadow 6 6 0 <farbe>`.
+  - Farbe je Zeile (Klecks = Schatten): contabo aqua, swetrix fuchsia, listmonk navy, balena `#9747ff`; `shadow 6 6 0 <farbe>`.
 - Animations-Kandidat: Klecks dreht beim Hover von −12° auf 0° beziehungsweise 12°; die Zeile verschiebt sich um 4px.
 
 ### 3.7 CSP – Produkt (654:856, h 752), `screens/654-856_csp.png`
 - `bg pop/purple-deep #7b2ff7` (beide Modi). Halftone fuchsia (≈55 % Deckkraft) mit 700 × 560 rechts oben (x 740), siehe 5.1.
-- Text (x 80, y 96, Breite 720, gap 24): Sticker „Unser Produkt“ (aqua, `shadow 4 4 0 #ff008f`, **rotate 3deg**); H2 in 3 Zeilen „csp: ein eigenes / serviceportal für / it-dienstleister“ (Display/L, **weiß**, `text-shadow 4 4 0 #1e2a45`); Lead 22/32 weiß; Button gelb „CSP kennenlernen“; Notiz D4.
+- Text (x 80, y 96, Breite 720, gap 24): Sticker „Unser Produkt“ (aqua, `shadow 4 4 0 #ff008f`, **rotate 3deg**); H2 in 3 Zeilen „csp: ein eigenes / serviceportal für / it-dienstleister“ (Display/L, **weiß**, `text-shadow 4 4 0 #1e2a45`); Lead 22/32 weiß; Button aqua „CSP kennenlernen“; Notiz D4.
 - CSP-Art (654:1669) mit 440 × 400 bei x 864, y 176: Burst `assets/654-1669_csp-art__imgBurst.svg` (aqua, 16 Zacken, 400 × 400, Kontur 10 navy, **Fuchsia-Schatten 12/12**). Darauf die Bubble (**rotate 6deg**) mit „open source“ (Hanken 900 44 navy) über „MIT-Lizenz“ (Hanken 900 30), gap 2, zentriert, bei left 84, top 150.
 - Animations-Kandidat: Burst dreht langsam (z. B. 60 s pro Umdrehung) oder pulsiert (`scale 1 → 1.04`), der Text bleibt fix.
 
@@ -214,20 +214,20 @@ y-Werte sind absolut im Frame. Bei Dividern gilt: Hintergrund = Farbe der Sektio
 
 ### 3.9 FAQ (654:1692, h 1133), `screens/654-1692_faq.png`
 - `bg surface`, `border-top 4 ink`, `px 80 py 96`, `flex-col gap 24`.
-- Sticker „FAQ“ (gelb, Hanken 800 18, `shadow 4 4 0 #ff008f`, **rotate 3deg**), H2 „häufige fragen“, Lead „Kurz und ehrlich beantwortet.“
-- Zwei Spalten mit gap 64 (je ca. 608). Item: `py 24`, `border-bottom 3 ink`, `flex gap 20`. Marker ist ein Quadrat 18 × 18 mit Rahmen 3 ink, **rotate −45deg** (Raute), Farben der Reihe nach aqua, fuchsia, yellow, purple, dann wieder von vorn. Titel Heading/S, Antwort Body/M secondary, gap 8.
+- Sticker „FAQ“ (aqua, Hanken 800 18, `shadow 4 4 0 #ff008f`, **rotate 3deg**), H2 „häufige fragen“, Lead „Kurz und ehrlich beantwortet.“
+- Zwei Spalten mit gap 64 (je ca. 608). Item: `py 24`, `border-bottom 3 ink`, `flex gap 20`. Marker ist ein Quadrat 18 × 18 mit Rahmen 3 ink, **rotate −45deg** (Raute), Farben der Reihe nach aqua, fuchsia, purple, navy, dann wieder von vorn. Titel Heading/S, Antwort Body/M secondary, gap 8.
 - Linke Spalte 4 Items, rechte Spalte 3 Items.
 - Umsetzung als `<details>`-Akkordeon (mobil ist es in Figma als „Akkordeon“ benannt, 658:655). Desktop zeigt alles offen. Marker dreht beim Öffnen von −45° auf 45°.
 
 ### 3.10 Abschluss-CTA (655:15, h 832), `screens/655-15_cta.png`
 - `bg pop/fuchsia`. Halftone `#9747ff` (≈50 %) über volle Breite × 420 von oben, siehe 5.1.
 - H2 „lernen wir uns kennen“ in Hanken 900 88, weiß, `text-shadow 7 7 0 #1e2a45`, zentriert (y 100).
-- Sprechblase (655:1043) mit 820 breit bei y 243: `bg surface`, **Rahmen 4 ink**, `shadow 10 10 0 #00ffdc`, `px 36 py 28`, gap 22, Text zentriert 22/32 `text/primary`. Darunter eine Zeile mit gap 28: Button gelb (Hanken 800 **20**, 251 × 62) und „Lieber per E-Mail: kontakt@kieks.me“ (Hanken 800 18 `text/link`).
+- Sprechblase (655:1043) mit 820 breit bei y 243: `bg surface`, **Rahmen 4 ink**, `shadow 10 10 0 #00ffdc`, `px 36 py 28`, gap 22, Text zentriert 22/32 `text/primary`. Darunter eine Zeile mit gap 28: Button aqua (Hanken 800 **20**, 251 × 62) und „Lieber per E-Mail: kontakt@kieks.me“ (Hanken 800 18 `text/link`).
 - Notiz ⟦PLATZHALTER⟧ Buchungslink, 460 breit, y 515.
-- **Flammen** am unteren Rand (z-Order: rot hinten, gelb vorn, beide unter dem Text):
+- **Flammen** am unteren Rand (z-Order: rot hinten, aqua vorn, beide unter dem Text):
   - rot `#e8202a`: 1440 × 220, y 612 (`assets/655-1038_flammen-rot__imgFlammenRot.svg`)
-  - gelb `#ffd60a`: 1440 × 150, y 682 (gleiche Formsprache; das Asset wurde wegen des Figma-Rate-Limits nicht exportiert, siehe Screenshot)
-  - Animations-Kandidat: Flammen „flackern“ (`scaleY 1 ↔ 1.06`, `transform-origin: bottom`, 1.2–1.8 s, ease-in-out, alternate, rot und gelb versetzt).
+  - aqua `#00ffdc`: 1440 × 150, y 682 (gleiche Formsprache; das Asset wurde wegen des Figma-Rate-Limits nicht exportiert, siehe Screenshot)
+  - Animations-Kandidat: Flammen „flackern“ (`scaleY 1 ↔ 1.06`, `transform-origin: bottom`, 1.2–1.8 s, ease-in-out, alternate, rot und aqua versetzt).
 
 ### 3.11 Footer (655:1052, h 404), `screens/655-1052_footer.png`
 - `bg footer/bg`, `pt 72 pb 40 px 80`, `flex-col gap 48`.
@@ -242,28 +242,28 @@ Navigation und Footer sind identisch mit der Startseite. Divider zwischen Hero �
 
 ### 4.1 Hero (659:85, h 667)
 - `bg hero/bg`, Halftone 620 × 560 rechts oben (wie auf der Startseite).
-- Text (x 80, y 88, Breite 800, gap 28): Sticker „Leistung · KI & MCP“ (gelb, Fuchsia-Schatten, **3deg**). H1 „ki, die mit ihren systemen arbeitet, nicht an ihnen vorbei.“ in **64/64** Hanken 900 mit `text-shadow 6 6 0 #ff008f`. Lead 22/32. Button gelb „KI-Vorhaben besprechen“.
-- Art (659:963) mit 460 × 440 bei x 928, y 110: Burst `assets/659-963_ki-hero-art-mcp__imgBurst.svg` (fuchsia, 420 × 420, Kontur navy, **gelber** Schatten). Darauf „mcp“ in Hanken 900 150, weiß, `text-shadow 8 8 0 #00ffdc`, navy Kontur, **rotate 8deg**, bei left 53, top 120.
+- Text (x 80, y 88, Breite 800, gap 28): Sticker „Leistung · KI & MCP“ (aqua, Fuchsia-Schatten, **3deg**). H1 „ki, die mit ihren systemen arbeitet, nicht an ihnen vorbei.“ in **64/64** Hanken 900 mit `text-shadow 6 6 0 #ff008f`. Lead 22/32. Button aqua „KI-Vorhaben besprechen“.
+- Art (659:963) mit 460 × 440 bei x 928, y 110: Burst `assets/659-963_ki-hero-art-mcp__imgBurst.svg` (fuchsia, 420 × 420, Kontur navy, **aqua** Schatten). Darauf „mcp“ in Hanken 900 150, weiß, `text-shadow 8 8 0 #00ffdc`, navy Kontur, **rotate 8deg**, bei left 53, top 120.
 
 ### 4.2 Was ist MCP? (659:969, h 741)
 - `bg surface`, `border-bottom 4 ink`, `px 80 py 96`. Text-Block 900 breit, gap 24: Sticker „Grundlagen“ (aqua, **3deg**), H2, Lead secondary.
 - Schema (gap 14, 44 unter dem Text) mit drei Boxen zu je 220 breit, `py 26`, **Rahmen 4**, `shadow 8 8 0 ink`, Text Hanken 900 26 zentriert in 2 Zeilen:
   - „ki-assistent“ aqua mit **3deg**
   - Pfeil
-  - „mcp-server“ gelb mit **−2deg**
+  - „mcp-server“ navy mit **−2deg**
   - Pfeil
   - „ihre systeme“ purple-deep mit weißem Text und **2deg**
-- Pfeil: `assets/659-969_was-ist-mcp__imgPfeil.svg` mit 64 × 40, gelb, Kontur 4 navy.
+- Pfeil: `assets/659-969_was-ist-mcp__imgPfeil.svg` mit 64 × 40, aqua, Kontur 4 navy.
 - Animations-Kandidat: Pfeile „pulsieren“ nach rechts (`translateX 0 → 6px`). Die Boxen wackeln nacheinander (gestaffelter Wobble ±1°).
 
 ### 4.3 Was wir für Sie tun (659:987, h 703)
 - `bg page/bg`, `px 80 py 96`, gap 24. Sticker „Leistungen“ (fuchsia, `shadow 4 4 0 #00ffdc`, **−2deg**). H2 „was wir für sie tun“.
 - Karten: Raster 2 × 2 mit gap 28, `pt 12`. Karte `bg surface`, Rahmen 3, `overflow hidden`, `flex`. Links eine **Farbkante** mit 22 breit und voller Höhe. Inhalt `pt 24 pb 26 px 24`, gap 10, Titel Heading/S, Text Body/M.
-- Farben (Kante / Schatten 8 8): MCP-Server aqua / aqua; Lokal oder als Dienst fuchsia / fuchsia; Agent-Skills **gelb / fuchsia**; Einordnung und Auswahl purple / purple.
+- Farben (Kante / Schatten 8 8): MCP-Server aqua / aqua; Lokal oder als Dienst fuchsia / fuchsia; Agent-Skills **navy / fuchsia**; Einordnung und Auswahl purple / purple.
 
 ### 4.4 So arbeiten wir (659:1017, h 592)
-- `bg band/bg` (navy, dark aqua), `pt 72 pb 88 px 80`, gap 24. Sticker „Ablauf“ (gelb, **3deg**). H2 in `band/text` mit `text-shadow 4 4 0 #ff008f`.
-- 4 Schritt-Karten (flex 1, gap 24, gleiche Höhe ca. 273): `bg surface`, Rahmen 3, `pt 22 pb 24 px 22`, gap 10, Schatten `8 8 0` in Aqua, Fuchsia, Gelb und Purple. **Rotation +1.5 / −1.5 / +1.5 / −1.5deg.**
+- `bg band/bg` (navy, dark aqua), `pt 72 pb 88 px 80`, gap 24. Sticker „Ablauf“ (aqua, **3deg**). H2 in `band/text` mit `text-shadow 4 4 0 #ff008f`.
+- 4 Schritt-Karten (flex 1, gap 24, gleiche Höhe ca. 273): `bg surface`, Rahmen 3, `pt 22 pb 24 px 22`, gap 10, Schatten `8 8 0` in Aqua, Fuchsia, Navy und Purple. **Rotation +1.5 / −1.5 / +1.5 / −1.5deg.**
   - Nummern-Badge: Rahmen 3, `px 12 py 2`, Hanken 900 44. Hintergrund = Akzentfarbe. Text navy, bei 04 weiß.
   - Titel Heading/S, Text Body/M secondary.
 - Texte: 01 Verstehen, 02 Eingrenzen, 03 Umsetzen, 04 Übergeben.
@@ -271,10 +271,10 @@ Navigation und Footer sind identisch mit der Startseite. Divider zwischen Hero �
 
 ### 4.5 Nachweis statt Versprechen (659:1045, h 634)
 - `bg purple-deep`, Halftone fuchsia 700 × 480 rechts oben (Pitch 22).
-- Sticker „Open Source“ (aqua, `shadow 4 4 0 #ff008f`, **3deg**) bei y 96. H2 „nachweis statt versprechen“ (weiß, `text-shadow 4 4 0 #1e2a45`), Lead 760 breit, Button gelb „Zu unseren MCP-Servern“ (265 × 59), Notiz (Belegstand) mit Breite 620.
+- Sticker „Open Source“ (aqua, `shadow 4 4 0 #ff008f`, **3deg**) bei y 96. H2 „nachweis statt versprechen“ (weiß, `text-shadow 4 4 0 #1e2a45`), Lead 760 breit, Button aqua „Zu unseren MCP-Servern“ (265 × 59), Notiz (Belegstand) mit Breite 620.
 
 ### 4.6 Abschluss-CTA (659:1764, h 728)
-- Wie 3.10. Halftone 1440 × 380. Flammen rot bei y 508 (h 220) und gelb bei y 578 (h 150).
+- Wie 3.10. Halftone 1440 × 380. Flammen rot bei y 508 (h 220) und aqua bei y 578 (h 150).
 - H2 in 2 Zeilen „haben sie ein system, mit / dem ihre ki sprechen soll?“ mit 68/72, weiß, `text-shadow 6 6 0 #1e2a45`.
 - Sprechblase 760 breit, `px 36 py 26`, gap 20, nur ein Button.
 
@@ -297,10 +297,10 @@ Alle Raster sind regelmäßig (quadratischer Pitch). Der Punktdurchmesser nimmt 
 Der erste Punkt sitzt jeweils etwa ½ Pitch vom Rand entfernt. Umsetzung: ein Atom `Halftone.astro`, das zur Build-Zeit ein SVG mit `<circle>`-Elementen erzeugt (Props: width, height, pitch, origin, d0, k, color, opacity). Alternativ `assets/653-21_service-card__imgGroup.svg` als Vorlage für die Kartenköpfe nutzen. **Nicht** mit einem gleichförmigen `radial-gradient` ersetzen, denn der Größenverlauf ist das Pop-Art-Merkmal.
 
 ### 5.2 Bursts / Starbursts (Sterne)
-- Hero (gelb): 24 Zacken, r_außen 250, r_innen ≈ 200, Kontur 10 navy, Schatten fuchsia 12/12 (im SVG).
+- Hero (aqua): 24 Zacken, r_außen 250, r_innen ≈ 200, Kontur 10 navy, Schatten fuchsia 12/12 (im SVG).
 - CSP (aqua): 16 Zacken, 400 × 400, Kontur 10, Schatten fuchsia 12/12.
-- KI-Hero (fuchsia): ca. 24 Zacken, 420 × 420, Kontur navy, Schatten **gelb**.
-- Mobil: gelber Burst 285 × 285.
+- KI-Hero (fuchsia): ca. 24 Zacken, 420 × 420, Kontur navy, Schatten **aqua**.
+- Mobil: aqua Burst 285 × 285.
 → Die Assets aus `assets/` verwenden. Für die Animation das SVG in ein Wrapper-Element legen und **nur den Burst** rotieren (bei der Hero-SVG sind Burst und Finger zusammengefasst; für getrennte Animation die Dark-Assets `661-962_*` nehmen, die als zwei Dateien vorliegen).
 
 ### 5.3 Zackenkante und Flammen
@@ -318,7 +318,7 @@ Dashed-Box für ⟦BESTÄTIGEN⟧, ⟦PLATZHALTER⟧ und ⟦ENTSCHEIDUNG⟧: `bg
 - Hero: Halftone 390 × 420 oben, CTAs **untereinander** (gap 16), Hero-Art unter dem Text (350 × 300) mit Burst 285, Finger 250 × 173 und Sticker „open source!“ (auch im Light-Mobil).
 - Leistungen: Karten horizontal (siehe 3.5). Repos 344 breit, Klecks 23.7.
 - Team: Avatare untereinander. FAQ als Akkordeon.
-- CTA: Halftone 300, Flammen rot 130 / gelb 90 hoch, H2 links 252 breit, Sprechblase 350.
+- CTA: Halftone 300, Flammen rot 130 / aqua 90 hoch, H2 links 252 breit, Sprechblase 350.
 - Footer 561 hoch, Spalten 2 × 2.
 
 ---
@@ -336,7 +336,7 @@ Dashed-Box für ⟦BESTÄTIGEN⟧, ⟦PLATZHALTER⟧ und ⟦ENTSCHEIDUNG⟧: `bg
 | Halftone | sehr langsames Drift (`translate 0 → pitch`), oder Fade-in beim Scrollen |
 | Service-/Schritt-Karten | Scroll-Reveal gestaffelt (80 ms); Hover-Lift; Schritt-Karten richten sich auf 0° auf |
 | FAQ-Marker | Raute dreht beim Öffnen (−45° → 45°) |
-| Flammen | Flackern `scaleY`, rot und gelb phasenversetzt |
+| Flammen | Flackern `scaleY`, rot und aqua phasenversetzt |
 | Team-Avatar | Ebenen-Parallax beim Hover |
 | Schema-Pfeile | `translateX` Puls nach rechts |
 
@@ -347,8 +347,8 @@ Dashed-Box für ⟦BESTÄTIGEN⟧, ⟦PLATZHALTER⟧ und ⟦ENTSCHEIDUNG⟧: `bg
 **Atoms** (`atoms/`)
 | Komponente | Props | Figma-Nodes |
 |---|---|---|
-| `Button.astro` | `variant: primary(gelb)/secondary(surface)/aqua`, `shadow: fuchsia/aqua`, `size: sm(16)/md(18)/lg(20)`, `href` | 652:21, 652:900, 652:902, 653:823, 654:1664, 655:1046, 659:961 |
-| `Sticker.astro` | `color: yellow/aqua/fuchsia`, `shadow`, `rotate` (deg), `size` | 652:895, 652:918, 653:16, 653:818, 654:1660, 654:1676, 654:1693, 659:957/972/988/1018/1752, 661:965 |
+| `Button.astro` | `variant: primary(aqua)/secondary(surface)/aqua`, `shadow: fuchsia/aqua`, `size: sm(16)/md(18)/lg(20)`, `href` | 652:21, 652:900, 652:902, 653:823, 654:1664, 655:1046, 659:961 |
+| `Sticker.astro` | `color: aqua/fuchsia/purple/navy`, `shadow`, `rotate` (deg), `size` | 652:895, 652:918, 653:16, 653:818, 654:1660, 654:1676, 654:1693, 659:957/972/988/1018/1752, 661:965 |
 | `Heading.astro` | `level`, `size: xl/l/cta`, `color`, `shadowColor` (harter Text-Schatten) | 652:897, 653:18, 653:820, 654:1662, 654:1678, 654:1695, 655:1042, 659:959/974/990/1020/1754/2731 |
 | `Lead.astro` / `Text` | `size: l/m`, `tone: primary/secondary/onColor` | 652:898 usw. |
 | `TextLink.astro` | `arrow` | 653:218, 653:825, 655:1048 |
@@ -398,6 +398,6 @@ Dashed-Box für ⟦BESTÄTIGEN⟧, ⟦PLATZHALTER⟧ und ⟦ENTSCHEIDUNG⟧: `bg
 ---
 
 ## 9. Offene Lücken in dieser Spec
-- Das Figma-MCP-Kontingent (Starter-Plan) war zwischendurch erschöpft. **Nicht** exportiert wurden das Asset „Flammen gelb“ (655:1040), die Hero-Halftone-SVG als Datei, Dark-Mode-Referenzcode pro Sektion (die Dark-Werte stammen aus den Variablen und den Screenshots) und die mobilen Sektionen über Nav und Band hinaus (die Maße stammen aus `ref/657-26_metadata.xml`).
+- Das Figma-MCP-Kontingent (Starter-Plan) war zwischendurch erschöpft. **Nicht** exportiert wurden das Asset „Flammen aqua“ (655:1040), die Hero-Halftone-SVG als Datei, Dark-Mode-Referenzcode pro Sektion (die Dark-Werte stammen aus den Variablen und den Screenshots) und die mobilen Sektionen über Nav und Band hinaus (die Maße stammen aus `ref/657-26_metadata.xml`).
 - Die Halftone-Deckkraft wurde für Hero, CSP und CTA aus den Pixelfarben der Screenshots zurückgerechnet (±5 %). Im Kartenkopf ist sie exakt `.25`.
 - Die Finger-Rotation von ≈ −7° wurde im Screenshot gemessen und ist im SVG eingebacken.

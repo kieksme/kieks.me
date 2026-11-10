@@ -47,7 +47,7 @@ assistent"
           <div className="flex h-[135.6px] items-center justify-center relative shrink-0 w-[224.333px]" data-node-id="659:981">
             <div className="-rotate-2 flex-none">
               <div
-                className="bg-[var(--pop\/yellow,#ffd60a)] border-4 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center justify-center overflow-clip py-[26px] relative shadow-[8px_8px_0px_0px_#1e2a45] w-[220px]"
+                className="bg-[var(--pop\/aqua,#00ffdc)] border-4 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center justify-center overflow-clip py-[26px] relative shadow-[8px_8px_0px_0px_#1e2a45] w-[220px]"
                 data-name="Box – mcp-
 server"
               >

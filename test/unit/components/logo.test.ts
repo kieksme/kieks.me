@@ -86,6 +86,6 @@ describe('approved circular brand logo', () => {
     expect(html).toContain(`src="${circleLogoDarkUrl}"`);
     expect(html).toContain('width="520" height="520"');
     expect(html.match(/<img\b/g)).toHaveLength(2);
-    expect(html).not.toMatch(/imgHeroArt|BurstGelb|FingerMultiStacked|pop-spin|pop-tap/);
+    expect(html).not.toMatch(/imgHeroArt|BurstGelb|BurstAqua|FingerMultiStacked|pop-spin|pop-tap/);
   });
 });

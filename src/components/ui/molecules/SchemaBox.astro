@@ -4,7 +4,7 @@ import pfeil from '~/assets/pop/659-969_was-ist-mcp__imgPfeil.svg?url';
 /** MCP schema flow box — SPEC §4.2 */
 export interface Props {
   label: string;
-  color: 'aqua' | 'yellow' | 'purple';
+  color: 'aqua' | 'navy' | 'purple';
   rotate?: number;
   showArrow?: boolean;
   class?: string;
@@ -13,10 +13,10 @@ export interface Props {
 const { label, color, rotate = 0, showArrow = false, class: className = '' } = Astro.props;
 const bgs = {
   aqua: 'var(--pop-aqua)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple-deep)',
 };
-const text = color === 'purple' ? '#fff' : 'var(--pop-navy)';
+const text = color === 'purple' || color === 'navy' ? '#fff' : 'var(--pop-navy)';
 ---
 
 <div class:list={['contents', className]}>
