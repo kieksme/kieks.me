@@ -1,4 +1,4 @@
-import hljs from 'highlight.js/lib/common';
+import hljs from 'highlight.js';
 /** Small, closed Lexical renderer: no raw HTML, styles, arbitrary tags or scripts. */
 export const escapeHtml = (value: unknown): string =>
   String(value ?? '').replace(
