@@ -21,8 +21,9 @@ const markSizes = {
   hero: { dimension: 520, class: 'h-auto w-full max-w-[520px]' },
 };
 const wordmarkSizes = {
-  sm: { mark: 34, text: 'text-[1.35rem]', gap: 'gap-2' },
-  md: { mark: 44, text: 'text-[1.75rem]', gap: 'gap-2.5' },
+  /* Extra gap keeps the finger tip clear of the „k“, especially on mobile. */
+  sm: { mark: 30, text: 'text-[1.35rem]', gap: 'gap-3' },
+  md: { mark: 40, text: 'text-[1.75rem]', gap: 'gap-3.5' },
   hero: { mark: 72, text: 'text-[3rem]', gap: 'gap-4' },
 };
 const dimensions = markSizes[size];
@@ -87,10 +88,7 @@ const word = wordmarkSizes[size];
           />
         </span>
         <span
-          class:list={[
-            'brand-logo__word font-heading font-black lowercase leading-none tracking-[-0.04em]',
-            word.text,
-          ]}
+          class:list={['brand-logo__word font-heading font-black lowercase leading-none tracking-[-0.04em]', word.text]}
           style="color: var(--text-primary);"
         >
           kieks<span style="color: var(--pop-fuchsia);">.me</span>
@@ -108,6 +106,15 @@ const word = wordmarkSizes[size];
   .brand-logo--animated:hover .brand-logo__mark,
   .brand-logo--animated:focus-within .brand-logo__mark {
     animation: brand-finger-wiggle 0.55s ease-in-out;
+  }
+  /* Horizontal wordmark: rotate only so the fingertip never slides into the „k“. */
+  .brand-logo--horizontal.brand-logo--animated .brand-logo__mark {
+    transform-origin: 55% 55%;
+    animation: brand-finger-tip-safe 1.1s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+  .brand-logo--horizontal.brand-logo--animated:hover .brand-logo__mark,
+  .brand-logo--horizontal.brand-logo--animated:focus-within .brand-logo__mark {
+    animation: brand-finger-wiggle-safe 0.55s ease-in-out;
   }
   @keyframes brand-finger-tip {
     0% {
@@ -132,6 +139,31 @@ const word = wordmarkSizes[size];
     }
     70% {
       transform: translateX(-2px) rotate(-3deg);
+    }
+  }
+  @keyframes brand-finger-tip-safe {
+    0% {
+      transform: rotate(-8deg);
+      opacity: 0.7;
+    }
+    55% {
+      transform: rotate(5deg);
+    }
+    100% {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+  }
+  @keyframes brand-finger-wiggle-safe {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    35% {
+      transform: rotate(6deg);
+    }
+    70% {
+      transform: rotate(-4deg);
     }
   }
   @media (prefers-reduced-motion: reduce) {
