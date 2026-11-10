@@ -148,15 +148,6 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 </header>
 
 <style>
-  .pop-site-header {
-    background: var(--page-bg);
-    border-bottom: 4px solid var(--ink);
-  }
-  :global(.dark) .pop-site-header {
-    /* Blend into the dark page canvas — no solid black bar, no aqua frame. */
-    background: var(--page-bg);
-    border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
-  }
   details > summary::-webkit-details-marker {
     display: none;
   }

@@ -545,9 +545,9 @@ describe('editable site sections with static fallback', () => {
     const { readFile } = await import('node:fs/promises');
     const page = await readFile(new URL('../../../src/pages/index.astro', import.meta.url), 'utf8');
     expect(page).toContain('teamTextsMissing &&');
-    // Fallback team roles are placeholders, so the hint is shown without CMS texts.
+    // Fallback founders ship with real roles and bios — the homepage hint stays hidden.
     const fallback = resolveSiteContent().team;
-    expect(fallback.every((m) => !m.bio && !m.bioHtml && (m.role ?? '').includes('⟦'))).toBe(true);
+    expect(fallback.some((m) => m.bio || m.bioHtml || (m.role && !m.role.includes('⟦')))).toBe(true);
     const cms = resolveSiteContent({
       team: [{ ...published, id: 1, slug: 'andre', name: 'André Lademann', position: 'Gesellschafter' }],
     }).team;

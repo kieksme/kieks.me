@@ -41,23 +41,25 @@
 }
 
 #header {
-  background-color: var(--pop-surface);
-  border-bottom: 2.5px solid transparent;
+  background-color: var(--page-bg);
+  border-bottom: 4px solid var(--ink);
 }
 
 .dark #header {
-  background-color: var(--pop-ink);
+  /* Match the dark page canvas — no solid black bar, no aqua frame. */
+  background-color: var(--page-bg);
+  border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
 }
 
 #header.scroll > div:first-child {
-  background-color: var(--pop-surface);
-  border-bottom: 2.5px solid var(--pop-navy);
-  box-shadow: 6px 0 0 0 transparent;
+  background-color: var(--page-bg);
+  border-bottom: 4px solid var(--ink);
+  box-shadow: none;
 }
 .dark #header.scroll > div:first-child,
 #header.scroll.dark > div:first-child {
-  background-color: var(--pop-ink);
-  border-bottom-color: var(--pop-aqua);
+  background-color: var(--page-bg);
+  border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
   box-shadow: none;
 }
 /* #header.scroll > div:last-child {

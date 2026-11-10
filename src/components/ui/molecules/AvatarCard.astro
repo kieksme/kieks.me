@@ -101,7 +101,11 @@ const isPlaceholder = Boolean(role && (role.includes('⟦') || role.includes('PL
   }
   {
     bioHtml ? (
-      <div class="cms-rich text-sm max-w-[22rem] text-center" style="color: var(--text-secondary);" set:html={bioHtml} />
+      <div
+        class="cms-rich text-sm max-w-[22rem] text-center"
+        style="color: var(--text-secondary);"
+        set:html={bioHtml}
+      />
     ) : (
       bio && (
         <p class="text-center text-sm max-w-[22rem] leading-relaxed" style="color: var(--text-secondary);">
