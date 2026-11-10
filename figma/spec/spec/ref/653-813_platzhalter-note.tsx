@@ -4,7 +4,7 @@
 
 export default function PlatzhalterentscheidungD6() {
   return (
-    <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] px-[14px] py-[10px] relative size-full text-[color:var(--note\/text,#5c4a00)]" data-node-id="653:813" data-name="Platzhalter – ⟦ENTSCHEIDUNG D6⟧">
+    <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] px-[14px] py-[10px] relative size-full text-[color:var(--note\/text,#1e2a45)]" data-node-id="653:813" data-name="Platzhalter – ⟦ENTSCHEIDUNG D6⟧">
       <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="653:814">
         ⟦ENTSCHEIDUNG D6⟧
       </p>

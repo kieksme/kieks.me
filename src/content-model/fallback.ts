@@ -41,16 +41,17 @@ export const fallbackServices: SiteServiceView[] = [
     description: 'Gemeinsam klären, was sich lohnt, bevor die erste Zeile Code entsteht.',
     href: '/leistungen/beratung',
     linkText: 'Mehr zu Beratung',
-    headColor: 'yellow' as const,
+    headColor: 'navy' as const,
     shadow: 'ink' as const,
     numShadow: 'fuchsia' as const,
+    numColor: '#fff',
   },
 ];
 
 export const fallbackHomeProjects = [
   { name: 'mcp-server · contabo', href: 'https://github.com/kieksme', color: 'aqua' as const },
   { name: 'mcp-server · swetrix', href: 'https://github.com/kieksme', color: 'fuchsia' as const },
-  { name: 'mcp-server · listmonk', href: 'https://github.com/kieksme', color: 'yellow' as const },
+  { name: 'mcp-server · listmonk', href: 'https://github.com/kieksme', color: 'navy' as const },
   { name: 'mcp-server · balena', href: 'https://github.com/kieksme', color: 'purple' as const },
 ];
 
@@ -68,7 +69,7 @@ export const fallbackFaqsLeft: SiteFaqView[] = [
   {
     title: 'Was brauchen Sie von uns für den Start?',
     body: 'Ein Ziel, eine Ansprechperson und Zugang zu den Informationen, um die es geht: Systeme, Abläufe, Zielgruppe. Den Rest klären wir im Erstgespräch.',
-    color: 'yellow' as const,
+    color: 'navy' as const,
   },
   {
     title: 'Wie lange dauert ein Projekt?',
@@ -91,7 +92,7 @@ export const fallbackFaqsRight: SiteFaqView[] = [
   {
     title: 'Was passiert, wenn Sie nicht zufrieden sind?',
     body: 'Dann sprechen wir offen darüber und bessern im vereinbarten Umfang nach. Damit es gar nicht so weit kommt, stimmen wir Zwischenstände regelmäßig mit Ihnen ab.',
-    color: 'yellow' as const,
+    color: 'navy' as const,
   },
 ];
 
@@ -211,7 +212,7 @@ export const fallbackAiTeam = [
   {
     title: 'Agents & Culture',
     description: 'Hilft bei Recherche und Dokumentation zu Agent-Richtlinien, Skills und Team-Praktiken.',
-    accent: 'yellow' as const,
+    accent: 'navy' as const,
   },
   {
     title: 'AI-Manager',

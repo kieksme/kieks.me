@@ -9,7 +9,7 @@ export default function Sprechblase() {
       <p className="[word-break:break-word] font-['Source_Sans_3:Regular'] font-normal leading-[32px] min-w-full relative shrink-0 text-[22px] text-[color:var(--text\/primary,#1e2a45)] text-center w-[min-content]" data-node-id="659:2733">
         Erzählen Sie uns davon. In 30 Minuten klären wir, ob und wie ein MCP-Server dafür sinnvoll ist.
       </p>
-      <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="659:2734" data-name="Button – Erstgespräch buchen">
+      <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="659:2734" data-name="Button – Erstgespräch buchen">
         <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[20px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="659:2735">
           Erstgespräch buchen
         </p>

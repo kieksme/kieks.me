@@ -82,7 +82,7 @@ const heroCtas = hero
       .filter((cta) => cta && cta.label && cta.href)
   : [];
 const highlights = collection === 'services' ? records(data.highlights, 20) : [];
-const accent = ['aqua', 'fuchsia', 'yellow', 'purple'].includes(String(data.accent)) ? String(data.accent) : '';
+const accent = ['aqua', 'fuchsia', 'purple', 'navy'].includes(String(data.accent)) ? String(data.accent) : '';
 const serviceLink = collection === 'services' ? link({ label: data.linkText, href: data.href }) : null;
 const profileHref = collection === 'team' ? safeHref(data.profileUrl) : null;
 const npmPackages =
@@ -523,7 +523,7 @@ const eyebrow = isNavigation
   }
   .editorial-content__contact button {
     border: 2px solid var(--pop-ink);
-    background: var(--pop-yellow);
+    background: var(--pop-aqua);
     color: var(--pop-ink);
     padding: 12px;
     font-weight: 800;

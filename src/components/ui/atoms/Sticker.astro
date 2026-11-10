@@ -1,7 +1,7 @@
 ---
 /** Pop Sticker / Badge — SPEC §2 rotations, §8 */
 export interface Props {
-  color?: 'yellow' | 'aqua' | 'fuchsia';
+  color?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   shadow?: 'fuchsia' | 'aqua';
   rotate?: number;
   size?: 'sm' | 'md' | 'lg';
@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const {
-  color = 'yellow',
+  color = 'aqua',
   shadow = color === 'fuchsia' ? 'aqua' : 'fuchsia',
   rotate = 3,
   size = 'md',
@@ -17,11 +17,13 @@ const {
 } = Astro.props;
 
 const bgs = {
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
+  purple: 'var(--pop-purple)',
 };
-const text = color === 'fuchsia' ? 'var(--pop-white)' : 'var(--pop-navy)';
+/* Aqua+navy clears AA normal (≥4.5). Fuchsia/purple/navy stickers use bold ≥16px (AA large ≥3:1). */
+const text = color === 'aqua' ? 'var(--pop-navy)' : 'var(--pop-white)';
 const shadowColor = shadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
 const sizes = { sm: 'text-base px-3.5 py-2', md: 'text-base px-3.5 py-2', lg: 'text-xl px-3.5 py-2' };
 ---

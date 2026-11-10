@@ -2,15 +2,15 @@
 // Convert to Astro + Tailwind; do not ship as-is. Assets were downloaded to ../assets/.
 <cursor_untrusted_data_1337 source="CallDynamicTool">
 
-const imgBurstGelb = "../assets/661-962_hero-art-dark__imgBurstGelb.svg";
+const imgBurstAqua = "../assets/661-962_hero-art-dark__imgBurstAqua.svg";
 const imgFingerMultiStacked = "../assets/661-962_hero-art-dark__imgFingerMultiStacked.svg";
 
 export default function HeroArt() {
   return (
     <div className="relative size-full" data-node-id="661:962" data-name="Hero-Art">
-      <div className="absolute left-[10px] size-[500px] top-[10px]" data-node-id="661:963" data-name="Burst gelb">
+      <div className="absolute left-[10px] size-[500px] top-[10px]" data-node-id="661:963" data-name="Burst aqua">
         <div className="absolute inset-[0_-2.4%_-2.4%_0]">
-          <img alt="" className="block max-w-none size-full" src={imgBurstGelb} />
+          <img alt="" className="block max-w-none size-full" src={imgBurstAqua} />
         </div>
       </div>
       <div className="absolute h-[277.333px] left-[50px] top-[150px] w-[400px]" data-node-id="661:964" data-name="Finger (multi stacked)">

@@ -2,7 +2,7 @@
 /** FAQ diamond (−45°) or repo color square (−12°) */
 export interface Props {
   variant?: 'diamond' | 'blob';
-  color?: 'aqua' | 'fuchsia' | 'yellow' | 'purple';
+  color?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
   class?: string;
 }
 
@@ -10,7 +10,7 @@ const { variant = 'diamond', color = 'aqua', class: className = '' } = Astro.pro
 const colors = {
   aqua: 'var(--pop-aqua)',
   fuchsia: 'var(--pop-fuchsia)',
-  yellow: 'var(--pop-yellow)',
+  navy: 'var(--pop-navy)',
   purple: 'var(--pop-purple)',
 };
 ---

@@ -43,9 +43,9 @@ origin. Existing top-right hero patterns remain radial.
 ## Original flame assets
 
 - Existing red desktop export: `655-1038_flammen-rot__imgFlammenRot.svg`, 1440×220.
-- Original yellow desktop node655:1040: `655-1040_flammen-gelb-original.svg`, 1440×150.
+- Aqua flame desktop node655:1040: `655-1040_flammen-aqua-original.svg`, 1440×150.
 - Original red mobile node658:1154: `658-1154_flammen-rot-mobile.svg`, 390×130.
-- Original yellow mobile node658:1156: `658-1156_flammen-gelb-mobile.svg`, 390×90.
+- Aqua flame mobile node658:1156: `658-1156_flammen-aqua-mobile.svg`, 390×90.
 
 New exports were downloaded unchanged from the high-fidelity Figma context.
 SVG root dimensions and paths are preserved. Responsive sources select the

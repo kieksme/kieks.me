@@ -36,11 +36,6 @@ export default {
           600: '#BF006B',
           700: '#800047',
         },
-        yellow: {
-          DEFAULT: '#FFD60A',
-          50: '#FFF8D6',
-          500: '#FFD60A',
-        },
         purple: {
           DEFAULT: '#9747FF',
           deep: '#7B2FF7',
@@ -60,8 +55,8 @@ export default {
           navy: 'var(--pop-navy)',
           aqua: 'var(--pop-aqua)',
           fuchsia: 'var(--pop-fuchsia)',
-          yellow: 'var(--pop-yellow)',
           purple: 'var(--pop-purple)',
+          gray: 'var(--pop-gray)',
         },
         ink: 'var(--ink)',
         surface: 'var(--surface)',

@@ -1,8 +1,8 @@
 ---
 import flamesRot from '~/assets/pop/655-1038_flammen-rot__imgFlammenRot.svg?url';
-import flamesGelb from '~/assets/pop/655-1040_flammen-gelb-original.svg?url';
+import flamesAqua from '~/assets/pop/655-1040_flammen-aqua-original.svg?url';
 import flamesRotMobile from '~/assets/pop/658-1154_flammen-rot-mobile.svg?url';
-import flamesGelbMobile from '~/assets/pop/658-1156_flammen-gelb-mobile.svg?url';
+import flamesAquaMobile from '~/assets/pop/658-1156_flammen-aqua-mobile.svg?url';
 
 export interface Props {
   class?: string;
@@ -17,7 +17,7 @@ const { class: className = '' } = Astro.props;
     <img src={flamesRot} alt="" class="block w-full h-auto" width="1440" height="220" decoding="async" />
   </picture>
   <picture class="absolute bottom-0 left-0 block w-full">
-    <source media="(max-width: 767px)" srcset={flamesGelbMobile} width="390" height="90" />
-    <img src={flamesGelb} alt="" class="block w-full h-auto" width="1440" height="150" decoding="async" />
+    <source media="(max-width: 767px)" srcset={flamesAquaMobile} width="390" height="90" />
+    <img src={flamesAqua} alt="" class="block w-full h-auto" width="1440" height="150" decoding="async" />
   </picture>
 </div>

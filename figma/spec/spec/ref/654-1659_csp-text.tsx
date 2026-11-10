@@ -23,12 +23,12 @@ export default function Text() {
       <p className="[word-break:break-word] font-['Source_Sans_3:Regular'] font-normal leading-[32px] min-w-full relative shrink-0 text-[22px] text-[color:var(--pop\/white,white)] w-[min-content]" data-node-id="654:1663">
         Das Customer Service Portal bündelt Status, Bereitschaft, Ansprechpartner und Supportwissen vor Ihrem vorhandenen Ticketsystem. Open Source unter MIT, mit direktem Weg zum Menschen.
       </p>
-      <div className="bg-[var(--pop\/yellow,#ffd60a)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="654:1664" data-name="Button – CSP kennenlernen">
+      <div className="bg-[var(--pop\/aqua,#00ffdc)] border-3 border-[var(--ink,#1e2a45)] border-solid content-stretch flex items-center overflow-clip px-[26px] py-[15px] relative shadow-[6px_6px_0px_0px_#ff008f] shrink-0" data-node-id="654:1664" data-name="Button – CSP kennenlernen">
         <p className="[word-break:break-word] font-['Hanken_Grotesk:ExtraBold'] font-extrabold leading-[normal] relative shrink-0 text-[18px] text-[color:var(--pop\/navy,#1e2a45)] whitespace-nowrap" data-node-id="654:1665">
           CSP kennenlernen
         </p>
       </div>
-      <div className="[word-break:break-word] bg-[var(--note\/bg,#fff3b0)] border-2 border-[var(--note\/text,#5c4a00)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#5c4a00)] w-[460px]" data-node-id="654:1666" data-name="Platzhalter – ⟦PLATZHALTER / D4⟧">
+      <div className="[word-break:break-word] bg-[var(--note\/bg,#e6fffc)] border-2 border-[var(--note\/text,#1e2a45)] border-dashed content-stretch flex flex-col gap-[4px] items-start leading-[normal] overflow-clip px-[14px] py-[10px] relative shrink-0 text-[color:var(--note\/text,#1e2a45)] w-[460px]" data-node-id="654:1666" data-name="Platzhalter – ⟦PLATZHALTER / D4⟧">
         <p className="font-['Hanken_Grotesk:ExtraBold'] font-extrabold relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="654:1667">
           ⟦PLATZHALTER / D4⟧
         </p>
