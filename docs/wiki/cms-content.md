@@ -45,3 +45,34 @@ Enable with `PAYLOAD_SITE_CONTENT=true` in the build runner (together with `PAYL
 ## SEO and verification
 
 `scripts/lib/seo-audit.mjs` (run via `node scripts/test-seo-static.mjs` after `pnpm build`, and inside `scripts/test-cms-static-build.mjs`) checks every page for title, description, a single clean canonical, robots (indexable pages `index,follow`; 404, `kontakt-erfolgreich` and `/docs/*` are `noindex` and absent from the sitemap), complete Open Graph and Twitter Card tags (Twitter falls back to the OG values), escaped JSON-LD with Organization + WebSite everywhere, BreadcrumbList on legal pages/articles/authors, BlogPosting on articles and Person on author pages. The fixture build additionally proves that synthetic CMS data never survives a build without CMS access.
+
+## Trainings
+
+Die neue Datahub-Collection `trainings` liefert `/trainings` und
+`/trainings/{slug}` (Titel, Kurzbeschreibung, Beschreibung, Dauer, Format,
+Anfrageadresse und Trainer). `deliveryLanguages[]` beschreibt die Durchführungssprachen
+Deutsch/Englisch unabhängig von der späteren UI-Locale. `trainers[]` referenziert vorhandene veröffentlichte
+Autorenprofile; Name/Bio/Porträt werden gemeinsam mit dem Blog wiederverwendet.
+Die Build-Rolle erhält weiterhin keinerlei Zugriff auf private Benutzerkonten.
+Relationen werden bei `depth=0` separat gegen veröffentlichte Profile aufgelöst;
+fehlende/zurückgezogene Trainer blenden das betroffene Training aus.
+
+In Standard-CMS-Seiten (`pages.pageKind=standard`, Route `/inhalte/{slug}`) lassen
+sich `sections` in beliebiger Reihenfolge pflegen. Ein Abschnitt mit
+`kind=training-teaser` und `training=<Trainings-ID>` rendert die gemeinsame
+`TrainingTeaser`-Komponente an dieser Stelle. Nicht auflösbare Referenzen werden
+weggelassen. Auf der CMS-Startseite (`startseite`) erscheinen ausgewählte
+Training-Abschnitte am Seitenende. Die Komponente kann auch direkt in jeder
+Astro-Seite eingesetzt werden. Einbettung mitten im Blog-Rich-Text gehört noch
+nicht zu diesem Inkrement.
+
+Auslieferungsreihenfolge: zuerst die additive Datahub-Migration auf isoliertem
+Klon samt Backup/Restore prüfen und Backend kontrolliert ausliefern; danach
+Website ausliefern. `PAYLOAD_SITE_CONTENT=true` fragt zusätzlich `trainings` und
+Standardseiten ab. Ohne CMS-Konfiguration bleiben bestehende Fallbacks erhalten;
+die Trainingsübersicht zeigt einen ehrlichen Leerzustand. Für Navigation auf
+`/trainings` kann die bestehende Navigation-Collection verwendet werden.
+
+Es werden keine Angebote oder Trainer in die Produktivdatenbank importiert.
+Keine globale Locale-/Slug-Umstellung: die Beziehungen verwenden stabile IDs und
+lassen sich später mit lokalisierten Texten und URLs weiterverwenden.

@@ -1,0 +1,102 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsTrainings } from '~/utils/trainings';
+import type { Training } from '~/utils/trainings';
+export async function getStaticPaths() {
+  return cmsTrainings(await loadCmsBuildContent()).map((training) => ({
+    params: { slug: training.slug },
+    props: { training },
+  }));
+}
+interface Props {
+  training: Training;
+}
+const { training } = Astro.props;
+---
+
+<PageLayout
+  metadata={{
+    ...training.metadata,
+    title: training.metadata.title || training.title,
+    description: training.metadata.description || training.summary,
+  }}
+>
+  <article class="mx-auto max-w-4xl px-6 py-16">
+    <p class="font-bold"><a href="/trainings">Trainings</a></p>
+    <h1 class="mt-6 text-4xl font-bold font-heading">{training.title}</h1>
+    <p class="mt-6 text-xl">{training.summary}</p>
+    <dl class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        training.duration && (
+          <div>
+            <>
+              <dt class="font-bold">Dauer</dt>
+              <dd>{training.duration}</dd>
+            </>
+          </div>
+        )
+      }{
+        training.format && (
+          <div>
+            <>
+              <dt class="font-bold">Format / Ort</dt>
+              <dd>{training.format}</dd>
+            </>
+          </div>
+        )
+      }
+      {
+        training.deliveryLanguages.length > 0 && (
+          <div>
+            <>
+              <dt class="font-bold">Durchführungssprachen</dt>
+              <dd>{training.deliveryLanguages.join(', ')}</dd>
+            </>
+          </div>
+        )
+      }
+    </dl>
+    <div class="prose dark:prose-invert my-10">
+      {
+        training.descriptionHtml ? (
+          <Fragment set:html={training.descriptionHtml} />
+        ) : (
+          <p class="whitespace-pre-line">{training.description}</p>
+        )
+      }
+    </div>
+    <h2 class="text-2xl font-bold font-heading">Trainer</h2>
+    <ul class="grid gap-8 mt-6 sm:grid-cols-2">
+      {
+        training.trainers.map((trainer) => (
+          <li>
+            {trainer.avatar && (
+              <img
+                src={trainer.avatar.url}
+                alt={trainer.avatar.alt}
+                width="128"
+                height="128"
+                loading="lazy"
+                class="w-32 h-32 rounded-full object-cover mb-4"
+              />
+            )}
+            <h3 class="text-xl font-bold">
+              <a class="underline" href={trainer.url}>
+                {trainer.name}
+              </a>
+            </h3>
+            <div class="prose dark:prose-invert mt-4" set:html={trainer.bio} />
+          </li>
+        ))
+      }
+    </ul>
+    {
+      training.requestUrl && (
+        <a class="inline-block mt-10 font-bold underline text-xl" href={training.requestUrl}>
+          Training anfragen →
+        </a>
+      )
+    }
+  </article>
+</PageLayout>

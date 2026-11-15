@@ -16,7 +16,18 @@ export interface CmsBuildContent {
 }
 const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
-  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'hero', 'seo'],
+  pages: [
+    'id',
+    '_status',
+    'title',
+    'slug',
+    'pageKind',
+    'contentMarkdown',
+    'contentRichText',
+    'sections',
+    'hero',
+    'seo',
+  ],
   posts: [
     'id',
     '_status',
@@ -68,9 +79,25 @@ const fields = {
     'descriptionRichText',
     'accent',
   ],
+  trainings: [
+    'id',
+    '_status',
+    'sortOrder',
+    'title',
+    'slug',
+    'summary',
+    'description',
+    'descriptionRichText',
+    'duration',
+    'format',
+    'deliveryLanguages',
+    'trainers',
+    'requestUrl',
+    'seo',
+  ],
   navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
-export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
+export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation', 'trainings'] as const;
 type Collection = keyof typeof fields;
 const imageTypes: Record<string, string> = {
   'image/png': 'png',
@@ -148,7 +175,7 @@ export async function fetchCmsBuildContent(
         url.searchParams.set('where[_status][equals]', 'published');
         if (slug === 'pages') {
           // The home page is only requested when editable site sections are enabled.
-          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home');
+          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home,standard');
           else url.searchParams.set('where[pageKind][equals]', 'legal');
         }
       }
@@ -188,7 +215,11 @@ export async function fetchCmsBuildContent(
         seen.add(id);
         if (slug === 'media' ? doc.websitePublished !== true : doc._status !== 'published')
           throw new Error(`Unpublished CMS ${slug} rejected`);
-        if (slug === 'pages' && doc.pageKind !== 'legal' && !(options.siteContent && doc.pageKind === 'home'))
+        if (
+          slug === 'pages' &&
+          doc.pageKind !== 'legal' &&
+          !(options.siteContent && ['home', 'standard'].includes(text(doc.pageKind)))
+        )
           throw new Error('Unexpected CMS page kind rejected');
         docs.push(pick(doc, fields[slug]));
       }

@@ -1,0 +1,42 @@
+---
+import type { Training } from '~/utils/trainings';
+interface Props {
+  training: Training;
+}
+const { training } = Astro.props;
+---
+
+<article class="training-teaser">
+  <p class="text-sm font-bold uppercase">Training</p>
+  <h2 class="text-2xl font-bold font-heading mt-3"><a href={training.url}>{training.title}</a></h2>
+  <p class="mt-4">{training.summary}</p>
+  <p class="mt-4 text-sm">
+    {[training.duration, training.format, training.deliveryLanguages.join(', ')].filter(Boolean).join(' · ')}
+  </p>
+  <p class="mt-4">
+    Mit {
+      training.trainers.map((trainer, index) => (
+        <Fragment>
+          {index > 0 && ', '}
+          <a href={trainer.url}>{trainer.name}</a>
+        </Fragment>
+      ))
+    }
+  </p>
+  <a class="inline-block mt-6 font-bold underline" href={training.url}>Training ansehen →</a>
+</article>
+<style>
+  .training-teaser {
+    border: 3px solid var(--pop-ink);
+    box-shadow: 6px 6px 0 var(--pop-aqua);
+    padding: 1.5rem;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+  }
+  .training-teaser a {
+    text-underline-offset: 4px;
+  }
+  .training-teaser a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import EditorialContent from '~/components/editorial/EditorialContent.astro';
+import { loadCmsBuildContent, mapCmsMetadata, publicSlug, resolvePublicMedia } from '~/utils/payload-build';
+import { renderPublicRichText } from '~/utils/cms-content';
+import { cmsTrainings } from '~/utils/trainings';
+export async function getStaticPaths() {
+  const content = await loadCmsBuildContent();
+  const seen = new Set<string>();
+  return content.pages
+    .filter((page) => page.pageKind === 'standard')
+    .map((page) => {
+      const slug = publicSlug(page.slug);
+      if (seen.has(slug)) throw new Error('Duplicate content page slug');
+      seen.add(slug);
+      return { params: { slug }, props: { page, content } };
+    });
+}
+const { page, content } = Astro.props;
+---
+
+<PageLayout metadata={{ ...mapCmsMetadata(page.seo, content), title: String(page.title) }}>
+  <EditorialContent
+    collection="pages"
+    document={page}
+    trainings={cmsTrainings(content)}
+    richRenderer={(value) => renderPublicRichText(value, content)}
+    mediaResolver={(value) => resolvePublicMedia(content, value) ?? null}
+  />
+</PageLayout>

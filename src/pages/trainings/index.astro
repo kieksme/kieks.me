@@ -1,0 +1,25 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import TrainingTeaser from '~/components/TrainingTeaser.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsTrainings } from '~/utils/trainings';
+const trainings = cmsTrainings(await loadCmsBuildContent());
+---
+
+<PageLayout metadata={{ title: 'Trainings', description: 'Praxisnahe Trainings mit unserem Team.' }}>
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <h1 class="text-4xl font-bold font-heading">Trainings</h1>
+    <p class="mt-6 text-xl">Praxisnah lernen. Gemeinsam weiterkommen.</p>
+    {
+      trainings.length ? (
+        <div class="grid gap-8 md:grid-cols-2 mt-10">
+          {trainings.map((training) => (
+            <TrainingTeaser training={training} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10">Aktuell sind keine Trainings veröffentlicht.</p>
+      )
+    }
+  </section>
+</PageLayout>

@@ -10,6 +10,7 @@ export const COLLECTIONS = [
   'navigation',
   'posts',
   'authors',
+  'trainings',
 ] as const;
 export type PreviewCollection = (typeof COLLECTIONS)[number];
 export interface PreviewEnvelope {
