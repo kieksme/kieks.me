@@ -30,3 +30,4 @@ public/_cms-media/
 **/.pnpm-store/
 
 preview/site-dist/
+__pycache__/

@@ -28,6 +28,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run check
+      - name: Test blog draft skill without CMS access
+        run: python3 -m unittest discover -s test/skills -v
 
   build:
     needs: check
