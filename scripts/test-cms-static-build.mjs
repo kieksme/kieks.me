@@ -19,7 +19,8 @@ const rich = { root: { type:'root', children:[{type:'paragraph',children:[{type:
 const records = {
   posts:[{id:1,_status:'published',title:'Synthetic CMS Article',slug:'synthetic-cms-article',publishedAt:'2026-10-30T12:00:00Z',updatedAt:'2026-10-31T12:00:00Z',author:2,category:'Engineering',tags:[{tag:'Testing'}],heroImage:7,contentRichText:rich,seo:{title:'Synthetic SEO title',openGraph:{title:'Synthetic OG title',description:'Synthetic OG description',image:7,imageAlt:'Synthetic OG alt',type:'article'},twitter:{title:'Synthetic Twitter title',description:'Synthetic Twitter description',image:7,card:'summary_large_image'}}}],
   authors:[{id:2,_status:'published',name:'Synthetic Author',slug:'synthetic-author',bioRichText:rich,avatar:7,contactEnabled:true,privateRecipient:'PRIVATE_RECIPIENT_MUST_NOT_RENDER'}],
-  pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
+  pages:[{id:3,_status:'published',pageKind:'legal',title:'Synthetic Legal',slug:'impressum',contentMarkdown:'## Synthetic legal text\\n\\n<address>Example address<br>Example city</address>',seo:{description:'Synthetic legal description'}},{id:21,_status:'published',pageKind:'home',slug:'startseite',title:'Synthetic Home',sections:[{kind:'training-teaser',training:31}],hero:{eyebrow:'Synthetic Eyebrow',headline:'Synthetic headline one\\nSynthetic headline two',lead:'Synthetic hero lead',primaryCta:{label:'Synthetic CTA',href:'/kontakt'},editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}}],
+  trainings:[{id:31,_status:'published',title:'Synthetic Training',slug:'synthetic-training',summary:'Synthetic training summary',trainers:[2],duration:'1 Tag',format:'Online',deliveryLanguages:['de','en'],requestUrl:'/kontakt',descriptionRichText:rich}],
   services:[{id:11,_status:'published',sortOrder:1,slug:'cloud-devops',descriptionRichText:{root:{type:'root',children:[{type:'heading',tag:'h2',children:[{type:'text',text:'Synthetic Detail Heading'}]},{type:'paragraph',children:[{type:'text',text:'Synthetic detail text',format:1}]}]}},highlights:[{title:'Synthetic Highlight',description:'Synthetic highlight text'}],title:'Synthetic Service',summary:'Synthetic service summary',href:'/leistungen/ki-mcp',linkText:'Synthetic more',accent:'navy',editorialNotes:'PRIVATE_NOTE_MUST_NOT_RENDER'}],
   faqs:[{id:12,_status:'published',sortOrder:1,placement:'home',question:'Synthetic FAQ question?',answer:'Synthetic FAQ rich fallback',answerRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich answer',format:1},{type:'link',fields:{url:'https://example.invalid/rich'},children:[{type:'text',text:'rich link'}]}]},{type:'html',html:'<script>synthetic()</script>'}]}},accent:'aqua'},{id:22,_status:'published',sortOrder:2,placement:'home',question:'Synthetic FAQ plain question?',answer:'Synthetic FAQ answer <b>plain</b>',accent:'fuchsia'}],
   team:[{id:13,_status:'published',sortOrder:1,slug:'andre',name:'Synthetic Teammate',position:'Synthetic role',bio:'Synthetic plain bio',bioRichText:{root:{type:'root',children:[{type:'paragraph',children:[{type:'text',text:'Synthetic rich bio',format:1}]},{type:'html',html:'<script>bio()</script>'}]}}}],
@@ -27,6 +28,7 @@ const records = {
   navigation:[{id:15,_status:'published',key:'header',links:[{label:'Synthetic Nav',href:'/blog'}],actions:[{label:'Synthetic Action',href:'/kontakt',variant:'primary'}]},{id:16,_status:'published',key:'footer',secondaryLinks:[{label:'Synthetic Legal Link',href:'/impressum'}],socialLinks:[{label:'Synthetic Social',href:'https://example.invalid/synthetic',icon:'tabler:brand-github'}],footNote:'Synthetic Foot <b>note</b>'}],
   media:[{id:7,websitePublished:true,filename:'synthetic.png',url:'/api/media/file/synthetic.png',mimeType:'image/png',alt:'Synthetic public image',width:1,height:1}]
 };
+records.pages.push({id:32,_status:'published',pageKind:'standard',title:'Synthetic Content Page',slug:'training-content',sections:[{kind:'text',body:'Before training teaser'},{kind:'training-teaser',training:31},{kind:'text',body:'After training teaser'}]});
 globalThis.fetch = async (input,init) => {
  const url=new URL(String(input));
  if(url.origin!=='https://cms-fixture.invalid'||init?.headers?.Authorization!=='users API-Key ${secret}'||init?.redirect!=='error')throw Error('Fixture request escaped its boundary');
@@ -48,6 +50,7 @@ globalThis.fetch = async (input,init) => {
       PAYLOAD_URL: 'https://cms-fixture.invalid',
       PAYLOAD_BUILD_API_KEY: secret,
       PAYLOAD_SITE_CONTENT: 'true',
+      PAYLOAD_TRAININGS: 'true',
       // Make preview-only notes visible so their presence/absence can be asserted.
       PUBLIC_SHOW_NOTES: 'true',
       NODE_OPTIONS: `${process.env.NODE_OPTIONS || ''} --import=${pathToFileURL(hook).href}`,
@@ -62,6 +65,15 @@ globalThis.fetch = async (input,init) => {
   const article = await readFile('dist/blog/synthetic-cms-article/index.html', 'utf8');
   const author = await readFile('dist/blog/autoren/synthetic-author/index.html', 'utf8');
   const legal = await readFile('dist/impressum/index.html', 'utf8');
+  const training = await readFile('dist/trainings/synthetic-training/index.html', 'utf8');
+  const trainingList = await readFile('dist/trainings/index.html', 'utf8');
+  const trainingPage = await readFile('dist/inhalte/training-content/index.html', 'utf8');
+  assert.match(training, /Synthetic Author/);
+  assert.match(training, /Deutsch, Englisch/);
+  assert.match(training, /_cms-media\//);
+  assert.match(trainingList, /Synthetic Training/);
+  assert.ok(trainingPage.indexOf('Before training teaser') < trainingPage.indexOf('Synthetic Training'));
+  assert.ok(trainingPage.indexOf('Synthetic Training') < trainingPage.indexOf('After training teaser'));
   assert.match(article, /Synthetic CMS Article/);
   assert.match(article, /Synthetic OG title/);
   assert.match(article, /Synthetic Twitter title/);

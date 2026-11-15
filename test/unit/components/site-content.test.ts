@@ -534,9 +534,9 @@ describe('editable site sections with static fallback', () => {
     await expect(fetchCmsBuildContent({ ...base, fetcher: make('home') })).rejects.toThrow();
     expect(kinds).toEqual(['legal']);
     const withSite = await fetchCmsBuildContent({ ...base, siteContent: true, fetcher: make('home') });
-    expect(kinds[1]).toBe('legal,home,standard');
+    expect(kinds[1]).toBe('legal,home');
     expect(withSite.pages).toHaveLength(1);
-    await expect(fetchCmsBuildContent({ ...base, siteContent: true, fetcher: make('invalid') })).rejects.toThrow(
+    await expect(fetchCmsBuildContent({ ...base, siteContent: true, fetcher: make('standard') })).rejects.toThrow(
       'page kind'
     );
   });

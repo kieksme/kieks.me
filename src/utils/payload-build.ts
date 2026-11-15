@@ -97,7 +97,7 @@ const fields = {
   ],
   navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
-export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation', 'trainings'] as const;
+export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
 type Collection = keyof typeof fields;
 const imageTypes: Record<string, string> = {
   'image/png': 'png',
@@ -128,6 +128,8 @@ export async function fetchCmsBuildContent(
     mediaDirectory?: string;
     /** Opt in to editable site sections. Off by default so builds never request unknown collections. */
     siteContent?: boolean;
+    /** Enable only after the additive Datahub trainings migrations have shipped. */
+    trainings?: boolean;
   } = {}
 ): Promise<CmsBuildContent> {
   if (!options.url && !options.apiKey) return empty();
@@ -175,7 +177,8 @@ export async function fetchCmsBuildContent(
         url.searchParams.set('where[_status][equals]', 'published');
         if (slug === 'pages') {
           // The home page is only requested when editable site sections are enabled.
-          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home,standard');
+          if (options.siteContent)
+            url.searchParams.set('where[pageKind][in]', options.trainings ? 'legal,home,standard' : 'legal,home');
           else url.searchParams.set('where[pageKind][equals]', 'legal');
         }
       }
@@ -218,7 +221,7 @@ export async function fetchCmsBuildContent(
         if (
           slug === 'pages' &&
           doc.pageKind !== 'legal' &&
-          !(options.siteContent && ['home', 'standard'].includes(text(doc.pageKind)))
+          !(options.siteContent && (doc.pageKind === 'home' || (options.trainings && doc.pageKind === 'standard')))
         )
           throw new Error('Unexpected CMS page kind rejected');
         docs.push(pick(doc, fields[slug]));
@@ -245,6 +248,7 @@ export async function fetchCmsBuildContent(
       site[slug] = loaded[index];
     });
   }
+  if (options.trainings) site.trainings = await collection('trainings');
   const result: CmsBuildContent = { enabled: true, posts, pages, authors, media: {}, site };
   const directory = options.mediaDirectory ?? path.resolve('public/_cms-media');
   await mkdir(directory, { recursive: true });
@@ -370,6 +374,7 @@ const snapshot = path.resolve('.runtime/payload-build.json');
 const configuration = () => ({
   url: process.env.PAYLOAD_URL ?? import.meta.env?.PAYLOAD_URL,
   apiKey: process.env.PAYLOAD_BUILD_API_KEY ?? import.meta.env?.PAYLOAD_BUILD_API_KEY,
+  trainings: (process.env.PAYLOAD_TRAININGS ?? import.meta.env?.PAYLOAD_TRAININGS) === 'true',
   siteContent: (process.env.PAYLOAD_SITE_CONTENT ?? import.meta.env?.PAYLOAD_SITE_CONTENT) === 'true',
 });
 export async function prepareCmsBuild() {

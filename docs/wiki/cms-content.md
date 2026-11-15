@@ -68,8 +68,10 @@ nicht zu diesem Inkrement.
 
 Auslieferungsreihenfolge: zuerst die additive Datahub-Migration auf isoliertem
 Klon samt Backup/Restore prüfen und Backend kontrolliert ausliefern; danach
-Website ausliefern. `PAYLOAD_SITE_CONTENT=true` fragt zusätzlich `trainings` und
-Standardseiten ab. Ohne CMS-Konfiguration bleiben bestehende Fallbacks erhalten;
+Website ausliefern. `PAYLOAD_SITE_CONTENT=true` erhält den bisherigen Collection-Umfang. Erst das
+zusätzliche, standardmäßig ausgeschaltete `PAYLOAD_TRAININGS=true` fragt
+`trainings` und Standardseiten ab. Vor der Backendmigration ausgeschaltet lassen;
+Authentifizierungs-/ACL-Fehler werden weiterhin als Buildfehler behandelt. Ohne CMS-Konfiguration bleiben bestehende Fallbacks erhalten;
 die Trainingsübersicht zeigt einen ehrlichen Leerzustand. Für Navigation auf
 `/trainings` kann die bestehende Navigation-Collection verwendet werden.
 

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { cmsTrainings } from '../../../src/utils/trainings';
+import { fetchCmsBuildContent } from '../../../src/utils/payload-build';
 import type { CmsBuildContent } from '../../../src/utils/payload-build';
 import TrainingTeaser from '../../../src/components/TrainingTeaser.astro';
 import EditorialContent from '../../../src/components/editorial/EditorialContent.astro';
@@ -34,6 +35,42 @@ const content = (): CmsBuildContent => ({
   },
 });
 describe('published trainings and reusable teasers', () => {
+  it('requests trainings and standard pages only after explicit rollout opt-in and keeps failures visible', async () => {
+    const requested: URL[] = [];
+    const fetcher = (async (input) => {
+      const url = new URL(String(input));
+      requested.push(url);
+      return Response.json({ docs: [], page: 1, totalPages: 0, totalDocs: 0 });
+    }) as typeof fetch;
+    const options = {
+      url: 'https://cms.example.invalid',
+      apiKey: 'synthetic-only',
+      fetcher,
+      siteContent: true,
+      mediaDirectory: '/tmp/kieks-trainings-unit-empty',
+    };
+    await fetchCmsBuildContent(options);
+    expect(requested.some((url) => url.pathname === '/api/trainings')).toBe(false);
+    expect(requested.find((url) => url.pathname === '/api/pages')?.searchParams.get('where[pageKind][in]')).toBe(
+      'legal,home'
+    );
+    requested.length = 0;
+    await fetchCmsBuildContent({ ...options, trainings: true });
+    const training = requested.find((url) => url.pathname === '/api/trainings')!;
+    expect(training.searchParams.get('draft')).toBe('false');
+    expect(training.searchParams.get('depth')).toBe('0');
+    expect(training.searchParams.get('select[trainers]')).toBe('true');
+    expect(requested.find((url) => url.pathname === '/api/pages')?.searchParams.get('where[pageKind][in]')).toBe(
+      'legal,home,standard'
+    );
+    await expect(
+      fetchCmsBuildContent({
+        ...options,
+        trainings: true,
+        fetcher: (async () => new Response('', { status: 403 })) as typeof fetch,
+      })
+    ).rejects.toThrow('CMS build request failed');
+  });
   it('reuses public profiles and never trusts populated trainer data', () => {
     const data = content();
     data.site.trainings[0].trainers = [{ id: 1, name: 'INJECTED', email: 'SECRET' }];
