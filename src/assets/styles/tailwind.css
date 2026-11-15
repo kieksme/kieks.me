@@ -40,31 +40,15 @@
   }
 }
 
+/* The header owns its surface and border; scrolling must not paint an inner panel. */
 #header {
-  background-color: var(--page-bg);
+  background-color: var(--surface);
   border-bottom: 4px solid var(--ink);
 }
 
 .dark #header {
-  /* Match the dark page canvas — no solid black bar, no aqua frame. */
-  background-color: var(--page-bg);
   border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
 }
-
-#header.scroll > div:first-child {
-  background-color: var(--page-bg);
-  border-bottom: 4px solid var(--ink);
-  box-shadow: none;
-}
-.dark #header.scroll > div:first-child,
-#header.scroll.dark > div:first-child {
-  background-color: var(--page-bg);
-  border-bottom-color: color-mix(in srgb, var(--text-primary) 28%, transparent);
-  box-shadow: none;
-}
-/* #header.scroll > div:last-child {
-  @apply py-3;
-} */
 
 #header.expanded nav {
   position: fixed;
