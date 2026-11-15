@@ -1,0 +1,5 @@
+# prettier-ignore
+interface:
+  display_name: "Datahub Blogentwürfe"
+  short_description: "Blog interviewen, recherchieren und als CMS-Entwurf pflegen"
+  default_prompt: "Nutze $draft-datahub-blog, interviewe mich zu Zielgruppe und Sprachen und erstelle einen recherchierten Blogentwurf mit Hero-/OG-Bild im Datahub."
