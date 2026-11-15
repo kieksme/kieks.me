@@ -37,17 +37,17 @@ Beziehungen bleiben stabil. Nur sprachabhängige Felder erhalten `localized: tru
 Das ist Content-Lokalisierung; die Sprache der Payload-Admin-Oberfläche ist davon
 unabhängig.
 
-| Objekt | Übersetzbare Felder | Gemeinsam / sprachunabhängig |
-|---|---|---|
-| Seiten einschließlich Startseite und Rechtstexte | Titel, Hero-/Abschnittstexte, Markdown/Rich Text, redaktionelle CTA-Texte, SEO | ID, pageKind, stabile Kennung, Layout-/Blocktypen |
-| Blogartikel (`posts`) | Titel, Kurzfassung, Rich Text, öffentlicher Slug, SEO, sprachabhängige Bildtexte | ID, Autorbeziehungen, Artikelidentität; fachliche Veröffentlichungsdaten bewusst festlegen |
-| MCP-Projekte (`mcp-projects`) | Name/Beschreibung soweit redaktionell, Kurztext, Rich Text, SEO, öffentlicher Slug | ID, Repository, npm-Paketnamen, Lizenz, technische Kennungen/Versionen |
-| Leistungen (`services`) | Titel, Kurztexte, Highlights, Detailtexte, Linkbeschriftung, SEO | stabile Leistungskennung, Reihenfolge, Gestaltung |
-| FAQ (`faqs`) | Frage, Antwort/Rich Text, sichtbare Kategorienamen | ID, Platzierung und Reihenfolge; Taxonomie-IDs bleiben gleich |
-| Autoren-/Trainerprofile (`authors`) und Team | Funktion, Bio, Bildbeschreibung, redaktionelle Profiltexte | Personen-ID, Name, echte Identität, Porträtdatei; private Auth-Benutzer bleiben privat |
-| Trainings | Titel, Teaser, Beschreibung, Lernziele, Voraussetzungen, SEO, öffentliche URL | ID, Trainerbeziehungen, Dauer, Termin-Zeitpunkte, numerische Preise/Währung |
-| Navigation | Beschriftungen, redaktionelle CTA-/Footertexte | Menütaxonomie und interne Dokumentbeziehungen; externe URLs nicht automatisch übersetzen |
-| Medien (`media`) | Alttext, Bildunterschrift; bei Text im Bild sprachabhängige Asset-Zuordnung | gemeinsame Binärdatei nur wenn sprachneutral, Maße, MIME-Typ und Rechte |
+| Objekt                                           | Übersetzbare Felder                                                                | Gemeinsam / sprachunabhängig                                                               |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Seiten einschließlich Startseite und Rechtstexte | Titel, Hero-/Abschnittstexte, Markdown/Rich Text, redaktionelle CTA-Texte, SEO     | ID, pageKind, stabile Kennung, Layout-/Blocktypen                                          |
+| Blogartikel (`posts`)                            | Titel, Kurzfassung, Rich Text, öffentlicher Slug, SEO, sprachabhängige Bildtexte   | ID, Autorbeziehungen, Artikelidentität; fachliche Veröffentlichungsdaten bewusst festlegen |
+| MCP-Projekte (`mcp-projects`)                    | Name/Beschreibung soweit redaktionell, Kurztext, Rich Text, SEO, öffentlicher Slug | ID, Repository, npm-Paketnamen, Lizenz, technische Kennungen/Versionen                     |
+| Leistungen (`services`)                          | Titel, Kurztexte, Highlights, Detailtexte, Linkbeschriftung, SEO                   | stabile Leistungskennung, Reihenfolge, Gestaltung                                          |
+| FAQ (`faqs`)                                     | Frage, Antwort/Rich Text, sichtbare Kategorienamen                                 | ID, Platzierung und Reihenfolge; Taxonomie-IDs bleiben gleich                              |
+| Autoren-/Trainerprofile (`authors`) und Team     | Funktion, Bio, Bildbeschreibung, redaktionelle Profiltexte                         | Personen-ID, Name, echte Identität, Porträtdatei; private Auth-Benutzer bleiben privat     |
+| Trainings                                        | Titel, Teaser, Beschreibung, Lernziele, Voraussetzungen, SEO, öffentliche URL      | ID, Trainerbeziehungen, Dauer, Termin-Zeitpunkte, numerische Preise/Währung                |
+| Navigation                                       | Beschriftungen, redaktionelle CTA-/Footertexte                                     | Menütaxonomie und interne Dokumentbeziehungen; externe URLs nicht automatisch übersetzen   |
+| Medien (`media`)                                 | Alttext, Bildunterschrift; bei Text im Bild sprachabhängige Asset-Zuordnung        | gemeinsame Binärdatei nur wenn sprachneutral, Maße, MIME-Typ und Rechte                    |
 
 **Trainingssprache ist ein eigenes fachliches Merkmal**, nicht die Sprache der
 Website: Ein deutsches Training kann in einer englischen Beschreibung angeboten
