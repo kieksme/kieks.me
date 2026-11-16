@@ -65,6 +65,7 @@ const seoProps: AstroSeoProps = merge(
 );
 
 const openGraphResolved = await adaptOpenGraphImages(seoProps?.openGraph, Astro.site);
+if (Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')) openGraphResolved.locale = 'en_GB';
 // Twitter cards default to the Open Graph values so every shared page has a complete card.
 const twitterTitle = twitter.title || openGraphResolved?.title || seoProps.title;
 const twitterDescription = twitter.description || openGraphResolved?.description || seoProps.description;

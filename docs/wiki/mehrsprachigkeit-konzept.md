@@ -1,5 +1,7 @@
 # Mehrsprachigkeit für kieks.me und Payload Data Hub
 
+Umsetzungsstand und Aktivierung: [Mehrsprachige Website und CMS-Vorschau](localization.md).
+
 Konzept vom 15. November 2026. Noch keine produktive Schema-Migration und keine
 Übersetzungen veröffentlicht. Ausgangspunkt: **Deutsch und Englisch**, weitere
 Sprachen später konfigurierbar. Deutsch bleibt die Standardsprache.

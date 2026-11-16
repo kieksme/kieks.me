@@ -1,0 +1,33 @@
+---
+import { alternatesForPath } from '~/utils/localization';
+const alternates = await alternatesForPath(Astro.url.pathname);
+const english = Astro.url.pathname.startsWith('/en');
+---
+
+<nav aria-label={english ? 'Language' : 'Sprache'} class="flex gap-2 text-sm font-bold">
+  {
+    (['de', 'en'] as const).map((locale) => {
+      const link = alternates.find((alternate) => alternate.locale === locale);
+      const label = locale === 'de' ? 'Deutsch' : 'English';
+      const active = locale === (english ? 'en' : 'de');
+      return active ? (
+        <span lang={locale} aria-current="page">
+          {label}
+        </span>
+      ) : link ? (
+        <a lang={locale} hreflang={locale} href={link.path} class="underline underline-offset-4">
+          {label}
+        </a>
+      ) : (
+        <span
+          lang={locale}
+          aria-disabled="true"
+          class="opacity-50"
+          title={english ? 'Translation not published' : 'Übersetzung nicht veröffentlicht'}
+        >
+          {label}
+        </span>
+      );
+    })
+  }
+</nav>

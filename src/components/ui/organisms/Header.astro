@@ -6,6 +6,7 @@ import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
 import { Icon } from 'astro-icon/components';
+import LanguageSwitcher from '~/components/LanguageSwitcher.astro';
 
 interface Link {
   text?: string;
@@ -22,6 +23,7 @@ export interface Props {
 
 const { links = [], actions = [], isSticky = false, showToggleTheme = false } = Astro.props;
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const english = currentPath === '/en' || currentPath.startsWith('/en/');
 ---
 
 <header
@@ -29,13 +31,19 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   class:list={[{ sticky: isSticky, relative: !isSticky }, 'top-0 z-40 w-full pop-site-header']}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
 >
-  <div class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex items-center justify-between gap-4">
-    <a href={getHomePermalink()} class="shrink-0" aria-label="kieks.me Startseite">
+  <div
+    class="mx-auto max-w-[1440px] px-5 md:px-20 py-3.5 md:py-5 flex flex-wrap xl:flex-nowrap items-center justify-between gap-4"
+  >
+    <a
+      href={english ? '/en' : getHomePermalink()}
+      class="shrink-0"
+      aria-label={english ? 'kieks.me home' : 'kieks.me Startseite'}
+    >
       <Logo layout="horizontal" size="md" class="max-md:hidden" />
       <Logo layout="horizontal" size="sm" class="md:hidden" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8" aria-label="Main navigation">
+    <nav class="hidden xl:flex items-center gap-8" aria-label="Main navigation">
       <ul class="flex items-center gap-8 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
         {
           links.map(({ text, href, links: sub }) => (
@@ -74,7 +82,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       </ul>
     </nav>
 
-    <div class="flex items-center gap-3">
+    <div class="flex w-full sm:w-auto items-center justify-end gap-3">
+      <LanguageSwitcher />
       {
         showToggleTheme && (
           <ToggleTheme
@@ -83,7 +92,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           />
         )
       }
-      <div class="hidden md:block">
+      <div class="hidden xl:block">
         {
           actions.map((a) => (
             <Button
@@ -96,12 +105,12 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           ))
         }
       </div>
-      <details class="md:hidden relative">
+      <details class="xl:hidden relative">
         <summary
           class="list-none cursor-pointer font-heading font-black text-lg lowercase px-3 py-2 border-[3px] border-[var(--ink)] bg-[var(--pop-aqua)] text-[var(--pop-navy)]"
           style="box-shadow: 4px 4px 0 0 var(--pop-fuchsia);"
         >
-          menü
+          {english ? 'menu' : 'menü'}
         </summary>
         <div
           class="absolute right-0 top-full mt-2 w-[min(90vw,280px)] border-[3px] border-[var(--ink)] bg-[var(--surface)] p-4 z-50"

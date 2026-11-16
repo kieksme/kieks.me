@@ -18,6 +18,7 @@ import { ClientRouter } from 'astro:transitions';
 
 import type { MetaData as MetaDataType } from '~/types';
 import { ORGANIZATION_JSON_LD } from '~/config/site';
+import { alternatesForPath } from '~/utils/localization';
 
 export interface Props {
   metadata?: MetaDataType;
@@ -25,21 +26,46 @@ export interface Props {
 
 const { metadata = {} } = Astro.props;
 const { language, textDirection } = I18N;
+const locale = Astro.url.pathname.startsWith('/en/') || Astro.url.pathname === '/en' ? 'en' : language;
+const alternates = await alternatesForPath(Astro.url.pathname);
 ---
 
 <!doctype html>
-<html lang={language} dir={textDirection} class="2xl:text-[20px]">
+<html lang={locale} dir={textDirection} class="2xl:text-[20px]">
   <head>
     <CommonMeta />
     <Favicons />
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
+    {
+      alternates.map((alternate) => (
+        <link rel="alternate" hreflang={alternate.locale} href={new URL(alternate.path, Astro.site)} />
+      ))
+    }
+    {
+      alternates.find((alternate) => alternate.locale === 'de') && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(alternates.find((alternate) => alternate.locale === 'de')!.path, Astro.site)}
+        />
+      )
+    }
     <SiteVerification />
     <Analytics />
     <StructuredData
       items={[
-        { ...ORGANIZATION_JSON_LD, '@id': 'https://kieks.me/#organization' },
+        {
+          ...ORGANIZATION_JSON_LD,
+          ...(locale === 'en'
+            ? {
+                description: 'AI, cloud and software consulting, development and practical workshops from Leipzig.',
+                makesOffer: undefined,
+              }
+            : {}),
+          '@id': 'https://kieks.me/#organization',
+        },
         {
           '@type': 'WebSite',
           '@id': 'https://kieks.me/#website',

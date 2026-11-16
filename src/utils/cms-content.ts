@@ -42,7 +42,10 @@ export function cmsAuthors(content: CmsBuildContent): PublicAuthor[] {
     id: relationId(author.id),
     name: text(author.name),
     slug: publicSlug(author.slug),
-    url: `/blog/autoren/${publicSlug(author.slug)}`,
+    url:
+      content.locale === 'en'
+        ? `/en/blog/authors/${publicSlug(author.pathSlug)}`
+        : `/blog/autoren/${publicSlug(author.slug)}`,
     bio: renderPublicRichText(author.bioRichText, content),
     avatar: resolvePublicMedia(content, author.avatar),
     contactEnabled: author.contactEnabled === true,

@@ -1,0 +1,54 @@
+---
+import PageLayout from './PageLayout.astro';
+import Header from '~/components/ui/organisms/Header.astro';
+import Footer from '~/components/ui/organisms/Footer.astro';
+import { loadCmsBuildContent, text } from '~/utils/payload-build';
+import { localizedRoutes } from '~/utils/localization';
+import { safeHref } from '~/utils/site-content';
+import { escapeHtml } from '~/components/editorial/rich-text';
+import type { MetaData } from '~/types';
+interface Props {
+  metadata?: MetaData;
+}
+const content = await loadCmsBuildContent('en');
+const routes = localizedRoutes(content);
+const header = content.site.navigation?.find((doc) => doc.key === 'header');
+const footer = content.site.navigation?.find((doc) => doc.key === 'footer');
+const nav = (value: unknown): Array<{ text: string; href?: string; links?: Array<{ text: string; href: string }> }> =>
+  Array.isArray(value)
+    ? value.map((item) => ({
+        text: text(item.label),
+        ...(Array.isArray(item.children) && item.children.length
+          ? {
+              links: item.children.map((child: Record<string, unknown>) => ({
+                text: text(child.label),
+                href: safeHref(child.href, false),
+              })),
+            }
+          : { href: safeHref(item.href, false) }),
+      }))
+    : [];
+const links = header?.links
+  ? nav(header.links)
+  : [
+      { text: 'Home', href: '/en' },
+      { text: 'Trainings & workshops', href: '/en/trainings' },
+      { text: 'Blog', href: '/en/blog' },
+    ];
+const legal = routes
+  .filter((route) => route.collection === 'pages' && route.document.pageKind === 'legal')
+  .map((route) => ({ text: escapeHtml(text(route.document.title)), href: route.path }));
+---
+
+<PageLayout metadata={Astro.props.metadata}>
+  <Header slot="header" links={links} actions={[]} isSticky showToggleTheme />
+  <slot />
+  <Footer
+    slot="footer"
+    links={[]}
+    secondaryLinks={legal}
+    footNote={escapeHtml(text(footer?.footNote))}
+    homeHref="/en"
+    locale="en"
+  />
+</PageLayout>

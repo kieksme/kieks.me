@@ -4,6 +4,7 @@ interface Props {
   training: Training;
 }
 const { training } = Astro.props;
+const english = training.locale === 'en';
 ---
 
 <article class="training-teaser">
@@ -14,7 +15,8 @@ const { training } = Astro.props;
     {[training.duration, training.format, training.deliveryLanguages.join(', ')].filter(Boolean).join(' · ')}
   </p>
   <p class="mt-4">
-    Mit {
+    {english ? 'With ' : 'Mit '}
+    {
       training.trainers.map((trainer, index) => (
         <Fragment>
           {index > 0 && ', '}
@@ -23,7 +25,9 @@ const { training } = Astro.props;
       ))
     }
   </p>
-  <a class="inline-block mt-6 font-bold underline" href={training.url}>Training ansehen →</a>
+  <a class="inline-block mt-6 font-bold underline" href={training.url}
+    >{english ? 'View training' : 'Training ansehen'} →</a
+  >
 </article>
 <style>
   .training-teaser {

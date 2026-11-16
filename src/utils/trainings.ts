@@ -31,18 +31,25 @@ export function cmsTrainings(content: CmsBuildContent) {
       // This prevents accidental publication of a training with an unresolved trainer.
       if (!trainers.length || trainers.length !== trainerIds.size) return undefined;
       return {
+        locale: content.locale ?? 'de',
         id: relationId(doc.id),
-        slug,
+        slug: content.locale === 'en' ? publicSlug(doc.pathSlug) : slug,
         title: text(doc.title),
         summary: text(doc.summary),
-        url: `/trainings/${slug}`,
+        url: content.locale === 'en' ? `/en/trainings/${publicSlug(doc.pathSlug)}` : `/trainings/${slug}`,
         description: text(doc.description),
         descriptionHtml: renderPublicRichText(doc.descriptionRichText, content),
         duration: text(doc.duration),
         format: text(doc.format),
         deliveryLanguages: (Array.isArray(doc.deliveryLanguages) ? doc.deliveryLanguages : []).map((language) => {
           if (language !== 'de' && language !== 'en') throw new Error('Invalid training delivery language');
-          return language === 'de' ? 'Deutsch' : 'Englisch';
+          return content.locale === 'en'
+            ? language === 'de'
+              ? 'German'
+              : 'English'
+            : language === 'de'
+              ? 'Deutsch'
+              : 'Englisch';
         }),
         trainers,
         requestUrl: doc.requestUrl ? safeHref(doc.requestUrl, false) : undefined,
