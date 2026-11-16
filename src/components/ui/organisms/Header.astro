@@ -46,7 +46,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                     {text}
                     <Icon name="tabler:chevron-down" class="w-3.5 h-3.5" />
                   </button>
-                  <ul class="absolute left-0 top-full mt-2 hidden group-hover:block group-focus-within:block min-w-[220px] border-[3px] border-[var(--ink)] bg-[var(--surface)] shadow-[6px_6px_0_0_var(--pop-fuchsia)] py-2 z-50">
+                  {/* before: = unsichtbare Hover-Bridge über dem 8px-Abstand, damit group-hover nicht abreißt */}
+                  <ul class="absolute left-0 top-full mt-2 hidden group-hover:block group-focus-within:block before:absolute before:inset-x-0 before:-top-3 before:h-3 before:content-[''] min-w-[220px] border-[3px] border-[var(--ink)] bg-[var(--surface)] shadow-[6px_6px_0_0_var(--pop-fuchsia)] py-2 z-50">
                     {sub.map(({ text: t2, href: h2 }) => (
                       <li>
                         <a
