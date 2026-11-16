@@ -2,30 +2,67 @@
 import { alternatesForPath } from '~/utils/localization';
 const alternates = await alternatesForPath(Astro.url.pathname);
 const english = Astro.url.pathname.startsWith('/en');
+
+// Kürzel für die Anzeige, volle Namen für Screenreader (aria-label / title)
+const locales = [
+  { code: 'de', short: 'DE', full: 'Deutsch' },
+  { code: 'en', short: 'EN', full: 'English' },
+] as const;
+
+// Gemeinsame Basis: gleiche Höhe wie der Theme-Toggle (p-2 + 20px Icon + 3px Rahmen)
+const base =
+  'inline-flex items-center justify-center px-2.5 min-h-[36px] font-heading font-black text-sm tracking-wide';
 ---
 
-<nav aria-label={english ? 'Language' : 'Sprache'} class="flex gap-2 text-sm font-bold">
+<nav
+  aria-label={english ? 'Language' : 'Sprache'}
+  class="inline-flex items-stretch border-[3px] border-[var(--ink)] bg-[var(--surface)] shadow-[4px_4px_0_0_var(--pop-fuchsia)]"
+>
   {
-    (['de', 'en'] as const).map((locale) => {
-      const link = alternates.find((alternate) => alternate.locale === locale);
-      const label = locale === 'de' ? 'Deutsch' : 'English';
-      const active = locale === (english ? 'en' : 'de');
+    locales.map(({ code, short, full }, i) => {
+      const link = alternates.find((alternate) => alternate.locale === code);
+      const active = code === (english ? 'en' : 'de');
+      // Trennlinie zwischen den Segmenten
+      const divider = i > 0 ? 'border-l-[3px] border-[var(--ink)]' : '';
+
       return active ? (
-        <span lang={locale} aria-current="page">
-          {label}
+        <span
+          lang={code}
+          aria-current="page"
+          aria-label={full}
+          title={full}
+          class:list={[base, divider, 'bg-[var(--pop-aqua)] text-[var(--pop-navy)]']}
+        >
+          {short}
         </span>
       ) : link ? (
-        <a lang={locale} hreflang={locale} href={link.path} class="underline underline-offset-4">
-          {label}
+        <a
+          lang={code}
+          hreflang={code}
+          href={link.path}
+          aria-label={full}
+          title={full}
+          class:list={[
+            base,
+            divider,
+            'text-[var(--text-primary)] hover:bg-[var(--page-bg)] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-[var(--pop-fuchsia)]',
+          ]}
+        >
+          {short}
         </a>
       ) : (
         <span
-          lang={locale}
+          lang={code}
           aria-disabled="true"
-          class="opacity-50"
+          aria-label={full}
           title={english ? 'Translation not published' : 'Übersetzung nicht veröffentlicht'}
+          class:list={[
+            base,
+            divider,
+            'cursor-not-allowed text-[color-mix(in_srgb,var(--text-primary)_40%,transparent)]',
+          ]}
         >
-          {label}
+          {short}
         </span>
       );
     })
