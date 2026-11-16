@@ -10,7 +10,8 @@ const locales = [
 ] as const;
 
 // Gemeinsame Basis: gleiche Höhe wie der Theme-Toggle (p-2 + 20px Icon + 3px Rahmen)
-const base = 'inline-flex items-center justify-center px-2.5 min-h-[36px] font-heading font-black text-sm tracking-wide';
+const base =
+  'inline-flex items-center justify-center px-2.5 min-h-[36px] font-heading font-black text-sm tracking-wide';
 ---
 
 <nav
@@ -55,7 +56,11 @@ const base = 'inline-flex items-center justify-center px-2.5 min-h-[36px] font-h
           aria-disabled="true"
           aria-label={full}
           title={english ? 'Translation not published' : 'Übersetzung nicht veröffentlicht'}
-          class:list={[base, divider, 'cursor-not-allowed text-[color-mix(in_srgb,var(--text-primary)_40%,transparent)]']}
+          class:list={[
+            base,
+            divider,
+            'cursor-not-allowed text-[color-mix(in_srgb,var(--text-primary)_40%,transparent)]',
+          ]}
         >
           {short}
         </span>
