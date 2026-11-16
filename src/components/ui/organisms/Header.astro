@@ -43,7 +43,7 @@ const english = currentPath === '/en' || currentPath.startsWith('/en/');
       <Logo layout="horizontal" size="sm" class="md:hidden" />
     </a>
 
-    <nav class="hidden xl:flex items-center gap-8" aria-label="Main navigation">
+    <nav class="hidden xl:flex items-center gap-8" aria-label={english ? 'Main navigation' : 'Hauptnavigation'}>
       <ul class="flex items-center gap-8 font-heading font-bold text-[17px]" style="color: var(--text-primary);">
         {
           links.map(({ text, href, links: sub }) => (

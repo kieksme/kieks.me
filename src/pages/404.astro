@@ -1,8 +1,33 @@
 ---
 import Layout from '~/layouts/Layout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
+import { loadCmsBuildContent } from '~/utils/payload-build';
 
 const title = `Error 404`;
+
+// Solange die englische Version noch nicht veröffentlicht ist, würde `/en` selbst eine 404 liefern.
+const englishEnabled = (await loadCmsBuildContent('en')).enabled;
+
+// Eine statische 404-Seite kennt die Sprache der angefragten URL nicht,
+// deshalb zeigen wir beide Sprachen untereinander (Deutsch zuerst = Default-Sprache).
+const messages = [
+  {
+    lang: 'de',
+    heading: 'Fehler',
+    title: 'Diese Seite haben wir leider nicht gefunden.',
+    text: 'Keine Sorge, auf unserer Startseite findest du viele andere Inhalte.',
+    cta: 'Zur Startseite',
+    href: getHomePermalink(),
+  },
+  {
+    lang: 'en',
+    heading: 'Error',
+    title: "Sorry, we couldn't find this page.",
+    text: "But don't worry, you can find plenty of other things on our homepage.",
+    cta: 'Back to homepage',
+    href: englishEnabled ? '/en' : getHomePermalink(),
+  },
+] as const;
 ---
 
 <Layout metadata={{ title, robots: { index: false, follow: false } }}>
@@ -10,14 +35,20 @@ const title = `Error 404`;
     <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
       <div class="max-w-md text-center">
         <h2 class="mb-8 font-bold text-9xl">
-          <span class="sr-only">Error</span>
+          <span class="sr-only">{messages.map((m) => m.heading).join(' / ')}</span>
           <span class="text-primary">404</span>
         </h2>
-        <p class="text-3xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-        <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          But dont worry, you can find plenty of other things on our homepage.
-        </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
+        {
+          messages.map((m, i) => (
+            <div lang={m.lang} class:list={[i > 0 && 'mt-12 pt-12 border-t border-current/20']}>
+              <p class="text-3xl font-semibold md:text-3xl">{m.title}</p>
+              <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">{m.text}</p>
+              <a rel="noopener noreferrer" href={m.href} class="btn">
+                {m.cta}
+              </a>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>

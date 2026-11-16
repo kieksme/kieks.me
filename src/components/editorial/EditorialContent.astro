@@ -8,6 +8,7 @@ import Lead from '~/components/ui/atoms/Lead.astro';
 import FaqItem from '~/components/ui/molecules/FaqItem.astro';
 import { renderMarkdown } from './safe-markdown';
 import { plainText, renderRichText, safeMedia, safeHref } from './rich-text';
+import { localeFromPath } from '~/utils/locale';
 export interface Props {
   collection: string;
   document: Record<string, unknown>;
@@ -16,9 +17,76 @@ export interface Props {
   mediaResolver?: typeof safeMedia;
 }
 const { collection, document: data, trainings = [] } = Astro.props;
+const copy = {
+  de: {
+    untitled: 'Noch ohne Überschrift',
+    actions: 'Aktionen',
+    tags: 'Schlagwörter',
+    by: 'Von',
+    articles: 'Artikel',
+    articlesOfPerson: 'Artikel dieser Person',
+    noArticles: 'Noch keine veröffentlichten Artikel zugeordnet.',
+    contactPreview: 'Kontaktformular-Vorschau',
+    contactPreviewInactive: 'Inaktive Kontaktformular-Vorschau',
+    contactHeading: 'Kontakt aufnehmen',
+    contactNotice: 'Vorschau – Nachrichten können hier nicht gesendet werden.',
+    contactTo: 'Kontakt an',
+    name: 'Name',
+    email: 'E-Mail',
+    message: 'Nachricht',
+    noSend: 'Vorschau – kein Versand',
+    highlights: 'Schwerpunkte',
+    tileLink: 'Kachel-Link',
+    profile: 'Profil',
+    npmPackages: 'npm-Pakete',
+    projectLinks: 'Projektlinks',
+    documentation: 'Dokumentation',
+    license: 'Lizenz',
+    legalLinks: 'Rechtliche Links',
+    socialLinks: 'Social-Links',
+    requestTraining: 'Training anfragen',
+    header: 'Kopfbereich',
+    footer: 'Fußbereich',
+    home: 'Startseite',
+    dateLocale: 'de-DE',
+  },
+  en: {
+    untitled: 'Untitled',
+    actions: 'Actions',
+    tags: 'Tags',
+    by: 'By',
+    articles: 'Articles',
+    articlesOfPerson: 'Articles by this person',
+    noArticles: 'No published articles assigned yet.',
+    contactPreview: 'Contact form preview',
+    contactPreviewInactive: 'Inactive contact form preview',
+    contactHeading: 'Get in touch',
+    contactNotice: 'Preview – messages cannot be sent from here.',
+    contactTo: 'Contact',
+    name: 'Name',
+    email: 'Email',
+    message: 'Message',
+    noSend: 'Preview – nothing is sent',
+    highlights: 'Highlights',
+    tileLink: 'Tile link',
+    profile: 'Profile',
+    npmPackages: 'npm packages',
+    projectLinks: 'Project links',
+    documentation: 'Documentation',
+    license: 'License',
+    legalLinks: 'Legal links',
+    socialLinks: 'Social links',
+    requestTraining: 'Enquire about this training',
+    header: 'Header',
+    footer: 'Footer',
+    home: 'Home page',
+    dateLocale: 'en-GB',
+  },
+} as const;
+const t = copy[localeFromPath(Astro.url.pathname)];
 const renderRich = Astro.props.richRenderer ?? renderRichText;
 const resolveMedia = Astro.props.mediaResolver ?? safeMedia;
-const title = plainText(data.title ?? data.name ?? data.question) || 'Noch ohne Überschrift';
+const title = plainText(data.title ?? data.name ?? data.question) || t.untitled;
 const image = resolveMedia(data.heroImage ?? data.image ?? data.photo ?? data.avatar);
 const richBody = renderRich(
   data.contentRichText ?? data.descriptionRichText ?? data.bioRichText ?? data.answerRichText
@@ -102,13 +170,13 @@ const npmPackages =
         .filter(Boolean)
     : [];
 const eyebrow = isNavigation
-  ? ({ header: 'Kopfbereich', footer: 'Fußbereich' } as Record<string, string>)[String(data.key)] || ''
+  ? ({ header: t.header, footer: t.footer } as Record<string, string>)[String(data.key)] || ''
   : hero
     ? plainText(hero.eyebrow)
     : collection === 'team'
       ? plainText(data.position)
       : collection === 'faqs'
-        ? [data.placement === 'home' ? 'Startseite' : '', plainText(data.category)].filter(Boolean).join(' · ')
+        ? [data.placement === 'home' ? t.home : '', plainText(data.category)].filter(Boolean).join(' · ')
         : collection === 'services'
           ? [plainText(data.number), accent].filter(Boolean).join(' · ')
           : collection === 'posts'
@@ -137,7 +205,7 @@ const eyebrow = isNavigation
   {hero && plainText(hero.lead) && <Lead class="mt-8 max-w-3xl">{plainText(hero.lead)}</Lead>}
   {
     heroCtas.length > 0 && (
-      <nav aria-label="Aktionen" class="editorial-content__links">
+      <nav aria-label={t.actions} class="editorial-content__links">
         {heroCtas.map((cta) => (
           <a href={cta!.href!}>{cta!.label}</a>
         ))}
@@ -149,17 +217,21 @@ const eyebrow = isNavigation
       <div class="editorial-content__meta">
         {publishedDate && (
           <time datetime={publishedDate.toISOString()}>
-            {new Intl.DateTimeFormat('de-DE', { dateStyle: 'long', timeZone: 'UTC' }).format(publishedDate)}
+            {new Intl.DateTimeFormat(t.dateLocale, { dateStyle: 'long', timeZone: 'UTC' }).format(publishedDate)}
           </time>
         )}
-        {author && <span>Von {authorHref ? <a href={authorHref}>{author}</a> : author}</span>}
+        {author && (
+          <span>
+            {t.by} {authorHref ? <a href={authorHref}>{author}</a> : author}
+          </span>
+        )}
       </div>
     )
   }
   {excerpt && <Lead class="mt-8 max-w-3xl">{excerpt}</Lead>}
   {
     tags.length > 0 && (
-      <ul class="editorial-content__tags" aria-label="Schlagwörter">
+      <ul class="editorial-content__tags" aria-label={t.tags}>
         {tags.map((tag) => (
           <li>{tag}</li>
         ))}
@@ -186,9 +258,9 @@ const eyebrow = isNavigation
   }
   {
     collection === 'authors' && (
-      <section class="editorial-content__section" aria-label="Artikel dieser Person">
+      <section class="editorial-content__section" aria-label={t.articlesOfPerson}>
         <Heading level={2} size="l">
-          Artikel
+          {t.articles}
         </Heading>
         {authorPosts.length > 0 ? (
           <ul class="editorial-content__articles">
@@ -206,35 +278,37 @@ const eyebrow = isNavigation
             ))}
           </ul>
         ) : (
-          <p class="editorial-prose mt-6">Noch keine veröffentlichten Artikel zugeordnet.</p>
+          <p class="editorial-prose mt-6">{t.noArticles}</p>
         )}
       </section>
     )
   }
   {
     collection === 'authors' && data.contactEnabled === true && (
-      <section class="editorial-content__section" aria-label="Kontaktformular-Vorschau">
+      <section class="editorial-content__section" aria-label={t.contactPreview}>
         <Heading level={2} size="l">
-          Kontakt aufnehmen
+          {t.contactHeading}
         </Heading>
-        <p class="editorial-prose mt-6">Vorschau – Nachrichten können hier nicht gesendet werden.</p>
-        <form class="editorial-content__contact" aria-label="Inaktive Kontaktformular-Vorschau">
+        <p class="editorial-prose mt-6">{t.contactNotice}</p>
+        <form class="editorial-content__contact" aria-label={t.contactPreviewInactive}>
           <fieldset disabled>
-            <legend>Kontakt an {title}</legend>
+            <legend>
+              {t.contactTo} {title}
+            </legend>
             <label>
-              Name
+              {t.name}
               <input name="name" type="text" autocomplete="off" />
             </label>
             <label>
-              E-Mail
+              {t.email}
               <input name="email" type="email" autocomplete="off" />
             </label>
             <label>
-              Nachricht
+              {t.message}
               <textarea name="message" rows={5} />
             </label>
             <button type="button" disabled>
-              Vorschau – kein Versand
+              {t.noSend}
             </button>
           </fieldset>
         </form>
@@ -281,9 +355,9 @@ const eyebrow = isNavigation
   }
   {
     highlights.length > 0 && (
-      <section class="editorial-content__section" aria-label="Schwerpunkte">
+      <section class="editorial-content__section" aria-label={t.highlights}>
         <Heading level={2} size="l">
-          Schwerpunkte
+          {t.highlights}
         </Heading>
         <ul class="editorial-content__articles">
           {highlights.map((item) => (
@@ -298,23 +372,23 @@ const eyebrow = isNavigation
   }
   {
     serviceLink && serviceLink.href && (
-      <nav aria-label="Kachel-Link" class="editorial-content__links">
+      <nav aria-label={t.tileLink} class="editorial-content__links">
         <a href={serviceLink.href}>{serviceLink.label || serviceLink.href}</a>
       </nav>
     )
   }
   {
     profileHref && (
-      <nav aria-label="Profil" class="editorial-content__links">
+      <nav aria-label={t.profile} class="editorial-content__links">
         <a href={profileHref} rel="noopener noreferrer">
-          Profil ↗
+          {t.profile} ↗
         </a>
       </nav>
     )
   }
   {
     npmPackages.length > 0 && (
-      <ul class="editorial-content__tags" aria-label="npm-Pakete">
+      <ul class="editorial-content__tags" aria-label={t.npmPackages}>
         {npmPackages.map((name) => (
           <li>{name}</li>
         ))}
@@ -323,10 +397,10 @@ const eyebrow = isNavigation
   }
   {
     collection === 'mcp-projects' && (
-      <nav aria-label="Projektlinks" class="editorial-content__links">
+      <nav aria-label={t.projectLinks} class="editorial-content__links">
         {[
           ['Repository', data.repositoryUrl],
-          ['Dokumentation', data.documentationUrl],
+          [t.documentation, data.documentationUrl],
         ].map(
           ([label, href]) =>
             safeHref(href) && (
@@ -335,7 +409,11 @@ const eyebrow = isNavigation
               </a>
             )
         )}
-        {plainText(data.license) && <span>Lizenz: {plainText(data.license)}</span>}
+        {plainText(data.license) && (
+          <span>
+            {t.license}: {plainText(data.license)}
+          </span>
+        )}
       </nav>
     )
   }
@@ -359,9 +437,9 @@ const eyebrow = isNavigation
   }
   {
     [
-      ['Aktionen', navActions],
-      ['Rechtliche Links', navLegal],
-      ['Social-Links', navSocial],
+      [t.actions, navActions],
+      [t.legalLinks, navLegal],
+      [t.socialLinks, navSocial],
     ].map(
       ([label, items]) =>
         (items as { label: string; href: string | null }[]).length > 0 && (
@@ -386,7 +464,7 @@ const eyebrow = isNavigation
         </ul>
         {safeHref(data.requestUrl) && (
           <a class="inline-block mt-6 underline" href={safeHref(data.requestUrl)!}>
-            Training anfragen →
+            {t.requestTraining} →
           </a>
         )}
       </section>
