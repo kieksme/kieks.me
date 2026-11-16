@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 
 import { UI } from 'astrowind:config';
+import { localeFromPath } from '~/utils/locale';
 
 export interface Props {
   label?: string;
@@ -10,8 +11,9 @@ export interface Props {
   iconName?: string;
 }
 
+const english = localeFromPath(Astro.url.pathname) === 'en';
 const {
-  label = 'Toggle between Dark and Light mode',
+  label = english ? 'Switch between dark and light mode' : 'Zwischen Dunkel- und Hellmodus wechseln',
   class:
     className = 'text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center',
   iconClass = 'w-6 h-6',
