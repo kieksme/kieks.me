@@ -6,6 +6,7 @@ import type { MetaData } from '../types';
 
 export type CmsDocument = Record<string, unknown>;
 export interface CmsBuildContent {
+  locale?: 'de' | 'en';
   enabled: boolean;
   posts: CmsDocument[];
   pages: CmsDocument[];
@@ -16,7 +17,18 @@ export interface CmsBuildContent {
 }
 const empty = (): CmsBuildContent => ({ enabled: false, posts: [], pages: [], authors: [], media: {}, site: {} });
 const fields = {
-  pages: ['id', '_status', 'title', 'slug', 'pageKind', 'contentMarkdown', 'hero', 'seo'],
+  pages: [
+    'id',
+    '_status',
+    'title',
+    'slug',
+    'pageKind',
+    'contentMarkdown',
+    'contentRichText',
+    'sections',
+    'hero',
+    'seo',
+  ],
   posts: [
     'id',
     '_status',
@@ -55,6 +67,7 @@ const fields = {
   faqs: ['id', '_status', 'sortOrder', 'slug', 'question', 'answer', 'answerRichText', 'placement', 'accent'],
   'mcp-projects': [
     'id',
+    'slug',
     '_status',
     'sortOrder',
     'slug',
@@ -67,6 +80,22 @@ const fields = {
     'npmPackages',
     'descriptionRichText',
     'accent',
+  ],
+  trainings: [
+    'id',
+    '_status',
+    'sortOrder',
+    'title',
+    'slug',
+    'summary',
+    'description',
+    'descriptionRichText',
+    'duration',
+    'format',
+    'deliveryLanguages',
+    'trainers',
+    'requestUrl',
+    'seo',
   ],
   navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
@@ -101,6 +130,11 @@ export async function fetchCmsBuildContent(
     mediaDirectory?: string;
     /** Opt in to editable site sections. Off by default so builds never request unknown collections. */
     siteContent?: boolean;
+    /** Enable only after the additive Datahub trainings migrations have shipped. */
+    trainings?: boolean;
+    locale?: 'de' | 'en';
+    /** Only for the explicitly opted-in private Docker staging preview. */
+    privateHttp?: boolean;
   } = {}
 ): Promise<CmsBuildContent> {
   if (!options.url && !options.apiKey) return empty();
@@ -112,7 +146,8 @@ export async function fetchCmsBuildContent(
     throw new Error('Invalid PAYLOAD_URL');
   }
   if (
-    origin.protocol !== 'https:' ||
+    (origin.protocol !== 'https:' &&
+      !(options.privateHttp && origin.protocol === 'http:' && /^[a-z0-9-]+$/.test(origin.hostname))) ||
     origin.username ||
     origin.password ||
     origin.search ||
@@ -138,17 +173,21 @@ export async function fetchCmsBuildContent(
     for (let page = 1; page <= 200; page++) {
       const url = new URL(`/api/${slug}`, origin);
       url.searchParams.set('draft', 'false');
+      url.searchParams.set('locale', options.locale ?? 'de');
+      url.searchParams.set('fallback-locale', 'none');
       url.searchParams.set('depth', '0');
       url.searchParams.set('limit', '100');
       url.searchParams.set('page', String(page));
       url.searchParams.set('sort', 'id');
       for (const field of fields[slug]) url.searchParams.set(`select[${field}]`, 'true');
+      if (slug !== 'media') url.searchParams.set('select[pathSlug]', 'true');
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
       else {
         url.searchParams.set('where[_status][equals]', 'published');
         if (slug === 'pages') {
           // The home page is only requested when editable site sections are enabled.
-          if (options.siteContent) url.searchParams.set('where[pageKind][in]', 'legal,home');
+          if (options.siteContent)
+            url.searchParams.set('where[pageKind][in]', options.trainings ? 'legal,home,standard' : 'legal,home');
           else url.searchParams.set('where[pageKind][equals]', 'legal');
         }
       }
@@ -188,9 +227,16 @@ export async function fetchCmsBuildContent(
         seen.add(id);
         if (slug === 'media' ? doc.websitePublished !== true : doc._status !== 'published')
           throw new Error(`Unpublished CMS ${slug} rejected`);
-        if (slug === 'pages' && doc.pageKind !== 'legal' && !(options.siteContent && doc.pageKind === 'home'))
+        if (
+          slug === 'pages' &&
+          doc.pageKind !== 'legal' &&
+          !(options.siteContent && (doc.pageKind === 'home' || (options.trainings && doc.pageKind === 'standard')))
+        )
           throw new Error('Unexpected CMS page kind rejected');
-        docs.push(pick(doc, fields[slug]));
+        docs.push({
+          ...pick(doc, fields[slug]),
+          ...(typeof doc.pathSlug === 'string' ? { pathSlug: doc.pathSlug } : {}),
+        });
       }
       if (page === body.totalPages) {
         if (body.totalDocs !== undefined && (!Number.isInteger(body.totalDocs) || body.totalDocs !== docs.length))
@@ -214,10 +260,20 @@ export async function fetchCmsBuildContent(
       site[slug] = loaded[index];
     });
   }
-  const result: CmsBuildContent = { enabled: true, posts, pages, authors, media: {}, site };
+  if (options.trainings) site.trainings = await collection('trainings');
+  const result: CmsBuildContent = {
+    enabled: true,
+    locale: options.locale ?? 'de',
+    posts,
+    pages,
+    authors,
+    media: {},
+    site,
+  };
   const directory = options.mediaDirectory ?? path.resolve('public/_cms-media');
   await mkdir(directory, { recursive: true });
   for (const media of mediaRecords) {
+    if (options.locale === 'en' && !text(media.alt).trim()) continue;
     const mime = text(media.mimeType),
       extension = imageTypes[mime];
     if (!extension) throw new Error('Published CMS media has an unsupported image type');
@@ -335,27 +391,43 @@ export function mapCmsMetadata(value: unknown, content: CmsBuildContent): MetaDa
   };
 }
 
-const snapshot = path.resolve('.runtime/payload-build.json');
-const configuration = () => ({
+const snapshot = (locale: 'de' | 'en') => path.resolve(`.runtime/payload-build${locale === 'de' ? '' : '-en'}.json`);
+const configuration = (locale: 'de' | 'en' = 'de') => ({
+  locale,
+  privateHttp: process.env.STAGING_CMS_PREVIEW === 'true' && process.env.PAYLOAD_ALLOW_PRIVATE_HTTP === 'true',
   url: process.env.PAYLOAD_URL ?? import.meta.env?.PAYLOAD_URL,
   apiKey: process.env.PAYLOAD_BUILD_API_KEY ?? import.meta.env?.PAYLOAD_BUILD_API_KEY,
+  trainings: (process.env.PAYLOAD_TRAININGS ?? import.meta.env?.PAYLOAD_TRAININGS) === 'true',
   siteContent: (process.env.PAYLOAD_SITE_CONTENT ?? import.meta.env?.PAYLOAD_SITE_CONTENT) === 'true',
 });
 export async function prepareCmsBuild() {
   await rm(path.resolve('public/_cms-media'), { recursive: true, force: true });
-  const content = await fetchCmsBuildContent(configuration());
-  await mkdir(path.dirname(snapshot), { recursive: true });
-  await writeFile(snapshot, JSON.stringify(content), { mode: 0o600 });
+  await mkdir(path.dirname(snapshot('de')), { recursive: true });
+  for (const locale of ['de', 'en'] as const) {
+    const content =
+      locale === 'en' && process.env.PAYLOAD_I18N !== 'true'
+        ? empty()
+        : await fetchCmsBuildContent(configuration(locale));
+    await writeFile(snapshot(locale), JSON.stringify(content), { mode: 0o600 });
+  }
 }
-let cached: Promise<CmsBuildContent> | undefined;
-export async function loadCmsBuildContent(): Promise<CmsBuildContent> {
-  return (cached ??= (async () => {
-    try {
-      return JSON.parse(await readFile(snapshot, 'utf8')) as CmsBuildContent;
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-      return fetchCmsBuildContent(configuration());
-    }
-  })());
+const cached = new Map<string, Promise<CmsBuildContent>>();
+export async function loadCmsBuildContent(locale: 'de' | 'en' = 'de'): Promise<CmsBuildContent> {
+  if (!cached.has(locale))
+    cached.set(
+      locale,
+      (async () => {
+        try {
+          return JSON.parse(await readFile(snapshot(locale), 'utf8')) as CmsBuildContent;
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+          return locale === 'en' && process.env.PAYLOAD_I18N !== 'true'
+            ? empty()
+            : fetchCmsBuildContent(configuration(locale));
+        }
+      })()
+    );
+  return cached.get(locale)!;
 }
-export const finishCmsBuild = () => rm(snapshot, { force: true });
+export const finishCmsBuild = () =>
+  Promise.all(['de', 'en'].map((locale) => rm(snapshot(locale as 'de' | 'en'), { force: true })));

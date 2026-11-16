@@ -1,0 +1,25 @@
+---
+import TrainingTeaser from './TrainingTeaser.astro';
+import { loadCmsBuildContent, relationId } from '~/utils/payload-build';
+import { cmsTrainings } from '~/utils/trainings';
+const content = await loadCmsBuildContent();
+const home = content.pages.find((page) => page.pageKind === 'home' && page.slug === 'startseite');
+const sections = Array.isArray(home?.sections) ? home.sections : [];
+const trainings = cmsTrainings(content);
+const selected = sections
+  .filter((section) => section?.kind === 'training-teaser')
+  .map((section) => trainings.find((training) => training.id === relationId(section.training)))
+  .filter((training) => training !== undefined);
+---
+
+{
+  selected.length > 0 && (
+    <section class="mx-auto max-w-6xl px-6 py-16" aria-label="Trainings">
+      <div class="grid gap-8 md:grid-cols-2">
+        {selected.map((training) => (
+          <TrainingTeaser training={training} />
+        ))}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,32 @@
+---
+import { workshopTopics } from '~/content-model/workshops';
+import { CONTACT_EMAIL } from '~/config/site';
+interface Props {
+  locale?: 'de' | 'en';
+}
+const { locale = 'de' } = Astro.props;
+const english = locale === 'en';
+---
+
+<section class="mt-12" aria-label={english ? 'Workshop topics' : 'Workshop-Themen'}>
+  <h2 class="font-heading text-3xl font-bold">{english ? 'Workshop topics' : 'Workshop-Themen'}</h2>
+  <p class="mt-4">
+    {
+      english
+        ? 'Practical workshops tailored to your team. These are possible topics; format and scope are agreed individually.'
+        : 'Praxisnah und auf Ihr Team zugeschnitten. Mögliche Themen – Format und Umfang stimmen wir gemeinsam ab.'
+    }
+  </p>
+  <ul class="mt-8 grid gap-6 md:grid-cols-2">
+    {
+      workshopTopics[locale].map((title) => (
+        <li class="border-[3px] border-[var(--ink)] bg-[var(--surface)] p-6">
+          <h3 class="font-heading font-bold text-xl">{title}</h3>
+        </li>
+      ))
+    }
+  </ul>
+  <a class="inline-block mt-8 font-bold underline" href={`mailto:${CONTACT_EMAIL}`}
+    >{english ? 'Discuss a workshop' : 'Workshop anfragen'} →</a
+  >
+</section>

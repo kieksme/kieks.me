@@ -1,0 +1,30 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import EditorialContent from '~/components/editorial/EditorialContent.astro';
+import { loadCmsBuildContent, mapCmsMetadata, resolvePublicMedia } from '~/utils/payload-build';
+import { localizedRoutes } from '~/utils/localization';
+import { renderPublicRichText } from '~/utils/cms-content';
+export async function getStaticPaths() {
+  const content = await loadCmsBuildContent();
+  const existing = new Set(['agent-hub', 'ki-mcp', 'cloud-devops', 'entwicklung', 'beratung']);
+  return localizedRoutes(content)
+    .filter((route) => route.collection === 'services' && !existing.has(String(route.document.slug)))
+    .map((route) => ({ params: { slug: route.document.slug }, props: { document: route.document, content } }));
+}
+const { document, content } = Astro.props;
+---
+
+<PageLayout
+  metadata={{
+    ...mapCmsMetadata(document.seo, content),
+    title: String(document.title),
+    description: String(document.summary || document.title),
+  }}
+>
+  <EditorialContent
+    collection="services"
+    document={document}
+    richRenderer={(value) => renderPublicRichText(value, content)}
+    mediaResolver={(value) => resolvePublicMedia(content, value) ?? null}
+  />
+</PageLayout>

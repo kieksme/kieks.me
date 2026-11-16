@@ -49,7 +49,7 @@ export function startPreview(windowObject: Window = window) {
       status('Vorschau wird aktualisiert …');
       try {
         const response = await windowObject.fetch(
-          `/preview/${encodeURIComponent(collection)}/${encodeURIComponent(id!)}`,
+          `/preview/${encodeURIComponent(collection)}/${encodeURIComponent(id!)}?locale=${windowObject.document.body.dataset.previewLocale === 'en' ? 'en' : 'de'}`,
           {
             method: 'POST',
             credentials: 'same-origin',

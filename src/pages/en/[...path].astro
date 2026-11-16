@@ -1,0 +1,256 @@
+---
+import Layout from '~/layouts/EnglishLayout.astro';
+import TrainingTeaser from '~/components/TrainingTeaser.astro';
+import WorkshopTopics from '~/components/WorkshopTopics.astro';
+import { loadCmsBuildContent, mapCmsMetadata, relationId, resolvePublicMedia, text } from '~/utils/payload-build';
+import { localizedRoutes } from '~/utils/localization';
+import { cmsTrainings } from '~/utils/trainings';
+import { cmsAuthors, renderPublicRichText } from '~/utils/cms-content';
+import { renderMarkdown } from '~/components/editorial/safe-markdown';
+export async function getStaticPaths() {
+  const content = await loadCmsBuildContent('en');
+  if (!content.enabled) return [];
+  const trainings = cmsTrainings(content);
+  const routes = localizedRoutes(content).filter(
+    (route) => route.collection !== 'trainings' || trainings.some((training) => training.id === route.id)
+  );
+  const result = routes.map((route) => ({
+    params: { path: route.path.slice(4) || undefined },
+    props: { route, content },
+  }));
+  for (const path of ['', 'trainings', 'blog']) {
+    if (!result.some((item) => (item.params.path ?? '') === path))
+      result.push({
+        params: { path: path || undefined },
+        props: {
+          route: {
+            collection: path || 'home',
+            document: {},
+            path: '/en' + (path ? '/' + path : ''),
+          } as (typeof routes)[number],
+          content,
+        },
+      });
+  }
+  return result;
+}
+const { route, content } = Astro.props;
+const doc = route.document;
+const home = route.collection === 'home' || doc.pageKind === 'home';
+const list = ['trainings', 'blog'].includes(route.collection) && !doc.id;
+const trainings = cmsTrainings(content);
+const training =
+  route.collection === 'trainings' && doc.id ? trainings.find((item) => item.id === relationId(doc.id)) : undefined;
+const authors = cmsAuthors(content);
+const author = route.collection === 'posts' ? authors.find((item) => item.id === relationId(doc.author)) : undefined;
+const title =
+  text(doc.title ?? doc.name ?? doc.question) ||
+  (home ? 'AI, cloud and software that work for you' : route.collection === 'blog' ? 'Blog' : 'Trainings & workshops');
+const summary =
+  text(doc.summary ?? doc.excerpt ?? doc.description) ||
+  (home
+    ? 'We help teams put technology into practice — with consulting, software development and practical learning.'
+    : 'Practical knowledge, shared by our team.');
+const image = resolvePublicMedia(content, doc.heroImage ?? doc.image ?? doc.avatar);
+const body =
+  renderPublicRichText(
+    doc.contentRichText ?? doc.descriptionRichText ?? doc.bioRichText ?? doc.answerRichText,
+    content
+  ) || (doc.contentMarkdown ? renderMarkdown(doc.contentMarkdown) : '');
+const hero = doc.hero && typeof doc.hero === 'object' ? (doc.hero as Record<string, unknown>) : {};
+const metadata = mapCmsMetadata(doc.seo, content);
+const canonical = `https://kieks.me${route.path}`;
+metadata.structuredData =
+  route.collection === 'posts' && doc.id
+    ? [
+        {
+          '@type': 'BlogPosting',
+          headline: title,
+          description: summary,
+          url: canonical,
+          ...(doc.publishedAt ? { datePublished: String(doc.publishedAt) } : {}),
+          ...(author ? { author: { '@type': 'Person', name: author.name, url: `https://kieks.me${author.url}` } } : {}),
+        },
+      ]
+    : route.collection === 'authors'
+      ? [{ '@type': 'Person', name: title, url: canonical }]
+      : training
+        ? [
+            {
+              '@type': 'Course',
+              name: title,
+              description: summary,
+              url: canonical,
+              provider: { '@id': 'https://kieks.me/#organization' },
+            },
+          ]
+        : [];
+const sections = Array.isArray(doc.sections) ? doc.sections : [];
+const linkedRoutes = localizedRoutes(content);
+---
+
+<Layout metadata={{ ...metadata, title: metadata.title || title, description: metadata.description || summary }}>
+  <article class="mx-auto max-w-6xl px-6 py-16">
+    <h1 class="font-heading text-4xl md:text-6xl font-bold whitespace-pre-line">{text(hero.headline) || title}</h1>
+    <p class="mt-6 text-xl max-w-3xl">{text(hero.lead) || summary}</p>
+    {
+      image && (
+        <img
+          class="my-8 max-h-96 object-contain"
+          src={image.url}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+        />
+      )
+    }
+    {
+      author && (
+        <p class="mt-4">
+          By{' '}
+          <a class="underline" href={author.url}>
+            {author.name}
+          </a>
+        </p>
+      )
+    }
+    {
+      doc.publishedAt && (
+        <time class="block mt-4" datetime={String(doc.publishedAt)}>
+          {new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeZone: 'UTC' }).format(
+            new Date(String(doc.publishedAt))
+          )}
+        </time>
+      )
+    }
+    {body && <div class="prose dark:prose-invert my-10" set:html={body} />}
+    {
+      !body && !list && !home && text(doc.description ?? doc.bio ?? doc.answer) && (
+        <p class="my-8 whitespace-pre-line">{text(doc.description ?? doc.bio ?? doc.answer)}</p>
+      )
+    }
+    {
+      training && (
+        <>
+          <dl class="my-8 grid gap-4 sm:grid-cols-3">
+            {[
+              ['Duration', training.duration],
+              ['Format / location', training.format],
+              ['Delivery languages', training.deliveryLanguages.join(', ')],
+            ]
+              .filter(([, value]) => value)
+              .map(([label, value]) => (
+                <div>
+                  <dt class="font-bold">{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+          </dl>
+          <h2 class="font-heading text-2xl font-bold">Trainers</h2>
+          <ul class="grid gap-8 mt-6 sm:grid-cols-2">
+            {training.trainers.map((trainer) => (
+              <li>
+                {trainer.avatar && (
+                  <img
+                    class="w-32 h-32 rounded-full object-cover mb-4"
+                    src={trainer.avatar.url}
+                    alt={trainer.avatar.alt}
+                    width="128"
+                    height="128"
+                    loading="lazy"
+                  />
+                )}
+                <h3 class="font-bold text-xl">
+                  <a class="underline" href={trainer.url}>
+                    {trainer.name}
+                  </a>
+                </h3>
+                <div class="prose dark:prose-invert mt-4" set:html={trainer.bio} />
+              </li>
+            ))}
+          </ul>
+          {training.requestUrl && (
+            <a class="inline-block underline font-bold text-xl mt-10" href={training.requestUrl}>
+              Enquire about this training →
+            </a>
+          )}
+        </>
+      )
+    }
+    {
+      sections.map((section) =>
+        section.kind === 'training-teaser' ? (
+          trainings
+            .filter((item) => item.id === relationId(section.training))
+            .map((item) => (
+              <div class="my-8">
+                <TrainingTeaser training={item} />
+              </div>
+            ))
+        ) : (
+          <section class="my-10">
+            {text(section.heading) && <h2 class="font-heading font-bold text-2xl mb-4">{text(section.heading)}</h2>}
+            {section.richText ? (
+              <div class="prose dark:prose-invert" set:html={renderPublicRichText(section.richText, content)} />
+            ) : (
+              <p class="whitespace-pre-line">{text(section.body)}</p>
+            )}
+          </section>
+        )
+      )
+    }
+    {
+      (home || (list && route.collection === 'trainings')) && (
+        <section class="mt-12">
+          {home && <h2 class="text-3xl font-heading font-bold mb-8">Trainings & workshops</h2>}
+          {trainings.length ? (
+            <div class="grid gap-8 md:grid-cols-2">
+              {trainings.map((item) => (
+                <TrainingTeaser training={item} />
+              ))}
+            </div>
+          ) : (
+            <p>No trainings are currently published in English.</p>
+          )}
+        </section>
+      )
+    }
+    {
+      (home || (list && route.collection === 'blog')) && (
+        <section class="mt-12 grid gap-8 md:grid-cols-2">
+          {linkedRoutes
+            .filter((item) => item.collection === 'posts')
+            .map((item) => (
+              <article>
+                <h2 class="font-heading font-bold text-2xl">
+                  <a class="underline" href={item.path}>
+                    {text(item.document.title)}
+                  </a>
+                </h2>
+                <p class="mt-3">{text(item.document.excerpt)}</p>
+              </article>
+            ))}
+        </section>
+      )
+    }
+    {
+      home && (
+        <section class="mt-12 grid gap-8 md:grid-cols-2">
+          {linkedRoutes
+            .filter((item) => ['services', 'mcp-projects'].includes(item.collection))
+            .map((item) => (
+              <article>
+                <h2 class="font-heading font-bold text-2xl">
+                  <a class="underline" href={item.path}>
+                    {text(item.document.title ?? item.document.name)}
+                  </a>
+                </h2>
+                <p class="mt-3">{text(item.document.summary)}</p>
+              </article>
+            ))}
+        </section>
+      )
+    }
+    {(home || (list && route.collection === 'trainings')) && <WorkshopTopics locale="en" />}
+  </article>
+</Layout>

@@ -17,7 +17,7 @@ for (const [key, value] of Object.entries(privateHeaders)) Astro.response.header
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang={envelope.document.locale === 'en' ? 'en' : 'de'}>
   <head
     ><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta
       name="robots"
@@ -28,6 +28,7 @@ for (const [key, value] of Object.entries(privateHeaders)) Astro.response.header
     class="bg-page text-default font-sans"
     data-preview-collection={envelope.collection}
     data-preview-id={String(envelope.id)}
+    data-preview-locale={envelope.document.locale === 'en' ? 'en' : 'de'}
   >
     <header class="preview-header">
       <Logo isAnimated={false} /><span>kieks.me <strong>Redaktionsvorschau</strong></span><span

@@ -1,5 +1,8 @@
 ---
 import '~/assets/styles/syntax-code.css';
+import { relationId } from '~/utils/payload-build';
+import TrainingTeaser from '~/components/TrainingTeaser.astro';
+import type { Training } from '~/utils/trainings';
 import Heading from '~/components/ui/atoms/Heading.astro';
 import Lead from '~/components/ui/atoms/Lead.astro';
 import FaqItem from '~/components/ui/molecules/FaqItem.astro';
@@ -8,11 +11,16 @@ import { plainText, renderRichText, safeMedia, safeHref } from './rich-text';
 export interface Props {
   collection: string;
   document: Record<string, unknown>;
+  trainings?: Training[];
+  richRenderer?: typeof renderRichText;
+  mediaResolver?: typeof safeMedia;
 }
-const { collection, document: data } = Astro.props;
+const { collection, document: data, trainings = [] } = Astro.props;
+const renderRich = Astro.props.richRenderer ?? renderRichText;
+const resolveMedia = Astro.props.mediaResolver ?? safeMedia;
 const title = plainText(data.title ?? data.name ?? data.question) || 'Noch ohne Überschrift';
-const image = safeMedia(data.heroImage ?? data.image ?? data.photo ?? data.avatar);
-const richBody = renderRichText(
+const image = resolveMedia(data.heroImage ?? data.image ?? data.photo ?? data.avatar);
+const richBody = renderRich(
   data.contentRichText ?? data.descriptionRichText ?? data.bioRichText ?? data.answerRichText
 );
 const body = richBody || (collection === 'pages' ? renderMarkdown(data.contentMarkdown) : '');
@@ -82,6 +90,7 @@ const heroCtas = hero
       .map((cta) => (cta && typeof cta === 'object' ? link(cta as Record<string, unknown>) : null))
       .filter((cta) => cta && cta.label && cta.href)
   : [];
+const trainingTrainers = collection === 'trainings' ? records(data.trainers, 10) : [];
 const highlights = collection === 'services' ? records(data.highlights, 20) : [];
 const accent = ['aqua', 'fuchsia', 'purple', 'navy'].includes(String(data.accent)) ? String(data.accent) : '';
 const serviceLink = collection === 'services' ? link({ label: data.linkText, href: data.href }) : null;
@@ -234,8 +243,17 @@ const eyebrow = isNavigation
   }
   {
     sections.map((section) => {
-      const sectionImage = safeMedia(section.media);
-      const rich = renderRichText(section.richText);
+      if (section.kind === 'training-teaser') {
+        const id = relationId(section.training);
+        const training = trainings.find((item) => item.id === id);
+        return training ? (
+          <section class="editorial-content__section">
+            <TrainingTeaser training={training} />
+          </section>
+        ) : null;
+      }
+      const sectionImage = resolveMedia(section.media);
+      const rich = renderRich(section.richText);
       return (
         <section class="editorial-content__section">
           {plainText(section.heading) && (
@@ -353,6 +371,25 @@ const eyebrow = isNavigation
             )}
           </nav>
         )
+    )
+  }
+  {
+    collection === 'trainings' && (
+      <section class="editorial-content__section">
+        <ul class="editorial-content__articles">
+          {trainingTrainers.map((trainer) => (
+            <li>
+              <h3>{plainText(trainer.name)}</h3>
+              <div class="editorial-prose mt-4" set:html={renderRich(trainer.bioRichText)} />
+            </li>
+          ))}
+        </ul>
+        {safeHref(data.requestUrl) && (
+          <a class="inline-block mt-6 underline" href={safeHref(data.requestUrl)!}>
+            Training anfragen →
+          </a>
+        )}
+      </section>
     )
   }
   {footNote && <p class="editorial-content__meta">{footNote}</p>}

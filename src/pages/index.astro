@@ -1,4 +1,5 @@
 ---
+import TrainingSections from '~/components/TrainingSections.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import Button from '~/components/ui/atoms/Button.astro';
 import Sticker from '~/components/ui/atoms/Sticker.astro';
@@ -323,4 +324,5 @@ if (teamMembers.length !== team.length) console.warn('Team members without a bun
     text="Qualität, Tempo und Verlässlichkeit sind wichtig. Am wichtigsten ist aber, dass wir uns gegenseitig respektieren und vertrauen können. Finden wir in 30 Minuten heraus, ob wir zusammenpassen."
     showEmailLink={true}
   />
+  <TrainingSections />
 </Layout>
