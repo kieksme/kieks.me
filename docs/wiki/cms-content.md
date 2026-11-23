@@ -103,3 +103,10 @@ Beschreibung und Modulübersicht (Titel, Dauer, Lernziele) unter `/kurse` und
   die Seite weist darauf hin. Datahub-Migration
   `20261123_220000_course_localization` muss vorher ausgeliefert sein.
 - Die Sprachumschaltung (hreflang) koppelt Kurse über ihre Datahub-ID.
+- **Navigation:** Der statische Fallback enthält „Kurse“ (Header und Fußbereich)
+  bzw. „Courses“ (englischer Header). Links auf `/kurse` und `/en/courses`
+  werden beim Build automatisch entfernt, solange kein Kurs veröffentlicht ist,
+  auch wenn sie in der CMS-Navigation gepflegt sind (leere Gruppen entfallen
+  ebenfalls). Die CMS-Navigation ersetzt den Fallback vollständig; dort muss
+  der Eintrag („Kurse“, Link `/kurse`) einmalig in der Collection `navigation`
+  ergänzt werden.

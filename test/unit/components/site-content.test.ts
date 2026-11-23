@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fetchCmsBuildContent } from '../../../src/utils/payload-build';
-import { resolveSiteContent, safeHref, withHighlights } from '../../../src/utils/site-content';
+import {
+  dropLinksTo,
+  resolveSiteContent,
+  safeHref,
+  withHighlights,
+  withoutEmptyCourseLinks,
+} from '../../../src/utils/site-content';
 import { fallbackFaqsLeft, fallbackMcpServers, fallbackServices } from '../../../src/content-model/fallback';
 import { footerData, headerData } from '../../../src/navigation';
 
@@ -552,5 +558,43 @@ describe('editable site sections with static fallback', () => {
       team: [{ ...published, id: 1, slug: 'andre', name: 'André Lademann', position: 'Gesellschafter' }],
     }).team;
     expect(cms.some((m) => m.bio || m.bioHtml || (m.role && !m.role.includes('⟦')))).toBe(true);
+  });
+});
+
+describe('course navigation links', () => {
+  const base = () => resolveSiteContent();
+  it('ships a Kurse link in header and footer fallback', () => {
+    const content = base();
+    expect(content.header.some((link) => 'href' in link && link.href === '/kurse')).toBe(true);
+    expect(content.footerColumns.flatMap((column) => column.links).some((link) => link.href === '/kurse')).toBe(true);
+  });
+  it('keeps the links while courses are published', () => {
+    expect(withoutEmptyCourseLinks(base(), true)).toEqual(base());
+  });
+  it('drops them while no course is published, including CMS-managed links and emptied groups', () => {
+    const content = withoutEmptyCourseLinks(base(), false);
+    const hrefs = JSON.stringify([content.header, content.footerColumns, content.legalLinks]);
+    expect(hrefs).not.toContain('"/kurse"');
+    expect(content.header.some((link) => 'href' in link && link.href === '/blog')).toBe(true);
+    const cms = withoutEmptyCourseLinks(
+      resolveSiteContent({
+        navigation: [
+          {
+            id: 1,
+            _status: 'published',
+            key: 'header',
+            links: [
+              { label: 'Lernen', href: '', children: [{ label: 'Kurse', href: '/kurse/' }] },
+              { label: 'Kontakt', href: '/kontakt' },
+            ],
+          },
+        ],
+      }),
+      false
+    );
+    expect(cms.header).toEqual([{ text: 'Kontakt', href: '/kontakt' }]);
+  });
+  it('does not treat the home link as a course link', () => {
+    expect(dropLinksTo([{ href: '/' }, { href: '/kurse' }], '/kurse')).toEqual([{ href: '/' }]);
   });
 });

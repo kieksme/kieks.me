@@ -4,6 +4,8 @@ import Header from '~/components/ui/organisms/Header.astro';
 import Footer from '~/components/ui/organisms/Footer.astro';
 import { loadCmsBuildContent, text } from '~/utils/payload-build';
 import { localizedRoutes } from '~/utils/localization';
+import { dropLinksTo } from '~/utils/site-content';
+import { cmsCourses } from '~/utils/courses';
 import { safeHref } from '~/utils/site-content';
 import { escapeHtml } from '~/components/editorial/rich-text';
 import type { MetaData } from '~/types';
@@ -28,13 +30,17 @@ const nav = (value: unknown): Array<{ text: string; href?: string; links?: Array
           : { href: safeHref(item.href, false) }),
       }))
     : [];
-const links = header?.links
+const hasCourses = cmsCourses(content).length > 0;
+// A link to the course overview must never lead to an empty page.
+const allLinks = header?.links
   ? nav(header.links)
   : [
       { text: 'Home', href: '/en' },
       { text: 'Trainings & workshops', href: '/en/trainings' },
       { text: 'Blog', href: '/en/blog' },
+      { text: 'Courses', href: '/en/courses' },
     ];
+const links = hasCourses ? allLinks : dropLinksTo(allLinks, '/en/courses');
 const legal = routes
   .filter((route) => route.collection === 'pages' && route.document.pageKind === 'legal')
   .map((route) => ({ text: escapeHtml(text(route.document.title)), href: route.path }));
