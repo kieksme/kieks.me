@@ -21,7 +21,8 @@ const { course } = Astro.props;
     <h1 class="mt-6 text-4xl font-bold font-heading">{course.title}</h1>
     {course.description && <p class="mt-6 text-xl">{course.description}</p>}
     <p class="mt-6 text-sm">
-      {course.modules.length} {course.modules.length === 1 ? 'Modul' : 'Module'} · ca. {course.totalMinutes} Minuten
+      {course.modules.length}
+      {course.modules.length === 1 ? 'Modul' : 'Module'} · ca. {course.totalMinutes} Minuten
     </p>
     <h2 class="mt-10 text-2xl font-bold font-heading">Module</h2>
     <ol class="mt-6 grid gap-6">
