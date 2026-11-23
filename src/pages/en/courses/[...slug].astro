@@ -1,0 +1,82 @@
+---
+import Layout from '~/layouts/EnglishLayout.astro';
+import CourseTeaser from '~/components/CourseTeaser.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsCourses } from '~/utils/courses';
+import type { Course } from '~/utils/courses';
+export async function getStaticPaths() {
+  const content = await loadCmsBuildContent('en');
+  // The English site only exists once the localized Datahub is enabled.
+  if (!content.enabled) return [];
+  const courses = cmsCourses(content);
+  return [
+    { params: { slug: undefined }, props: { courses, course: undefined } },
+    ...courses.map((course) => ({ params: { slug: course.slug }, props: { courses, course } })),
+  ];
+}
+interface Props {
+  courses: Course[];
+  course?: Course;
+}
+const { courses, course } = Astro.props;
+---
+
+<Layout
+  metadata={course
+    ? { title: course.title, description: course.description || undefined }
+    : { title: 'Courses', description: 'Online courses for self-paced learning and training material.' }}
+>
+  {
+    course ? (
+      <article class="mx-auto max-w-4xl px-6 py-16">
+        <p class="font-bold">
+          <a href="/en/courses">Courses</a>
+        </p>
+        <h1 class="mt-6 text-4xl font-bold font-heading">{course.title}</h1>
+        {course.description && <p class="mt-6 text-xl">{course.description}</p>}
+        <p class="mt-6 text-sm">
+          {course.modules.length} {course.modules.length === 1 ? 'module' : 'modules'} · approx. {course.totalMinutes}{' '}
+          minutes · course language: German
+        </p>
+        <h2 class="mt-10 text-2xl font-bold font-heading">Modules</h2>
+        <ol class="mt-6 grid gap-6">
+          {course.modules.map((module) => (
+            <li>
+              <h3 class="text-xl font-bold">
+                {module.title} <span class="text-sm font-normal">({module.duration} min.)</span>
+              </h3>
+              {module.objectives.length > 0 && (
+                <ul class="mt-2 list-disc pl-6">
+                  {module.objectives.map((objective) => (
+                    <li>{objective}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p class="mt-10 text-sm">
+          The course content and the knowledge check are available in German on our course platform. You receive access
+          through your personal link.
+        </p>
+        <a class="inline-block mt-6 font-bold underline text-xl" href={course.courseUrl} rel="noopener">
+          Go to the course platform →
+        </a>
+      </article>
+    ) : (
+      <section class="mx-auto max-w-6xl px-6 py-16">
+        <h1 class="text-4xl font-bold font-heading">Courses</h1>
+        <p class="mt-6 text-xl">Self-paced learning with practical focus.</p>
+        {courses.length ? (
+          <div class="grid gap-8 md:grid-cols-2 mt-10">
+            {courses.map((item) => (
+              <CourseTeaser course={item} />
+            ))}
+          </div>
+        ) : (
+          <p class="mt-10">No courses are currently published in English.</p>
+        )}
+      </section>
+    )
+  }
+</Layout>

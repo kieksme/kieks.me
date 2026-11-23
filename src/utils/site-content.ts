@@ -22,6 +22,7 @@ import { footerData, headerData } from '../navigation';
 import { escapeHtml, renderRichText } from '../components/editorial/rich-text';
 import { renderPublicRichText } from './cms-content';
 import { loadCmsBuildContent } from './payload-build';
+import { cmsCourses } from './courses';
 
 type Doc = Record<string, unknown>;
 const MAX_ITEMS = 50;
@@ -324,12 +325,40 @@ export function withHighlights<T extends { title: string; description: string }>
   return cms.map((item, index) => ({ ...base[index % base.length], title: item.title, description: item.description }));
 }
 
+const samePath = (href: unknown, target: string) =>
+  typeof href === 'string' && href.replace(/[?#].*$/, '').replace(/\/$/, '') === target;
+
+/** Removes links to `target` (and groups that become empty), e.g. a page that has nothing to show yet. */
+export function dropLinksTo<T extends { href?: string; links?: T[] }>(links: T[], target: string): T[] {
+  return links.flatMap((link) => {
+    if (samePath(link.href, target)) return [];
+    if (!link.links) return [link];
+    const children = dropLinksTo(link.links, target);
+    return children.length ? [{ ...link, links: children }] : link.links.length ? [] : [link];
+  });
+}
+
+/** A link to the course overview must never lead to an empty page: drop it while no course is published. */
+export function withoutEmptyCourseLinks(content: SiteContent, hasCourses: boolean): SiteContent {
+  if (hasCourses) return content;
+  return {
+    ...content,
+    header: dropLinksTo(content.header as { href?: string; links?: never[] }[], '/kurse') as SiteContent['header'],
+    footerColumns: content.footerColumns
+      .map((column) => ({ ...column, links: dropLinksTo(column.links, '/kurse') }))
+      .filter((column) => column.links.length),
+    legalLinks: dropLinksTo(content.legalLinks, '/kurse'),
+  };
+}
+
 /** Build-time entry point for pages: published CMS sections (if enabled) over the static fallback. */
 export async function getSiteContent(): Promise<SiteContent> {
   const content = await loadCmsBuildContent();
   const site = content.enabled && Object.keys(content.site ?? {}).length ? content.site : undefined;
-  return resolveSiteContent(
-    site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') },
-    (value) => renderPublicRichText(value, content)
+  return withoutEmptyCourseLinks(
+    resolveSiteContent(site && { ...site, home: content.pages.filter((page) => page.pageKind === 'home') }, (value) =>
+      renderPublicRichText(value, content)
+    ),
+    cmsCourses(content).length > 0
   );
 }

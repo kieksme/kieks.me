@@ -1,0 +1,54 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsCourses } from '~/utils/courses';
+import type { Course } from '~/utils/courses';
+export async function getStaticPaths() {
+  return cmsCourses(await loadCmsBuildContent()).map((course) => ({
+    params: { slug: course.slug },
+    props: { course },
+  }));
+}
+interface Props {
+  course: Course;
+}
+const { course } = Astro.props;
+---
+
+<PageLayout metadata={{ title: course.title, description: course.description || undefined }}>
+  <article class="mx-auto max-w-4xl px-6 py-16">
+    <p class="font-bold"><a href="/kurse">Kurse</a></p>
+    <h1 class="mt-6 text-4xl font-bold font-heading">{course.title}</h1>
+    {course.description && <p class="mt-6 text-xl">{course.description}</p>}
+    <p class="mt-6 text-sm">
+      {course.modules.length}
+      {course.modules.length === 1 ? 'Modul' : 'Module'} · ca. {course.totalMinutes} Minuten
+    </p>
+    <h2 class="mt-10 text-2xl font-bold font-heading">Module</h2>
+    <ol class="mt-6 grid gap-6">
+      {
+        course.modules.map((module) => (
+          <li>
+            <h3 class="text-xl font-bold">
+              {module.title} <span class="text-sm font-normal">({module.duration} Min.)</span>
+            </h3>
+            {module.objectives.length > 0 && (
+              <ul class="mt-2 list-disc pl-6">
+                {module.objectives.map((objective) => (
+                  <li>{objective}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+    <p class="mt-10 text-sm">
+      Die Kursinhalte und die Lernkontrolle findest du auf unserer Kursplattform. Den Zugang erhältst du über deinen
+      persönlichen Link.
+    </p>
+    <a class="inline-block mt-6 font-bold underline text-xl" href={course.courseUrl} rel="noopener">
+      Zur Kursplattform →
+    </a>
+  </article>
+</PageLayout>
