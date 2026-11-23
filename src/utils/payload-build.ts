@@ -97,6 +97,8 @@ const fields = {
     'requestUrl',
     'seo',
   ],
+  // Courses have no draft status: the Datahub shares only teaser fields of courses flagged `publicOnWebsite`.
+  courses: ['id', 'publicOnWebsite', 'slug', 'title', 'description', 'modules'],
   navigation: ['id', '_status', 'key', 'links', 'actions', 'secondaryLinks', 'socialLinks', 'footNote'],
 } as const;
 export const SITE_COLLECTIONS = ['services', 'team', 'faqs', 'mcp-projects', 'navigation'] as const;
@@ -132,6 +134,8 @@ export async function fetchCmsBuildContent(
     siteContent?: boolean;
     /** Enable only after the additive Datahub trainings migrations have shipped. */
     trainings?: boolean;
+    /** Enable only after the Datahub `course_public_flag` migration has shipped. */
+    courses?: boolean;
     locale?: 'de' | 'en';
     /** Only for the explicitly opted-in private Docker staging preview. */
     privateHttp?: boolean;
@@ -180,8 +184,9 @@ export async function fetchCmsBuildContent(
       url.searchParams.set('page', String(page));
       url.searchParams.set('sort', 'id');
       for (const field of fields[slug]) url.searchParams.set(`select[${field}]`, 'true');
-      if (slug !== 'media') url.searchParams.set('select[pathSlug]', 'true');
+      if (slug !== 'media' && slug !== 'courses') url.searchParams.set('select[pathSlug]', 'true');
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
+      else if (slug === 'courses') url.searchParams.set('where[publicOnWebsite][equals]', 'true');
       else {
         url.searchParams.set('where[_status][equals]', 'published');
         if (slug === 'pages') {
@@ -225,7 +230,13 @@ export async function fetchCmsBuildContent(
           id = relationId(doc.id);
         if (!id || seen.has(id)) throw new Error(`Duplicate or missing CMS id in ${slug}`);
         seen.add(id);
-        if (slug === 'media' ? doc.websitePublished !== true : doc._status !== 'published')
+        if (
+          slug === 'media'
+            ? doc.websitePublished !== true
+            : slug === 'courses'
+              ? doc.publicOnWebsite !== true
+              : doc._status !== 'published'
+        )
           throw new Error(`Unpublished CMS ${slug} rejected`);
         if (
           slug === 'pages' &&
@@ -235,6 +246,15 @@ export async function fetchCmsBuildContent(
           throw new Error('Unexpected CMS page kind rejected');
         docs.push({
           ...pick(doc, fields[slug]),
+          // Defense in depth: course body text must never enter the build snapshot,
+          // even if the Datahub field access were misconfigured.
+          ...(slug === 'courses'
+            ? {
+                modules: (Array.isArray(doc.modules) ? doc.modules : []).map((module) =>
+                  pick(object(module), ['title', 'duration', 'objectives'])
+                ),
+              }
+            : {}),
           ...(typeof doc.pathSlug === 'string' ? { pathSlug: doc.pathSlug } : {}),
         });
       }
@@ -261,6 +281,7 @@ export async function fetchCmsBuildContent(
     });
   }
   if (options.trainings) site.trainings = await collection('trainings');
+  if (options.courses) site.courses = await collection('courses');
   const result: CmsBuildContent = {
     enabled: true,
     locale: options.locale ?? 'de',
@@ -398,6 +419,7 @@ const configuration = (locale: 'de' | 'en' = 'de') => ({
   url: process.env.PAYLOAD_URL ?? import.meta.env?.PAYLOAD_URL,
   apiKey: process.env.PAYLOAD_BUILD_API_KEY ?? import.meta.env?.PAYLOAD_BUILD_API_KEY,
   trainings: (process.env.PAYLOAD_TRAININGS ?? import.meta.env?.PAYLOAD_TRAININGS) === 'true',
+  courses: (process.env.PAYLOAD_COURSES ?? import.meta.env?.PAYLOAD_COURSES) === 'true',
   siteContent: (process.env.PAYLOAD_SITE_CONTENT ?? import.meta.env?.PAYLOAD_SITE_CONTENT) === 'true',
 });
 export async function prepareCmsBuild() {

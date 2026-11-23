@@ -78,3 +78,21 @@ die Trainingsübersicht zeigt einen ehrlichen Leerzustand. Für Navigation auf
 Es werden keine Angebote oder Trainer in die Produktivdatenbank importiert.
 Keine globale Locale-/Slug-Umstellung: die Beziehungen verwenden stabile IDs und
 lassen sich später mit lokalisierten Texten und URLs weiterverwenden.
+
+## Kurs-Teaser (`/kurse`)
+
+Die Website zeigt öffentliche **Teaser** der Kurse aus dem Datahub: Titel,
+Beschreibung und Modulübersicht (Titel, Dauer, Lernziele) unter `/kurse` und
+`/kurse/<slug>`. Die Kursinhalte und die Lernkontrolle bleiben auf
+`kurse.kieks.me` hinter dem Zugangslink; die Detailseite verlinkt dorthin.
+
+- Im Datahub muss der Kurs das Feld **„Als Teaser auf kieks.me anzeigen“**
+  gesetzt haben (Standard: aus). Der Build fragt ausschließlich diese Kurse ab.
+- Der Website-Build-Schlüssel kann `modules.content` (Kurstext) nicht lesen und
+  hat keinerlei Zugriff auf den Fragenpool. Der Build-Client verwirft zusätzlich
+  alles außer Titel, Dauer und Lernzielen der Module.
+- Ausgeschaltet per Default: `PAYLOAD_COURSES=true` aktiviert die Abfrage erst,
+  nachdem die Datahub-Migration `20261123_210000_course_public_flag`
+  ausgeliefert ist. Davor ausgeschaltet lassen, sonst bricht der Build.
+- Ohne freigegebene Kurse zeigt `/kurse` einen Leerzustand. Eine englische
+  Fassung gibt es noch nicht.

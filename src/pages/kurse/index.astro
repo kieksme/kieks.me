@@ -1,0 +1,27 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import CourseTeaser from '~/components/CourseTeaser.astro';
+import { loadCmsBuildContent } from '~/utils/payload-build';
+import { cmsCourses } from '~/utils/courses';
+const courses = cmsCourses(await loadCmsBuildContent());
+---
+
+<PageLayout
+  metadata={{ title: 'Kurse', description: 'Online-Kurse zum Selbstlernen und Begleitmaterial für Schulungen.' }}
+>
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <h1 class="text-4xl font-bold font-heading">Kurse</h1>
+    <p class="mt-6 text-xl">Selbstlernen mit Praxisbezug.</p>
+    {
+      courses.length ? (
+        <div class="grid gap-8 md:grid-cols-2 mt-10">
+          {courses.map((course) => (
+            <CourseTeaser course={course} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10">Aktuell sind keine Kurse veröffentlicht.</p>
+      )
+    }
+  </section>
+</PageLayout>

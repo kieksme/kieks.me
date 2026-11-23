@@ -1,0 +1,32 @@
+---
+import type { Course } from '~/utils/courses';
+interface Props {
+  course: Course;
+}
+const { course } = Astro.props;
+---
+
+<article class="course-teaser">
+  <p class="text-sm font-bold uppercase">Kurs</p>
+  <h2 class="text-2xl font-bold font-heading mt-3"><a href={course.url}>{course.title}</a></h2>
+  {course.description && <p class="mt-4">{course.description}</p>}
+  <p class="mt-4 text-sm">
+    {course.modules.length} {course.modules.length === 1 ? 'Modul' : 'Module'} · ca. {course.totalMinutes} Minuten
+  </p>
+  <a class="inline-block mt-6 font-bold underline" href={course.url}>Kurs ansehen →</a>
+</article>
+<style>
+  .course-teaser {
+    border: 3px solid var(--pop-ink);
+    box-shadow: 6px 6px 0 var(--pop-aqua);
+    padding: 1.5rem;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+  }
+  .course-teaser a {
+    text-underline-offset: 4px;
+  }
+  .course-teaser a:hover {
+    text-decoration: underline;
+  }
+</style>
