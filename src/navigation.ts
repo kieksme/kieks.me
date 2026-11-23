@@ -15,6 +15,7 @@ export const headerData = {
     },
     { text: 'MCP-Server', href: getPermalink('/projekte/mcp-server') },
     { text: 'CSP', href: getPermalink('/csp') },
+    { text: 'Trainings', href: getPermalink('/trainings') },
     { text: 'Blog', href: getPermalink('/blog') },
     { text: 'Kurse', href: getPermalink('/kurse') },
     { text: 'Kontakt', href: getPermalink('/kontakt') },

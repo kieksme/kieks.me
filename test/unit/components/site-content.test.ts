@@ -568,6 +568,12 @@ describe('course navigation links', () => {
     expect(content.header.some((link) => 'href' in link && link.href === '/kurse')).toBe(true);
     expect(content.footerColumns.flatMap((column) => column.links).some((link) => link.href === '/kurse')).toBe(true);
   });
+  it('ships a Trainings link in the header fallback that is never pruned', () => {
+    for (const hasCourses of [true, false]) {
+      const content = withoutEmptyCourseLinks(base(), hasCourses);
+      expect(content.header.some((link) => 'href' in link && link.href === '/trainings')).toBe(true);
+    }
+  });
   it('keeps the links while courses are published', () => {
     expect(withoutEmptyCourseLinks(base(), true)).toEqual(base());
   });
