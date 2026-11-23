@@ -184,7 +184,7 @@ export async function fetchCmsBuildContent(
       url.searchParams.set('page', String(page));
       url.searchParams.set('sort', 'id');
       for (const field of fields[slug]) url.searchParams.set(`select[${field}]`, 'true');
-      if (slug !== 'media' && slug !== 'courses') url.searchParams.set('select[pathSlug]', 'true');
+      if (slug !== 'media') url.searchParams.set('select[pathSlug]', 'true');
       if (slug === 'media') url.searchParams.set('where[websitePublished][equals]', 'true');
       else if (slug === 'courses') url.searchParams.set('where[publicOnWebsite][equals]', 'true');
       else {

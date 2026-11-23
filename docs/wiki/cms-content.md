@@ -94,5 +94,12 @@ Beschreibung und Modulübersicht (Titel, Dauer, Lernziele) unter `/kurse` und
 - Ausgeschaltet per Default: `PAYLOAD_COURSES=true` aktiviert die Abfrage erst,
   nachdem die Datahub-Migration `20261123_210000_course_public_flag`
   ausgeliefert ist. Davor ausgeschaltet lassen, sonst bricht der Build.
-- Ohne freigegebene Kurse zeigt `/kurse` einen Leerzustand. Eine englische
-  Fassung gibt es noch nicht.
+- Ohne freigegebene Kurse zeigt `/kurse` einen Leerzustand.
+- **Englisch** (`/en/courses`, `/en/courses/<pathSlug>`): erscheint nur mit
+  `PAYLOAD_I18N=true` und nur für Kurse, deren englische Fassung Titel,
+  öffentlichen URL-Namen (`pathSlug`) und vollständige Modultitel hat. Es gibt
+  keinen Fallback auf deutschen Text; unvollständig übersetzte Kurse fehlen auf
+  Englisch, ohne den Build zu brechen. Der Kurs selbst bleibt deutschsprachig,
+  die Seite weist darauf hin. Datahub-Migration
+  `20261123_220000_course_localization` muss vorher ausgeliefert sein.
+- Die Sprachumschaltung (hreflang) koppelt Kurse über ihre Datahub-ID.

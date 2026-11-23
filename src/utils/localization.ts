@@ -1,4 +1,5 @@
 import { loadCmsBuildContent, publicSlug, relationId, text } from './payload-build';
+import { cmsCourses } from './courses';
 import type { CmsBuildContent, CmsDocument } from './payload-build';
 export type Locale = 'de' | 'en';
 export interface LocalizedRoute {
@@ -70,6 +71,25 @@ export async function alternatesForPath(path: string) {
       (route) => route.collection === current.collection && route.id === current.id
     );
     if (pair.length === 2) return pair.map(({ locale, path }) => ({ locale, path }));
+  }
+  if (en.enabled) {
+    // Courses are not part of the generic localized routes: they have their own pages and pair by Datahub id.
+    const clean = path.replace(/\/$/, '');
+    if (['/kurse', '/en/courses'].includes(clean))
+      return [
+        { locale: 'de' as const, path: '/kurse' },
+        { locale: 'en' as const, path: '/en/courses' },
+      ];
+    const germanCourses = cmsCourses(de),
+      englishCourses = cmsCourses(en);
+    const course = [...germanCourses, ...englishCourses].find((item) => item.url === clean);
+    const pairDe = course && germanCourses.find((item) => item.id === course.id);
+    const pairEn = course && englishCourses.find((item) => item.id === course.id);
+    if (pairDe && pairEn)
+      return [
+        { locale: 'de' as const, path: pairDe.url },
+        { locale: 'en' as const, path: pairEn.url },
+      ];
   }
   if (en.enabled && ['/trainings', '/en/trainings', '/blog', '/en/blog'].includes(path.replace(/\/$/, ''))) {
     const suffix = path.replace(/^\/en/, '').replace(/\/$/, '');

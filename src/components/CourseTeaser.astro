@@ -4,17 +4,22 @@ interface Props {
   course: Course;
 }
 const { course } = Astro.props;
+const english = course.locale === 'en';
+const count = course.modules.length;
 ---
 
 <article class="course-teaser">
-  <p class="text-sm font-bold uppercase">Kurs</p>
+  <p class="text-sm font-bold uppercase">{english ? 'Course' : 'Kurs'}</p>
   <h2 class="text-2xl font-bold font-heading mt-3"><a href={course.url}>{course.title}</a></h2>
   {course.description && <p class="mt-4">{course.description}</p>}
   <p class="mt-4 text-sm">
-    {course.modules.length}
-    {course.modules.length === 1 ? 'Modul' : 'Module'} · ca. {course.totalMinutes} Minuten
+    {
+      english
+        ? `${count} ${count === 1 ? 'module' : 'modules'} · approx. ${course.totalMinutes} minutes`
+        : `${count} ${count === 1 ? 'Modul' : 'Module'} · ca. ${course.totalMinutes} Minuten`
+    }
   </p>
-  <a class="inline-block mt-6 font-bold underline" href={course.url}>Kurs ansehen →</a>
+  <a class="inline-block mt-6 font-bold underline" href={course.url}>{english ? 'View course' : 'Kurs ansehen'} →</a>
 </article>
 <style>
   .course-teaser {
