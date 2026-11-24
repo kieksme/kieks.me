@@ -1,11 +1,14 @@
 ---
+import { localeFromPath } from '~/utils/locale';
+
 export interface Props {
   label?: string;
   class?: string;
 }
 
+const english = localeFromPath(Astro.url.pathname) === 'en';
 const {
-  label = 'Toggle Menu',
+  label = english ? 'Toggle menu' : 'Menü ein- oder ausklappen',
   class: className = 'flex flex-col h-12 w-12 rounded justify-center items-center cursor-pointer group',
 } = Astro.props;
 ---

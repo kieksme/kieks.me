@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { localeFromPath } from '~/utils/locale';
 
 export interface Props {
   text: string;
@@ -8,13 +9,17 @@ export interface Props {
 }
 
 const { text, url, class: className = 'inline-block' } = Astro.props;
+const english = localeFromPath(Astro.url.pathname) === 'en';
+// Icon-Buttons brauchen einen zugänglichen Namen (aria-label); `title` allein ist dafür nicht verlässlich.
+const label = (network: string) => (english ? `Share on ${network}` : `Auf ${network} teilen`);
 ---
 
 <div class={className}>
-  <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
+  <span class="align-super font-bold text-slate-500 dark:text-slate-400">{english ? 'Share:' : 'Teilen:'}</span>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Twitter Share"
+    aria-label={label('X')}
+    title={label('X')}
     data-aw-social-share="twitter"
     data-aw-url={url}
     data-aw-text={text}
@@ -23,7 +28,12 @@ const { text, url, class: className = 'inline-block' } = Astro.props;
       class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
     />
   </button>
-  <button class="ml-2 rtl:ml-0 rtl:mr-2" title="Facebook Share" data-aw-social-share="facebook" data-aw-url={url}
+  <button
+    class="ml-2 rtl:ml-0 rtl:mr-2"
+    aria-label={label('Facebook')}
+    title={label('Facebook')}
+    data-aw-social-share="facebook"
+    data-aw-url={url}
     ><Icon
       name="tabler:brand-facebook"
       class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
@@ -31,7 +41,8 @@ const { text, url, class: className = 'inline-block' } = Astro.props;
   </button>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Linkedin Share"
+    aria-label={label('LinkedIn')}
+    title={label('LinkedIn')}
     data-aw-social-share="linkedin"
     data-aw-url={url}
     data-aw-text={text}
@@ -42,7 +53,8 @@ const { text, url, class: className = 'inline-block' } = Astro.props;
   </button>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Whatsapp Share"
+    aria-label={label('WhatsApp')}
+    title={label('WhatsApp')}
     data-aw-social-share="whatsapp"
     data-aw-url={url}
     data-aw-text={text}
@@ -53,7 +65,8 @@ const { text, url, class: className = 'inline-block' } = Astro.props;
   </button>
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Email Share"
+    aria-label={english ? 'Share by email' : 'Per E-Mail teilen'}
+    title={english ? 'Share by email' : 'Per E-Mail teilen'}
     data-aw-social-share="mail"
     data-aw-url={url}
     data-aw-text={text}
