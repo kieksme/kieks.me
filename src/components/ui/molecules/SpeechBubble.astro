@@ -1,14 +1,8 @@
 ---
-export interface Props {
-  class?: string;
-}
-
-const { class: className = '' } = Astro.props;
+/** Compatibility entry: implementation is shared by kieks.me.ui. */
+import Shared from '@kieksme/kieksme-astro/website/SpeechBubble';
+import type { Props as SharedProps } from '@kieksme/kieksme-astro/website/SpeechBubble';
+type Props = SharedProps;
 ---
 
-<div
-  class:list={['pop-speech bg-[var(--surface)] border-4 border-[var(--ink)] px-9 py-7', className]}
-  style="box-shadow: 10px 10px 0 0 var(--pop-aqua);"
->
-  <slot />
-</div>
+<Shared {...Astro.props}><slot /></Shared>

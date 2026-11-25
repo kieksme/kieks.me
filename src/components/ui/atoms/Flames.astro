@@ -1,23 +1,8 @@
 ---
-import flamesRot from '~/assets/pop/655-1038_flammen-rot__imgFlammenRot.svg?url';
-import flamesAqua from '~/assets/pop/655-1040_flammen-aqua-original.svg?url';
-import flamesRotMobile from '~/assets/pop/658-1154_flammen-rot-mobile.svg?url';
-import flamesAquaMobile from '~/assets/pop/658-1156_flammen-aqua-mobile.svg?url';
-
-export interface Props {
-  class?: string;
-}
-
-const { class: className = '' } = Astro.props;
+/** Compatibility entry: implementation is shared by kieks.me.ui. */
+import Shared from '@kieksme/kieksme-astro/website/Flames';
+import type { Props as SharedProps } from '@kieksme/kieksme-astro/website/Flames';
+type Props = SharedProps;
 ---
 
-<div class:list={['pop-cta-flames relative w-full pointer-events-none', className]} aria-hidden="true">
-  <picture class="block">
-    <source media="(max-width: 767px)" srcset={flamesRotMobile} width="390" height="130" />
-    <img src={flamesRot} alt="" class="block w-full h-auto" width="1440" height="220" decoding="async" />
-  </picture>
-  <picture class="absolute bottom-0 left-0 block w-full">
-    <source media="(max-width: 767px)" srcset={flamesAquaMobile} width="390" height="90" />
-    <img src={flamesAqua} alt="" class="block w-full h-auto" width="1440" height="150" decoding="async" />
-  </picture>
-</div>
+<Shared {...Astro.props}><slot /></Shared>

@@ -1,32 +1,8 @@
 ---
-/** FAQ diamond (−45°) or repo color square (−12°) */
-export interface Props {
-  variant?: 'diamond' | 'blob';
-  color?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
-  class?: string;
-}
-
-const { variant = 'diamond', color = 'aqua', class: className = '' } = Astro.props;
-const colors = {
-  aqua: 'var(--pop-aqua)',
-  fuchsia: 'var(--pop-fuchsia)',
-  navy: 'var(--pop-navy)',
-  purple: 'var(--pop-purple)',
-};
+/** Compatibility entry: implementation is shared by kieks.me.ui. */
+import Shared from '@kieksme/kieksme-astro/website/Marker';
+import type { Props as SharedProps } from '@kieksme/kieksme-astro/website/Marker';
+type Props = SharedProps;
 ---
 
-{
-  variant === 'diamond' ? (
-    <span
-      class:list={['pop-faq-marker inline-block shrink-0 border-[3px] border-[var(--ink)]', className]}
-      style={`width: 18px; height: 18px; background: ${colors[color]}; transform: rotate(-45deg); transition: transform 0.25s ease;`}
-      aria-hidden="true"
-    />
-  ) : (
-    <span
-      class:list={['inline-block shrink-0 border-[3px] border-[var(--ink)]', className]}
-      style={`width: 28px; height: 28px; background: ${colors[color]}; transform: rotate(-12deg); transition: transform 0.25s ease;`}
-      aria-hidden="true"
-    />
-  )
-}
+<Shared {...Astro.props}><slot /></Shared>

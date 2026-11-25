@@ -42,7 +42,9 @@
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
     "mdast-util-from-markdown": "2.1.0",
-    "unpic": "^3.22.0"
+    "unpic": "^3.22.0",
+    "@kieksme/kieksme-astro": "file:vendor/kieksme-kieksme-astro-0.2.0.tgz",
+    "@kieksme/kieksme-tokens": "file:vendor/kieksme-kieksme-tokens-0.2.0.tgz"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
@@ -79,5 +81,10 @@
   },
   "bugs": {
     "url": "https://github.com/kieksme/kieks.me/issues"
+  },
+  "pnpm": {
+    "overrides": {
+      "@kieksme/kieksme-tokens": "file:vendor/kieksme-kieksme-tokens-0.2.0.tgz"
+    }
   }
 }
