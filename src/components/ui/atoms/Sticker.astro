@@ -1,56 +1,8 @@
 ---
-/** Pop Sticker / Badge — SPEC §2 rotations, §8 */
-export interface Props {
-  color?: 'aqua' | 'fuchsia' | 'purple' | 'navy';
-  shadow?: 'fuchsia' | 'aqua';
-  rotate?: number;
-  size?: 'sm' | 'md' | 'lg';
-  class?: string;
-}
-
-const {
-  color = 'aqua',
-  shadow = color === 'fuchsia' ? 'aqua' : 'fuchsia',
-  rotate = 3,
-  size = 'md',
-  class: className = '',
-} = Astro.props;
-
-const bgs = {
-  navy: 'var(--pop-navy)',
-  aqua: 'var(--pop-aqua)',
-  fuchsia: 'var(--pop-fuchsia)',
-  purple: 'var(--pop-purple)',
-};
-/* Aqua+navy clears AA normal (≥4.5). Fuchsia/purple/navy stickers use bold ≥16px (AA large ≥3:1). */
-const text = color === 'aqua' ? 'var(--pop-navy)' : 'var(--pop-white)';
-const shadowColor = shadow === 'aqua' ? 'var(--pop-aqua)' : 'var(--pop-fuchsia)';
-const sizes = { sm: 'text-base px-3.5 py-2', md: 'text-base px-3.5 py-2', lg: 'text-xl px-3.5 py-2' };
+/** Compatibility entry: implementation is shared by kieks.me.ui. */
+import Shared from '@kieksme/kieksme-astro/website/Sticker';
+import type { Props as SharedProps } from '@kieksme/kieksme-astro/website/Sticker';
+type Props = SharedProps;
 ---
 
-<span
-  class:list={[
-    'pop-sticker motion-safe:pop-stamp inline-block font-heading font-extrabold leading-none border-[3px] border-[var(--ink)] w-fit',
-    sizes[size],
-    className,
-  ]}
-  style={`--pop-rotate: ${rotate}deg; background: ${bgs[color]}; color: ${text}; box-shadow: 4px 4px 0 0 ${shadowColor}; transform: rotate(${rotate}deg);`}
->
-  <slot />
-</span>
-
-<style>
-  .pop-sticker {
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-  .pop-sticker:hover {
-    transform: rotate(calc(var(--pop-rotate, 0deg) * 2)) scale(1.05);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .pop-sticker:hover {
-      transform: rotate(var(--pop-rotate, 0deg));
-    }
-  }
-</style>
+<Shared {...Astro.props}><slot /></Shared>
